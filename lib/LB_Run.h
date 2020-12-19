@@ -2,8 +2,8 @@
 
 ---------- file information -----------------------------------------------
 file name: 
-define   : <文件说明>
-version  : 见文件尾端
+define   : <锟侥硷拷说锟斤拷>
+version  : 锟斤拷锟侥硷拷尾锟斤拷
 ---------------------------------------------------------------------------
 */
 #ifndef  LB_Run_h
@@ -21,7 +21,7 @@ version  : 见文件尾端
 #endif
 
 
-//全局变量声明
+//全锟街憋拷锟斤拷锟斤拷锟斤拷
 #ifdef  KAKA_Run_GB
 #define KAKA_Run_EXT
 #else
@@ -52,5 +52,6 @@ KAKA_Run_EXT  void  CheckRun();
 KAKA_Run_EXT  INT8U  LowVoltageFlag;
 KAKA_Run_EXT  void CheckMode(INT8U Key);
 KAKA_Run_EXT  void InitSysclk(INT8U SYS);
+KAKA_Run_EXT  void Delay_ms(INT16U fui_i);
 
 #endif

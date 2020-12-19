@@ -22,6 +22,28 @@ version  : ���ļ�β��
 #include "LB_IR.h"
 #include "LB_Usart.h"
 #endif
+
+/*******************************************************
+  * @?|¨¬???  	?¡§?¡§o?¨¤o?£¤¡§oy
+  * @2?¡§oy  	fui_i : ?¡§?¡§o?¨¤¡§o?¨¤??
+  * @?¡è|¨¬???|¨¬ ?T
+  * @?¨¢?¨¦ 	Fcpu = 16MHz?¨º?fui_i = 1¡§o?¨¤?¨º??¡§?¡§o?¨¤¡§o?¨¤?????a1Ms
+**************************************************************/
+void Delay_ms(INT16U fui_i)
+{
+	INT16U fui_j;
+	for(;fui_i > 0;fui_i --)
+	for(fui_j = 1596;fui_j > 0;fui_j --)
+	{
+		;
+	}
+}
+/*******************************************************
+  * @?|¨¬???  	?¡§?¡§o?¨¤o?£¤¡§oy
+  * @2?¡§oy  	fui_i : ?¡§?¡§o?¨¤¡§o?¨¤??
+  * @?¡è|¨¬???|¨¬ ?T
+  * @?¨¢?¨¦ 	Fcpu = 16MHz?¨º?fui_i = 1¡§o?¨¤?¨º??¡§?¡§o?¨¤¡§o?¨¤?????a1Ms
+**************************************************************/
 INT8U readRunTime()
 {
 	INT8U i;
@@ -71,6 +93,14 @@ INT8U readRunTime()
 		i= 61;
 	return (i+40);
 }
+/**********************************************************************
+ * 	*
+    *Function Name:void  CheckRun()
+	*Function: 
+	*Input Ref:NO
+	*Return Ref: NO
+	*
+***********************************************************************/
 void  CheckRun()
 {
 
@@ -1198,7 +1228,7 @@ void CheckMode(INT8U Key)
 
 		}
 	}
-
+    ////power on of initial:	Mode=2;Step=0;RunMode=1;RunStep=0;
 	switch(Mode)
 	{
 	case 0:
@@ -1583,24 +1613,36 @@ void CheckMode(INT8U Key)
 	{
 		switch(Step)
 		{
-		case 0:
-		{
-			RunMode=2;
-			RunStep=0;
-			Step=1;
-		}
-		break;
-		case 1:
-		{
-			if(ReadPowerAutoIn())
+			case 0:
 			{
-				RunStep=0x60;
-				SetStop();
-				LedGreenON();
-				Step=2;
+				RunMode=2;
+				RunStep=0;
+				Step=1;
 			}
-		}
-		break;
+			break;
+			case 1:
+			{
+				if(ReadPowerAutoIn())
+				{
+					RunStep=0x60;
+					SetStop();
+					LedGreenON();
+					Step=2;
+				}
+			}
+			break;
+            //battery recharge status
+			case 2:
+                 SetStop() ;// AllStop();
+				LedGreenON();
+				Delay_ms(500);
+				LedGreenOff();
+				Delay_ms(500);
+				Step =2;
+				Mode =2;
+
+
+			break;
 		}
 
 	}
