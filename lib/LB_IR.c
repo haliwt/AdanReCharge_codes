@@ -316,7 +316,7 @@ void CheckRechargeIR()
 	  }
 
 	  #if 1
-	  Usart1Send[0]=4;
+	  Usart1Send[0]=4; 
 	  Usart1Send[1]=Mid_ReadIR.ReadIR[0];
 	  Usart1Send[2]=Mid_ReadIR.ReadIR[1];
 	  Usart1Send[3]=Mid_ReadIR.ReadIR[2];
@@ -327,9 +327,9 @@ void CheckRechargeIR()
 
 
 
-  		    Mid_ReadIR.ReadIR[0]=0;
-		    Mid_ReadIR.ReadIR[1]=0;
-			Mid_ReadIR.ReadIR[2]=0;
+//  		  Mid_ReadIR.ReadIR[0]=0;
+//		    Mid_ReadIR.ReadIR[1]=0;
+//			Mid_ReadIR.ReadIR[2]=
 			Mid_ReadIR.ReadIRFlag=0;
 
 	}
