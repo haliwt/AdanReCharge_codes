@@ -1622,7 +1622,7 @@ void CheckMode(INT8U Key)
 			break;
 			case 1:
 			{
-				if(ReadPowerAutoIn())
+				if(P2_1 ==1|| P1_0 ==1)
 				{
 					RunStep=0x60;
 					SetStop();
@@ -1632,17 +1632,20 @@ void CheckMode(INT8U Key)
 			}
 			break;
             //battery recharge status
+           
 			case 2:
-                 SetStop() ;// AllStop();
-				LedGreenON();
-				Delay_ms(500);
-				LedGreenOff();
-				Delay_ms(500);
-				Step =2;
-				Mode =2;
+				if(P2_1 ==1|| P1_0 ==1){
+	                SetStop() ;// AllStop();
+					LedGreenON();
+					Delay_ms(500);
+					LedGreenOff();
+					Delay_ms(500);
+					Step =2;
+					Mode =2;
 
-
+				}
 			break;
+		
 		}
 
 	}

@@ -153,10 +153,10 @@ INT8U ReadKey(void)
 }
 void InitPowerIn(void)
 {
-     P2M1 = 0X51 ; //ReCharge input SMT pull down
-     P1M0 = 0x51;  //DC INPUT pull down 
-     P2_1 =0; 
-	 P1_0 =0;
+     P2M1 = 0X58 ; //ReCharge input SMT pull down
+     P1M0 = 0x58;  //DC INPUT pull down 
+     P2_1 =1; 
+	 P1_0 =1;
 }
 
 /***********************************************************
