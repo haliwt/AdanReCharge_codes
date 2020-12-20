@@ -27,6 +27,11 @@ version  : ¼ûÎÄ¼þÎ²¶Ë
 #else
 #define  KAKA_Led_EXT extern
 #endif
+
+
+#define BatterCharge    		P2_1 
+#define CloseSwitch_L  			P1_5	
+#define CloseSwitch_R  			P3_2
 KAKA_Led_EXT  INT8U BuzzerTime;
 KAKA_Led_EXT  INT8U IMP;
 KAKA_Led_EXT  void InitLed(void);

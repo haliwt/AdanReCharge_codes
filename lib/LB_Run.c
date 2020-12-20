@@ -103,7 +103,7 @@ INT8U readRunTime()
 ***********************************************************************/
 void  CheckRun()
 {
-    static INT16U i ,j,l,r;
+    static INT16U i ;
 
 	switch(RunMode)
 	{
@@ -734,364 +734,364 @@ void  CheckRun()
 		break;
 		//far target 
 		case 0x40:
-		
+		{
 			if(RunMs>30)
 			{
 				RunMs=0;
-				#if 1
+				#if 0
 				if(SendCount>=12)
 				{
-					  Usart1Send[0]=3;
-					  Usart1Send[1]=Mid_ReadIR.ReadIR[0];
-					  Usart1Send[2]=Mid_ReadIR.ReadIR[1];
-					  Usart1Send[3]=Mid_ReadIR.ReadIR[2];
-					  SendCount=1;
-					  SBUF=Usart1Send[SendCount];
-					}
-				#endif 
-			  }
-			  i++;
-			  if(i<11){
-			    
-				 if(IRLocation.NearMid>0)
-					{
-						RunStep=0x50;
-						i=100;
-						j=0;
-						l=0;
-						r=0;
-						  ClearAllIR();
-					}
-					else if(IRLocation.NearPreRight>0)
-					{
-						RunStep=0x50;
-						i=100;
-						j=0;
-						l=0;
-						r=0;
-						  ClearAllIR();
-						InitMotorForwardLeftSlow();
-					}
-					else if(IRLocation.NearPreLeft>0)
-					{
-						RunStep=0x50;
-						i=100;
-						j=0;
-						  ClearAllIR();
-						InitMotorForwardRightSlow();
-						
-					}
-					else if(IRLocation.NearRight>0)
-					{
-						RunStep=0x50;
-						i=100;
-						j=0;
-						l=0;
-						r=0;
-						  ClearAllIR();
-						InitMotorForwardLeftSlow();
-					}
-					else if(IRLocation.NearLeft>0)
-					{
-						RunStep=0x50;
-						i=100;
-						j=0;
-						l=0;
-						r=0;
-						  ClearAllIR();
-						InitMotorForwardRightSlow();
-					}
-					
-			       else if((Mid_ReadIR.ReadIR[0]  ==0xAA )|| (Mid_ReadIR.ReadIR[0]  ==0xA1)){
-						
-							    if(Mid_ReadIR.ReadIR[0]  ==0xAA){ //LEFT  --RUN left
-										
-											l++;
-											
-											
-							    }
-							    else if(Mid_ReadIR.ReadIR[0]  ==0xA1){ //right side ----run left
-			                               r++ ;
-
-
-							  }
-							  if(l>r){
-
-									       RunStep=0x41;  //CCW
-											RunMs =0 ;
-								            ClearAllIR();
-											i=20;
-											j=0;
-											
-
-							  }
-							  else{
-
-									
-										   RunStep=0x43;  //left
-											RunMs =0 ;
-								            ClearAllIR();
-											i=20;
-											j=0;
-									}
+					Usart1Send[0]=12;
+					Usart1Send[1]=IRLocation.NearMid;
+					Usart1Send[2]=IRLocation.NearPreRight;
+					Usart1Send[3]=IRLocation.NearPreLeft;
+					Usart1Send[4]=IRLocation.NearRight;
+					Usart1Send[5]=IRLocation.NearLeft;
+					Usart1Send[6]=IRLocation.FarMid;
+					Usart1Send[7]=IRLocation.FarPreRight;
+					Usart1Send[8]=IRLocation.FarPreLeft;
+					Usart1Send[9]=IRLocation.FarRight;
+					Usart1Send[10]=IRLocation.FarLeft;
+					Usart1Send[11]=RunNoIRsenorLastStep;
+					Usart1Send[12]=RunStep;
+					SendCount=1;
+					SBUF=Usart1Send[SendCount];
 				}
-				else if(Mid_ReadIR.ReadIR[0]==Mid_ReadIR.ReadIR[1] && Mid_ReadIR.ReadIR[0]==Mid_ReadIR.ReadIR[2]){
-							j++;
-						    ClearAllIR();
-					        RunMs = 0;
-							RunStep = 1;
-					        
-					        if(j==10){
-								j=0;
-	                        
-							   	RunStep = 41;
-								RunMs = 0;
-								 ClearAllIR();
+				#endif 
+				if(IRLocation.NearMid>0)
+				{
+					RunStep=0x50;
+				}
+				else if(IRLocation.NearPreRight>0)
+				{
+					//RunStep=0x53;
+					RunStep=0x50;
+				}
+				else if(IRLocation.NearPreLeft>0)
+				{
+					//RunStep=0x56;
+					RunStep=0x50;
+				}
+				else if(IRLocation.NearRight>0)
+				{
+					//RunStep=0x59;
+					RunStep=0x50;
+				}
+				else if(IRLocation.NearLeft>0)
+				{
+					//RunStep=0x5c;
+					RunStep=0x50;
+				}
+				else if(IRLocation.FarMid>0)
+				{
+					//RunStep=0x40;
+					InitMotorForwardSlow();
+					RunNoIRsenorTime=0;
+					RunNoIRsenorLastStep=1;
+				}
+				else if(IRLocation.FarPreRight>0)
+				{
+					InitMotorForwardLeftSlow();
+					//RunStep=0x43;
+					RunNoIRsenorTime=0;
+					RunNoIRsenorLastStep=2;
+				}
+				else if(IRLocation.FarPreLeft>0)
+				{
+					InitMotorForwardRightSlow();
+					//RunStep=0x46;
+					RunNoIRsenorTime=0;
+					RunNoIRsenorLastStep=3;
+				}
+				else if(IRLocation.FarRight>0)
+				{
+					//RunStep=0x49;
+					InitMotorForwardLeftSlow();
+					RunNoIRsenorTime=0;
+					RunNoIRsenorLastStep=2;
+				}
+				else if(IRLocation.FarLeft>0)
+				{
+					//RunStep=0x4c;
+					InitMotorForwardRightSlow();
+					RunNoIRsenorTime=0;
+					RunNoIRsenorLastStep=3;
+				}
+				else
+				{
+					RunNoIRsenorTime++;
+					if(RunNoIRsenorTime>9)
+					{
 
-	                       	}
-				  }
+						RunNoIRsenorTime=0;
+						if(RunNoIRsenorLastStep==1)
+						{
 
-			  	}    
+						}
+						else	if(RunNoIRsenorLastStep==2)
+						{
+							InitMotorForwardRightSlow();
+							RunNoIRsenorTime=0;
+							RunStep=0x41;
+						}
+						else	if(RunNoIRsenorLastStep==3)
+						{
+							InitMotorForwardLeftSlow();
+							RunNoIRsenorTime=0;
+							RunStep=0x42;
+						}
 
-				
-			       
-					
+
+					}
+				}
+				ClearAllIR();
+			}
+		}
 		break;
-		case 41: //CCW  
-       			if(RunMs <5){ //50ms
-		              
-					   i=0;
-					   j=0;
-					   
-					  //if(IRLocation.Number==420)IRLocation.Number=0;
-					    IRLocation.Number++; 
-					  // ClearAllIR();
-					   InitMotorLeft();//CCW
-		             
-			     }
-				 else RunSecond = 0x42;
+		case 0x41:
+		{
 
+            if(CloseSwitch_L ==1 || CloseSwitch_R ==1){
+
+			    if(BatterCharge ==1){
+					Mode =2 ;
+					Step =0;
+				    SetStop();
+
+				}
+				else {
+
+                      if(RunMs < 10){
+
+							InitMotorRetreat(); //back run
+					  }
+					  else {
+
+							RunStep = 1;
+							RunMs = 0;
+
+
+					  }
+
+
+				}
+
+
+
+            }
+           else {
+			if(RunMs>30)
+			{
+				RunMs=0;
+				#if 0
+				if(SendCount>=12)
+				{
+					Usart1Send[0]=12;
+					Usart1Send[1]=IRLocation.NearMid;
+					Usart1Send[2]=IRLocation.NearPreRight;
+					Usart1Send[3]=IRLocation.NearPreLeft;
+					Usart1Send[4]=IRLocation.NearRight;
+					Usart1Send[5]=IRLocation.NearLeft;
+					Usart1Send[6]=IRLocation.FarMid;
+					Usart1Send[7]=IRLocation.FarPreRight;
+					Usart1Send[8]=IRLocation.FarPreLeft;
+					Usart1Send[9]=IRLocation.FarRight;
+					Usart1Send[10]=IRLocation.FarLeft;
+					Usart1Send[11]=RunNoIRsenorLastStep;
+					Usart1Send[12]=RunStep;
+					SendCount=1;
+					SBUF=Usart1Send[SendCount];
+				}
+				#endif 
+				if(IRLocation.NearMid>0)
+				{
+					RunStep=0x50;
+				}
+				else if(IRLocation.NearPreRight>0)
+				{
+					//RunStep=0x53;
+					RunStep=0x50;
+				}
+				else if(IRLocation.NearPreLeft>0)
+				{
+					//RunStep=0x56;
+					RunStep=0x50;
+				}
+				else if(IRLocation.NearRight>0)
+				{
+					//RunStep=0x59;
+					RunStep=0x50;
+				}
+				else if(IRLocation.NearLeft>0)
+				{
+					//RunStep=0x5c;
+					RunStep=0x50;
+				}
+				else if(IRLocation.FarMid>0)
+				{
+					RunStep=0x40;
+					InitMotorForwardSlow();
+					RunNoIRsenorTime=0;
+					RunNoIRsenorLastStep=1;
+				}
+				else if(IRLocation.FarPreRight>0)
+				{
+					InitMotorForwardLeftSlow();
+					RunStep=0x40;
+					RunNoIRsenorTime=0;
+					RunNoIRsenorLastStep=2;
+				}
+				else if(IRLocation.FarPreLeft>0)
+				{
+					InitMotorForwardRightSlow();
+					RunStep=0x40;
+					RunNoIRsenorTime=0;
+					RunNoIRsenorLastStep=3;
+				}
+				else if(IRLocation.FarRight>0)
+				{
+					RunStep=0x40;
+					InitMotorForwardLeftSlow();
+					RunNoIRsenorTime=0;
+					RunNoIRsenorLastStep=2;
+				}
+				else if(IRLocation.FarLeft>0)
+				{
+					RunStep=0x40;
+					InitMotorForwardRightSlow();
+					RunNoIRsenorTime=0;
+					RunNoIRsenorLastStep=3;
+				}
+				else
+				{
+					RunNoIRsenorTime++;
+					if(RunNoIRsenorTime>9)
+					{
+
+						RunNoIRsenorTime=0;
+
+						//else	if(RunNoIRsenorLastStep==3)
+						{
+							InitMotorForwardLeftSlow();
+							RunNoIRsenorTime=0;
+							RunStep=0x42;
+						}
+
+
+					}
+				}
+				ClearAllIR();
+			}
+
+           	}
+		}
 		break;
 		case 0x42:
-		
-			     SetStop();
-				 Delay_ms(500);
-		         CheckRechargeIR();
-				 i++;
-				 if(i<11){
-						 if(IRLocation.NearMid>0)
+		{
+			if(RunMs>30)
+			{
+				RunMs=0;
+				#if 0
+				if(SendCount>=12)
+				{
+					Usart1Send[0]=12;
+					Usart1Send[1]=IRLocation.NearMid;
+					Usart1Send[2]=IRLocation.NearPreRight;
+					Usart1Send[3]=IRLocation.NearPreLeft;
+					Usart1Send[4]=IRLocation.NearRight;
+					Usart1Send[5]=IRLocation.NearLeft;
+					Usart1Send[6]=IRLocation.FarMid;
+					Usart1Send[7]=IRLocation.FarPreRight;
+					Usart1Send[8]=IRLocation.FarPreLeft;
+					Usart1Send[9]=IRLocation.FarRight;
+					Usart1Send[10]=IRLocation.FarLeft;
+					Usart1Send[11]=RunNoIRsenorLastStep;
+					Usart1Send[12]=RunStep;
+					SendCount=1;
+					SBUF=Usart1Send[SendCount];
+				}
+				#endif 
+				if(IRLocation.NearMid>0)
+				{
+					RunStep=0x50;
+				}
+				else if(IRLocation.NearPreRight>0)
+				{
+					//RunStep=0x53;
+					RunStep=0x50;
+				}
+				else if(IRLocation.NearPreLeft>0)
+				{
+					//RunStep=0x56;
+					RunStep=0x50;
+				}
+				else if(IRLocation.NearRight>0)
+				{
+					//RunStep=0x59;
+					RunStep=0x50;
+				}
+				else if(IRLocation.NearLeft>0)
+				{
+					//RunStep=0x5c;
+					RunStep=0x50;
+				}
+				else if(IRLocation.FarMid>0)
+				{
+					RunStep=0x40;
+					InitMotorForwardSlow();
+					RunNoIRsenorTime=0;
+					RunNoIRsenorLastStep=1;
+				}
+				else if(IRLocation.FarPreRight>0)
+				{
+					InitMotorForwardLeftSlow();
+					RunStep=0x40;
+					RunNoIRsenorTime=0;
+					RunNoIRsenorLastStep=2;
+				}
+				else if(IRLocation.FarPreLeft>0)
+				{
+					InitMotorForwardRightSlow();
+					RunStep=0x40;
+					RunNoIRsenorTime=0;
+					RunNoIRsenorLastStep=3;
+				}
+				else if(IRLocation.FarRight>0)
+				{
+					RunStep=0x40;
+					InitMotorForwardLeftSlow();
+					RunNoIRsenorTime=0;
+					RunNoIRsenorLastStep=2;
+				}
+				else if(IRLocation.FarLeft>0)
+				{
+					RunStep=0x40;
+					InitMotorForwardRightSlow();
+					RunNoIRsenorTime=0;
+					RunNoIRsenorLastStep=3;
+				}
+				else
+				{
+					RunNoIRsenorTime++;
+					if(RunNoIRsenorTime>9)
+					{
+
+						RunNoIRsenorTime=0;
+						if(RunNoIRsenorLastStep==2)
 						{
-							RunStep=0x50;
-							i= 20;
-							 ClearAllIR();
-						}
-						else if(IRLocation.NearPreRight>0)
-						{
-							i= 20;
-							RunStep=0x50;
-							  ClearAllIR();
-							InitMotorForwardLeftSlow();
-						}
-						else if(IRLocation.NearPreLeft>0)
-						{
-							i= 20;
-							RunStep=0x50;
-							  ClearAllIR();
 							InitMotorForwardRightSlow();
+							RunNoIRsenorTime=0;
+							RunStep=0x41;
 						}
-						else if(IRLocation.NearRight>0)
-						{
-							i= 20;
-							RunStep=0x50;
-							  ClearAllIR();
-							InitMotorForwardLeftSlow();
-						}
-						else if(IRLocation.NearLeft>0)
-						{
-							i= 20;
-							RunStep=0x50;
-							  ClearAllIR();
-							InitMotorForwardRightSlow();
-						}
-					else if((Mid_ReadIR.ReadIR[0]  ==0xAA )|| (Mid_ReadIR.ReadIR[0]  ==0xA1)){
-						
-							    if(Mid_ReadIR.ReadIR[0]  ==0xAA){ //LEFT  --RUN left
-										
-											l++;
-											
-											
-							    }
-							    else if(Mid_ReadIR.ReadIR[0]  ==0xA1){ //right side ----run left
-			                               r++ ;
 
 
-							  }
-							  if(l>r){
 
-									       RunStep=0x41;  //CCW
-											RunMs =0 ;
-								            ClearAllIR();
-											i=20;
-											j=0;
-
-							  }
-							  else{
-
-									
-										   RunStep=0x43;  //left
-											RunMs =0 ;
-								            ClearAllIR();
-											i=20;
-											j=0;
-									}
+					}
 				}
-				else if(Mid_ReadIR.ReadIR[0]==Mid_ReadIR.ReadIR[1] && Mid_ReadIR.ReadIR[0]==Mid_ReadIR.ReadIR[2]){
-
-						j++;
-						 ClearAllIR();
-						RunStep = 0x41;
-						RunMs = 0;
-						if(j==10){
-						      RunStep = 0x45;
-						      RunMs = 0;
-				               i= 0;
-						     j=0;
-							   ClearAllIR();
-						}
-				       
-
-		        }
-				}
-
-
-			  
-		         
+				ClearAllIR();
+			}
+		}
 		break;
-		case 0x43: //CW
-			      if(RunMs< 10){
-				  	  // ClearAllIR();
-					   i=0;
-				      j=0;
-		               ClearAllIR();
-					   InitMotorRight();//
-			       }
-				  else{
-				  	RunStep = 0x44;
-				    RunMs=0;
-				  }
-				  	
-			 
-		break;
-
-	    case 0x44:
-
-		         SetStop();
-				 Delay_ms(500);
-				 RunMs =0;
-		         CheckRechargeIR();
-				 i++;
-				 if(i<11){
-					if(IRLocation.NearMid>0)
-					{
-						RunStep=0x50;
-						  ClearAllIR();
-						i=20;
-					}
-					else if(IRLocation.NearPreRight>0)
-					{
-						RunStep=0x50;
-						  ClearAllIR();
-						i=20;
-						InitMotorForwardLeftSlow();
-					}
-					else if(IRLocation.NearPreLeft>0)
-					{
-						RunStep=0x50;
-						  ClearAllIR();
-						i=20;
-						InitMotorForwardRightSlow();
-					}
-					else if(IRLocation.NearRight>0)
-					{
-						RunStep=0x50;
-						  ClearAllIR();
-						i=20;
-						InitMotorForwardLeftSlow();
-					}
-					else if(IRLocation.NearLeft>0)
-					{
-						RunStep=0x50;
-						i=20;
-						  ClearAllIR();
-						InitMotorForwardRightSlow();
-					}
-					 
-			       
-			    else if((Mid_ReadIR.ReadIR[0]  ==0xAA) || (Mid_ReadIR.ReadIR[0]  ==0xA1)){
-						
-							    if(Mid_ReadIR.ReadIR[0]  ==0xAA){ //LEFT  --RUN left
-										
-											l++;
-											
-											
-							    }
-							    else if(Mid_ReadIR.ReadIR[0]  ==0xA1){ //right side ----run left
-			                               r++ ;
-
-
-							  }
-							  if(l>r){
-
-									       RunStep=0x41;  //CCW
-											RunMs =0 ;
-								            ClearAllIR();
-											i=20;
-											j=0;
-											
-
-							  }
-							  else{
-
-									
-										   RunStep=0x43;  //left
-											RunMs =0 ;
-								            ClearAllIR();
-											i=20;
-											j=0;
-									}
-				}
-				else if(Mid_ReadIR.ReadIR[0]==Mid_ReadIR.ReadIR[1] && Mid_ReadIR.ReadIR[0]==Mid_ReadIR.ReadIR[2]){
-
-
-						RunStep = 0x41;  //CCW
-						RunMs = 0;
-				        ClearAllIR();
-				       i=0;
-					   j=0;
-				        if(IRLocation.Number > 400){
-						     RunStep = 0x45;
-							   ClearAllIR();
-							 IRLocation.Number=0;
-				        }
-				 	}
-				     
-				}
-		break;
-
-        case 0x45:
-		  if(RunMs< 10){
-				  	  
-					   i=0;
-		              j=0;
-					  l=0;
-					  r=0;
-		              InitMotorForwardSlow();
-			      	}
-				  else {
-				  	RunStep = 0x44;
-					RunMs =0;
-				  }
-	   break;
 
        case 0x50:
 		{
@@ -1646,7 +1646,7 @@ void CheckMode(INT8U Key)
 	}
 	break;
 	/**********************Mode 1 END***********************************/
-	/*************Mode 2 start***********************/
+	/*************Mode 2 start Battery recharge ***********************/
 	//power on of initial:	Mode=2;Step=0;RunMode=1;RunStep=0;
 	case 2:
 	{

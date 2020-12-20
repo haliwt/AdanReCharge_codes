@@ -85,11 +85,19 @@ void InitKey(void)
 
 void InitIMP(void)
 {
-  P3M2 = 0x50;                        
-  P3_2=1;
-  P1M5 = 0x50;                        
-  P1_5=1;
+
+  P1M5 = 0X50;   //close switch Left   pull down 
+  P3M2 = 0x50;   //close switch Right  pull down
+
+
+  P1_5 =0;
+  P3_2 =0;
+
+  
   IMP=0;
+
+
+  
 }
 
 void ReadIMP(void)

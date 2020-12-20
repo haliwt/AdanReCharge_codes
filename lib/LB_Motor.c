@@ -423,7 +423,7 @@ void InitMotorRight(void)
     P1_3=0;
     P1_4=0;
 	PWM0_MAP = 0x13;					//PWM0通道映射P14口
-	PWM01_MAP = 0x12;					//PWM01通道映射P11口
+	PWM01_MAP = 0x11;					//PWM01通道映射P11口
     PWM0C = 0x01;						//PWM0高有效，PWM01高有效，时钟8分频 
     PWMM |= 0x10;						//PWM0工作于互补模式						
 
@@ -465,7 +465,7 @@ void InitMotorRight(void)
     P1_2=0;
     P1_3=0;
     P1_4=0;
-	PWM0_MAP = 0x13;					//PWM0通道映射P13口
+	PWM0_MAP = 0x14;					//PWM0通道映射P13口
 	PWM01_MAP = 0x12;					//PWM01通道映射P12口
     PWM0C = 0x01;						//PWM0高有效，PWM01高有效，时钟8分频 
     PWMM |= 0x10;						//PWM0工作于互补模式
@@ -510,7 +510,7 @@ void InitMotorRight(void)
     P1_2=0;
     P1_3=0;
     P1_4=0;
-	PWM0_MAP = 0x14;					//PWM0通道映射P14口
+	PWM0_MAP = 0x13;					//PWM0通道映射P14口
 	PWM01_MAP = 0x11;					//PWM01通道映射P11口
     PWM0C = 0x01;						//PWM0高有效，PWM01高有效，时钟8分频 
     PWMM |= 0x10;						//PWM0工作于互补模式						
@@ -545,7 +545,7 @@ void InitMotorRight(void)
     P1_2=0;
     P1_3=0;
     P1_4=0;
-	PWM0_MAP = 0x13;					//PWM0通道映射P13口
+	PWM0_MAP = 0x14;					//PWM0通道映射P13口
 	PWM01_MAP = 0x12;					//PWM01通道映射P12口
     PWM0C = 0x01;						//PWM0高有效，PWM01高有效，时钟8分频 
     PWMM |= 0x10;						//PWM0工作于互补模式						
@@ -580,7 +580,7 @@ void InitMotorRightSlow(void)
     P1_2=0;
     P1_3=0;
     P1_4=0;
-	PWM0_MAP = 0x14;					//PWM0通道映射P14口
+	PWM0_MAP = 0x13;					//PWM0通道映射P14口
 	PWM01_MAP = 0x11;					//PWM01通道映射P11口
     PWM0C = 0x01;						//PWM0高有效，PWM01高有效，时钟8分频 
     PWMM |= 0x10;						//PWM0工作于互补模式						
@@ -616,7 +616,7 @@ void InitMotorRightSlow(void)
     P1_2=0;
     P1_3=0;
     P1_4=0;
-	PWM0_MAP = 0x13;					//PWM0通道映射P13口
+	PWM0_MAP = 0x14;					//PWM0通道映射P13口
 	PWM01_MAP = 0x12;					//PWM01通道映射P12口
     PWM0C = 0x01;						//PWM0高有效，PWM01高有效，时钟8分频 
     PWMM |= 0x10;						//PWM0工作于互补模式						
