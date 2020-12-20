@@ -311,7 +311,7 @@ void CheckRechargeIR()
 		IRLocation.FarPreRight++;
 	  }
 
-	  #if 0
+	  #if 1
 	  Usart1Send[0]=4;
 	  Usart1Send[1]=Mid_ReadIR.ReadIR[0];
 	  Usart1Send[2]=Mid_ReadIR.ReadIR[1];
