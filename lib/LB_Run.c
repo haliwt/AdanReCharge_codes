@@ -807,6 +807,7 @@ void  CheckRun()
 				  }
 			  else if(RunMs <5){ //50ms
 		              
+					   i=0;
 					  if(IRLocation.Number==420)IRLocation.Number=0;
 					   IRLocation.Number++; 
 					   ClearAllIR();
@@ -822,49 +823,61 @@ void  CheckRun()
 			     SetStop();
 				 Delay_ms(500);
 		         CheckRechargeIR();
-				 if(IRLocation.NearMid>0)
-				{
-					RunStep=0x50;
-				}
-				else if(IRLocation.NearPreRight>0)
-				{
-					RunStep=0x50;
-					InitMotorForwardLeftSlow();
-				}
-				else if(IRLocation.NearPreLeft>0)
-				{
-					RunStep=0x50;
-					InitMotorForwardRightSlow();
-				}
-				else if(IRLocation.NearRight>0)
-				{
-					RunStep=0x50;
-					InitMotorForwardLeftSlow();
-				}
-				else if(IRLocation.NearLeft>0)
-				{
-					RunStep=0x50;
-					InitMotorForwardRightSlow();
-				}
-				
-		        else if(Mid_ReadIR.ReadIR[0] > 0x08){
+				 i++;
+				 if(i<11){
+						 if(IRLocation.NearMid>0)
+						{
+							RunStep=0x50;
+							i= 20;
+						}
+						else if(IRLocation.NearPreRight>0)
+						{
+							i= 20;
+							RunStep=0x50;
+							InitMotorForwardLeftSlow();
+						}
+						else if(IRLocation.NearPreLeft>0)
+						{
+							i= 20;
+							RunStep=0x50;
+							InitMotorForwardRightSlow();
+						}
+						else if(IRLocation.NearRight>0)
+						{
+							i= 20;
+							RunStep=0x50;
+							InitMotorForwardLeftSlow();
+						}
+						else if(IRLocation.NearLeft>0)
+						{
+							i= 20;
+							RunStep=0x50;
+							InitMotorForwardRightSlow();
+						}
 						
-							RunStep=0x42;  //直行
-							RunMs =0 ;
-	
-						
-                 }
+				        else if(Mid_ReadIR.ReadIR[0] > 0x08){
+								
+									i= 20;
+									RunStep=0x42;  //直行
+									RunMs =0 ;
+			
+								
+		                 }
+				 }
 				else if(Mid_ReadIR.ReadIR[0]==0x08 && Mid_ReadIR.ReadIR[1]==0x68){
 						RunStep = 0x40;
 						RunMs = 0;
+				         i= 0;
 				       
 
 		        }
+				 	
 		         
 		break;
 		case 0x42:
 			      if(RunMs< 10){
 				  	   ClearAllIR();
+					   i=0;
 		              InitMotorForwardSlow();
 			      	}
 				  else RunStep = 0x43;
@@ -878,40 +891,49 @@ void  CheckRun()
 				 Delay_ms(500);
 				 RunMs =0;
 		         CheckRechargeIR();
-				if(IRLocation.NearMid>0)
-				{
-					RunStep=0x50;
-				}
-				else if(IRLocation.NearPreRight>0)
-				{
-					RunStep=0x50;
-					InitMotorForwardLeftSlow();
-				}
-				else if(IRLocation.NearPreLeft>0)
-				{
-					RunStep=0x50;
-					InitMotorForwardRightSlow();
-				}
-				else if(IRLocation.NearRight>0)
-				{
-					RunStep=0x50;
-					InitMotorForwardLeftSlow();
-				}
-				else if(IRLocation.NearLeft>0)
-				{
-					RunStep=0x50;
-					InitMotorForwardRightSlow();
-				}
-				 
-		       
-		        else if(Mid_ReadIR.ReadIR[0] > 0x08){
-						
-							RunStep=0x40;  //直行
-							RunMs =0 ;
-							ClearAllIR();
+				 i++;
+				 if(i<11){
+					if(IRLocation.NearMid>0)
+					{
+						RunStep=0x50;
+						i=20;
+					}
+					else if(IRLocation.NearPreRight>0)
+					{
+						RunStep=0x50;
+						i=20;
+						InitMotorForwardLeftSlow();
+					}
+					else if(IRLocation.NearPreLeft>0)
+					{
+						RunStep=0x50;
+						i=20;
+						InitMotorForwardRightSlow();
+					}
+					else if(IRLocation.NearRight>0)
+					{
+						RunStep=0x50;
+						i=20;
+						InitMotorForwardLeftSlow();
+					}
+					else if(IRLocation.NearLeft>0)
+					{
+						RunStep=0x50;
+						i=20;
+						InitMotorForwardRightSlow();
+					}
+					 
+			       
+			        else if(Mid_ReadIR.ReadIR[0] > 0x08){
 							
-						
-                 }
+								RunStep=0x40;  //直行
+								RunMs =0 ;
+								i=20;
+								
+								
+							
+	                 }
+				 }
 				 else if(Mid_ReadIR.ReadIR[0]==0x08 && Mid_ReadIR.ReadIR[1]==0x68){
 
 
