@@ -246,7 +246,7 @@ void CheckRechargeIR()
 0xa8,0x61,0x80,	  //Ô¶ÓÒ		17
 0x61,0x80,0x00,   //Ô¶ÓÒ		18
 0xaa,0x86,0x00,	  //Ô¶ÓÒ		19
-
+0xAA,0X00,0X00,   //½üÓÒ      20  //WT.EDIT --ÔÚ»Ø³ä×ùµÄÓÒ±ß¡£
 
 */
 	
@@ -309,6 +309,10 @@ void CheckRechargeIR()
 	  	case 18:
 	  	case 19:
 		IRLocation.FarPreRight++;
+		break; //WT.EDIT 
+ 		case 20:  //WT.EDIT 
+           IRLocation.FarPreRight++;
+		break;
 	  }
 
 	  #if 1
@@ -323,9 +327,9 @@ void CheckRechargeIR()
 
 
 
-//			Mid_ReadIR.ReadIR[0]=0;
-//		    Mid_ReadIR.ReadIR[1]=0;
-//			Mid_ReadIR.ReadIR[2]=0;
+  		    Mid_ReadIR.ReadIR[0]=0;
+		    Mid_ReadIR.ReadIR[1]=0;
+			Mid_ReadIR.ReadIR[2]=0;
 			Mid_ReadIR.ReadIRFlag=0;
 
 	}

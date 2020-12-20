@@ -785,7 +785,7 @@ void  CheckRun()
 				else if(IRLocation.FarMid>0)
 				{
 					//RunStep=0x40;
-					InitMotorForwardSlow();
+					//InitMotorForwardSlow();
 					RunNoIRsenorTime=0;
 					RunNoIRsenorLastStep=1;
 				}
@@ -798,7 +798,7 @@ void  CheckRun()
 				}
 				else if(IRLocation.FarPreLeft>0)
 				{
-					InitMotorForwardRightSlow();
+					//InitMotorForwardRightSlow();
 					//RunStep=0x46;
 					RunNoIRsenorTime=0;
 					RunNoIRsenorLastStep=3;
@@ -806,14 +806,14 @@ void  CheckRun()
 				else if(IRLocation.FarRight>0)
 				{
 					//RunStep=0x49;
-					InitMotorForwardLeftSlow();
+					//InitMotorForwardLeftSlow();
 					RunNoIRsenorTime=0;
 					RunNoIRsenorLastStep=2;
 				}
 				else if(IRLocation.FarLeft>0)
 				{
 					//RunStep=0x4c;
-					InitMotorForwardRightSlow();
+					//InitMotorForwardRightSlow();
 					RunNoIRsenorTime=0;
 					RunNoIRsenorLastStep=3;
 				}
@@ -830,13 +830,13 @@ void  CheckRun()
 						}
 						else	if(RunNoIRsenorLastStep==2)
 						{
-							InitMotorForwardRightSlow();
+							//InitMotorForwardRightSlow();
 							RunNoIRsenorTime=0;
 							RunStep=0x41;
 						}
 						else	if(RunNoIRsenorLastStep==3)
 						{
-							InitMotorForwardLeftSlow();
+							//InitMotorForwardLeftSlow();
 							RunNoIRsenorTime=0;
 							RunStep=0x42;
 						}
@@ -876,9 +876,7 @@ void  CheckRun()
 
 				}
 
-
-
-            }
+             }
            else {
 			if(RunMs>30)
 			{
@@ -930,20 +928,20 @@ void  CheckRun()
 				else if(IRLocation.FarMid>0)
 				{
 					RunStep=0x40;
-					InitMotorForwardSlow();
+					//InitMotorForwardSlow();
 					RunNoIRsenorTime=0;
 					RunNoIRsenorLastStep=1;
 				}
 				else if(IRLocation.FarPreRight>0)
 				{
-					InitMotorForwardLeftSlow();
+					//InitMotorForwardLeftSlow();
 					RunStep=0x40;
 					RunNoIRsenorTime=0;
 					RunNoIRsenorLastStep=2;
 				}
 				else if(IRLocation.FarPreLeft>0)
 				{
-					InitMotorForwardRightSlow();
+					//InitMotorForwardRightSlow();
 					RunStep=0x40;
 					RunNoIRsenorTime=0;
 					RunNoIRsenorLastStep=3;
@@ -951,14 +949,14 @@ void  CheckRun()
 				else if(IRLocation.FarRight>0)
 				{
 					RunStep=0x40;
-					InitMotorForwardLeftSlow();
+					//InitMotorForwardLeftSlow();
 					RunNoIRsenorTime=0;
 					RunNoIRsenorLastStep=2;
 				}
 				else if(IRLocation.FarLeft>0)
 				{
 					RunStep=0x40;
-					InitMotorForwardRightSlow();
+					//InitMotorForwardRightSlow();
 					RunNoIRsenorTime=0;
 					RunNoIRsenorLastStep=3;
 				}
@@ -986,6 +984,7 @@ void  CheckRun()
            	}
 		}
 		break;
+		//FarPreRight
 		case 0x42:
 		{
 			if(RunMs>30)
@@ -1038,20 +1037,22 @@ void  CheckRun()
 				else if(IRLocation.FarMid>0)
 				{
 					RunStep=0x40;
-					InitMotorForwardSlow();
+					//InitMotorForwardSlow();
 					RunNoIRsenorTime=0;
 					RunNoIRsenorLastStep=1;
 				}
-				else if(IRLocation.FarPreRight>0)
+				else if(IRLocation.FarPreRight>0)//ср
 				{
-					InitMotorForwardLeftSlow();
-					RunStep=0x40;
+					//InitMotorForwardLeftSlow();
+					//RunStep=0x40;
+					RunMs = 0;   //WT.EDIT 
+					RunStep = 0x43; //WT.EDIT 
 					RunNoIRsenorTime=0;
 					RunNoIRsenorLastStep=2;
 				}
 				else if(IRLocation.FarPreLeft>0)
 				{
-					InitMotorForwardRightSlow();
+					//InitMotorForwardRightSlow();
 					RunStep=0x40;
 					RunNoIRsenorTime=0;
 					RunNoIRsenorLastStep=3;
@@ -1059,14 +1060,14 @@ void  CheckRun()
 				else if(IRLocation.FarRight>0)
 				{
 					RunStep=0x40;
-					InitMotorForwardLeftSlow();
+					//InitMotorForwardLeftSlow();
 					RunNoIRsenorTime=0;
 					RunNoIRsenorLastStep=2;
 				}
 				else if(IRLocation.FarLeft>0)
 				{
 					RunStep=0x40;
-					InitMotorForwardRightSlow();
+					//InitMotorForwardRightSlow();
 					RunNoIRsenorTime=0;
 					RunNoIRsenorLastStep=3;
 				}
@@ -1079,7 +1080,7 @@ void  CheckRun()
 						RunNoIRsenorTime=0;
 						if(RunNoIRsenorLastStep==2)
 						{
-							InitMotorForwardRightSlow();
+							//InitMotorForwardRightSlow();
 							RunNoIRsenorTime=0;
 							RunStep=0x41;
 						}
@@ -1091,6 +1092,24 @@ void  CheckRun()
 				ClearAllIR();
 			}
 		}
+		break;
+
+		case 0x43 :
+               if(RunMs< 10){
+
+                InitMotorLeft();//CCW 
+
+
+			   }
+			   else {
+
+					RunMs =0 ;
+					RunStep = 0x40;
+
+
+			   }
+
+
 		break;
 
        case 0x50:
@@ -1127,6 +1146,7 @@ void  CheckRun()
 				}
 				else if(IRLocation.NearPreRight>0)
 				{
+
 					InitMotorForwardLeftSlow();
 					RunNoIRsenorTime=0;
 					RunNoIRsenorLastStep=2;					
