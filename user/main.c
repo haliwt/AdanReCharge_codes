@@ -93,12 +93,21 @@ void main(void)
 	//SetEdge(0xFA);
 	while(1)
 	{
-	   //kk=ReadKey();
+	   if(P2_1 ==1|| P1_0 ==1){//回充和电源适配器DC输入检测，没有用中??
+	      SetStop();
+		 LedGreenON();
+		 Delay_ms(500);
+		 LedGreenOff();
+		 Delay_ms(500);
+	  
+	  }
+      else{
+	//kk=ReadKey();
 	   //CheckWall();
-	   CheckRun();
-	  // CheckHandsetIR();
-	   CheckRechargeIR();
-	  CheckMode(kk);
+		   CheckRun();
+		   CheckRechargeIR();
+		  CheckMode(kk);
+      }
 
 	}
 
@@ -147,22 +156,22 @@ void TIMER1_Rpt(void) interrupt TIMER1_VECTOR
 	{
 	  t_1s=0;
 	  MidWallOffSecond++;
-      #if 1
+      #if 0
 	  if(SendCount>=12)
 	  {
-	  Usart1Send[0]=12;
-	  Usart1Send[1]=IRLocation.NearMid;
-	  Usart1Send[2]=IRLocation.NearPreRight;
-	  Usart1Send[3]=IRLocation.NearPreLeft;
-	  Usart1Send[4]=IRLocation.NearRight;
-	  Usart1Send[5]=IRLocation.NearLeft;
-	  Usart1Send[6]=IRLocation.FarMid;
-	  Usart1Send[7]=IRLocation.FarPreRight;
-	  Usart1Send[8]=IRLocation.FarPreLeft;
-	  Usart1Send[9]=IRLocation.FarRight;
-	  Usart1Send[10]=IRLocation.FarLeft;
-	  Usart1Send[11]=IMP;
-	  Usart1Send[12]=RunStep;
+//	  Usart1Send[0]=12;
+//	  Usart1Send[1]=IRLocation.NearMid;
+//	  Usart1Send[2]=IRLocation.NearPreRight;
+//	  Usart1Send[3]=IRLocation.NearPreLeft;
+//	  Usart1Send[4]=IRLocation.NearRight;
+//	  Usart1Send[5]=IRLocation.NearLeft;
+//	  Usart1Send[6]=IRLocation.FarMid;
+//	  Usart1Send[7]=IRLocation.FarPreRight;
+//	  Usart1Send[8]=IRLocation.FarPreLeft;
+//	  Usart1Send[9]=IRLocation.FarRight;
+//	  Usart1Send[10]=IRLocation.FarLeft;
+//	  Usart1Send[11]=IMP;
+//	  Usart1Send[12]=RunStep;
  	  SendCount=1;
 	  SBUF=Usart1Send[SendCount];
 	   }

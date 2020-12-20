@@ -733,7 +733,7 @@ void  CheckRun()
 			if(RunMs>30)
 			{
 				RunMs=0;
-				#if 1
+				#if 0
 				if(SendCount>=12)
 				{
 					Usart1Send[0]=12;
@@ -848,7 +848,7 @@ void  CheckRun()
 			if(RunMs>30)
 			{
 				RunMs=0;
-				#if 1
+				#if 0
 				if(SendCount>=12)
 				{
 					Usart1Send[0]=12;
@@ -954,7 +954,7 @@ void  CheckRun()
 			if(RunMs>30)
 			{
 				RunMs=0;
-				#if 1
+				#if 0
 				if(SendCount>=12)
 				{
 					Usart1Send[0]=12;
@@ -1060,7 +1060,7 @@ void  CheckRun()
 			if(RunMs>30)
 			{
 				RunMs=0;
-				#if 1
+				#if 0
 				if(SendCount>=12)
 				{
 					Usart1Send[0]=12;
@@ -1521,7 +1521,7 @@ void CheckMode(INT8U Key)
 			}
 		}
 		break;
-		// ����еƹ�Ƶ�� 0.5Hz
+		// ����еƹ�Ƶ��?0.5Hz
 		case 5:
 		{
 			if(RunSecond>9)
