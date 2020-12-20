@@ -111,8 +111,9 @@ void main(void)
       else{
 	//kk=ReadKey();
 	   //CheckWall();
-		   CheckRun();
+		   
 		   CheckRechargeIR();
+	       CheckRun();
 		  CheckMode(kk);
       }
 	  #endif 

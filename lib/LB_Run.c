@@ -103,6 +103,7 @@ INT8U readRunTime()
 ***********************************************************************/
 void  CheckRun()
 {
+    static INT16U i ;
 
 	switch(RunMode)
 	{
@@ -748,102 +749,54 @@ void  CheckRun()
 					  SBUF=Usart1Send[SendCount];
 				}
 				#endif 
-                //WT.EDIT
+                //WT.EDIT,don't be detected signal IR
 				if(Mid_ReadIR.ReadIR[0]==0x08 && Mid_ReadIR.ReadIR[1]==0x68){
                            //set left run one step
-                           
-						
+                          
+                           InitMotorLeft();//CCW
+                           i++ ;
+                           if(RunMs < 10){
+                              // InitMotorLeft();//CCW
+                               if( Mid_ReadIR.ReadIR[0] > 0x08){
+							   	    if(IRLocation.NearMid>0)
+									{
+										 ClearAllIR();
+										RunStep=0x50;
+										RunMs =0;
+										break;
+									}
+									else{
 
+										 ClearAllIR();
+										RunStep = 0x41;
+										RunMs =0 ;
+										break;
+									}		   	  
+							     	
+									i=0;
+							        break;
+                                }
+							   else{
+							   	ClearAllIR();
+							   	RunMs = 0;
+								RunStep = 0x40;
+								if(i>300){
+									i=0;
+									RunStep = 0x41;
+								     ClearAllIR();
+								    break;
+								}
+							   }
+                           }
+						   
+						   
+                    }
+				
 				}
-				if(IRLocation.NearMid>0)
-				{
-					RunStep=0x50;
-				}
-				else if(IRLocation.NearPreRight>0)
-				{
-					//RunStep=0x53;
-					RunStep=0x50;
-				}
-				else if(IRLocation.NearPreLeft>0)
-				{
-					//RunStep=0x56;
-					RunStep=0x50;
-				}
-				else if(IRLocation.NearRight>0)
-				{
-					//RunStep=0x59;
-					RunStep=0x50;
-				}
-				else if(IRLocation.NearLeft>0)
-				{
-					//RunStep=0x5c;
-					RunStep=0x50;
-				}
-				else if(IRLocation.FarMid>0)
-				{
-					//RunStep=0x40;
-					InitMotorForwardSlow();
-					RunNoIRsenorTime=0;
-					RunNoIRsenorLastStep=1;
-				}
-				else if(IRLocation.FarPreRight>0)
-				{
-					InitMotorForwardLeftSlow();
-					//RunStep=0x43;
-					RunNoIRsenorTime=0;
-					RunNoIRsenorLastStep=2;
-				}
-				else if(IRLocation.FarPreLeft>0)
-				{
-					InitMotorForwardRightSlow();
-					//RunStep=0x46;
-					RunNoIRsenorTime=0;
-					RunNoIRsenorLastStep=3;
-				}
-				else if(IRLocation.FarRight>0)
-				{
-					//RunStep=0x49;
-					InitMotorForwardLeftSlow();
-					RunNoIRsenorTime=0;
-					RunNoIRsenorLastStep=2;
-				}
-				else if(IRLocation.FarLeft>0)
-				{
-					//RunStep=0x4c;
-					InitMotorForwardRightSlow();
-					RunNoIRsenorTime=0;
-					RunNoIRsenorLastStep=3;
-				}
-				else
-				{
-					RunNoIRsenorTime++;
-					if(RunNoIRsenorTime>9)
-					{
-
-						RunNoIRsenorTime=0;
-						if(RunNoIRsenorLastStep==1)
-						{
-
-						}
-						else	if(RunNoIRsenorLastStep==2)
-						{
-							InitMotorForwardRightSlow();
-							RunNoIRsenorTime=0;
-							RunStep=0x41;
-						}
-						else	if(RunNoIRsenorLastStep==3)
-						{
-							InitMotorForwardLeftSlow();
-							RunNoIRsenorTime=0;
-							RunStep=0x42;
-						}
-
-
-					}
-				}
+				
 				ClearAllIR();
 			}
-		}
+	
 		break;
 		case 0x41:
 		{
