@@ -734,7 +734,7 @@ void  CheckRun()
 		break;
 		//far target 
 		case 0x40:
-		{
+		
 			if(RunMs>30)
 			{
 				RunMs=0;
@@ -747,162 +747,44 @@ void  CheckRun()
 					  Usart1Send[3]=Mid_ReadIR.ReadIR[2];
 					  SendCount=1;
 					  SBUF=Usart1Send[SendCount];
-				}
+					}
 				#endif 
+			  }
                 //WT.EDIT,don't be detected signal IR
-				if(Mid_ReadIR.ReadIR[0]==0x08 && Mid_ReadIR.ReadIR[1]==0x68){
+			  if(Mid_ReadIR.ReadIR[0]==0x08 && Mid_ReadIR.ReadIR[1]==0x68){
                            //set left run one step
                           
                            InitMotorLeft();//CCW
-                           i++ ;
-                           if(RunMs < 10){
-                              // InitMotorLeft();//CCW
-                               if( Mid_ReadIR.ReadIR[0] > 0x08){
-							   	    if(IRLocation.NearMid>0)
-									{
-										 ClearAllIR();
-										RunStep=0x50;
-										RunMs =0;
-										break;
-									}
-									else{
+          
+                           if(RunMs < 5){
 
-										 ClearAllIR();
-										RunStep = 0x41;
-										RunMs =0 ;
-										break;
-									}		   	  
-							     	
-									i=0;
-							        break;
-                                }
-							   else{
-							   	ClearAllIR();
-							   	RunMs = 0;
-								RunStep = 0x40;
-								if(i>300){
-									i=0;
-									RunStep = 0x41;
-								     ClearAllIR();
-								    break;
-								}
-							   }
-                           }
-						   
-						   
-                    }
-				
-				}
-				
-				ClearAllIR();
-			}
-	
+							  RunStep = 0x41 ;
+							   break;
+                             
+                            }
+			  }
+					
 		break;
 		case 0x41:
-		{
-			if(RunMs>30)
-			{
-				RunMs=0;
-				#if 0
-				if(SendCount>=12)
-				{
-					Usart1Send[0]=12;
-					Usart1Send[1]=IRLocation.NearMid;
-					Usart1Send[2]=IRLocation.NearPreRight;
-					Usart1Send[3]=IRLocation.NearPreLeft;
-					Usart1Send[4]=IRLocation.NearRight;
-					Usart1Send[5]=IRLocation.NearLeft;
-					Usart1Send[6]=IRLocation.FarMid;
-					Usart1Send[7]=IRLocation.FarPreRight;
-					Usart1Send[8]=IRLocation.FarPreLeft;
-					Usart1Send[9]=IRLocation.FarRight;
-					Usart1Send[10]=IRLocation.FarLeft;
-					Usart1Send[11]=RunNoIRsenorLastStep;
-					Usart1Send[12]=RunStep;
-					SendCount=1;
-					SBUF=Usart1Send[SendCount];
-				}
-				#endif 
-				if(IRLocation.NearMid>0)
-				{
-					RunStep=0x50;
-				}
-				else if(IRLocation.NearPreRight>0)
-				{
-					//RunStep=0x53;
-					RunStep=0x50;
-				}
-				else if(IRLocation.NearPreLeft>0)
-				{
-					//RunStep=0x56;
-					RunStep=0x50;
-				}
-				else if(IRLocation.NearRight>0)
-				{
-					//RunStep=0x59;
-					RunStep=0x50;
-				}
-				else if(IRLocation.NearLeft>0)
-				{
-					//RunStep=0x5c;
-					RunStep=0x50;
-				}
-				else if(IRLocation.FarMid>0)
-				{
-					RunStep=0x40;
-					InitMotorForwardSlow();
-					RunNoIRsenorTime=0;
-					RunNoIRsenorLastStep=1;
-				}
-				else if(IRLocation.FarPreRight>0)
-				{
-					InitMotorForwardLeftSlow();
-					RunStep=0x40;
-					RunNoIRsenorTime=0;
-					RunNoIRsenorLastStep=2;
-				}
-				else if(IRLocation.FarPreLeft>0)
-				{
-					InitMotorForwardRightSlow();
-					RunStep=0x40;
-					RunNoIRsenorTime=0;
-					RunNoIRsenorLastStep=3;
-				}
-				else if(IRLocation.FarRight>0)
-				{
-					RunStep=0x40;
-					InitMotorForwardLeftSlow();
-					RunNoIRsenorTime=0;
-					RunNoIRsenorLastStep=2;
-				}
-				else if(IRLocation.FarLeft>0)
-				{
-					RunStep=0x40;
-					InitMotorForwardRightSlow();
-					RunNoIRsenorTime=0;
-					RunNoIRsenorLastStep=3;
-				}
-				else
-				{
-					RunNoIRsenorTime++;
-					if(RunNoIRsenorTime>9)
-					{
-
-						RunNoIRsenorTime=0;
-
-						//else	if(RunNoIRsenorLastStep==3)
+		
+			     SetStop();
+				 Delay_ms(100);
+		         if(Mid_ReadIR.ReadIR[0] > 0x08){
+						if(IRLocation.NearMid>0)
 						{
-							InitMotorForwardLeftSlow();
-							RunNoIRsenorTime=0;
-							RunStep=0x42;
+							RunStep=0x50;
+							ClearAllIR();
+							break;
 						}
+                 }
+				 else{
+						RunStep = 0x40;
+						RunMs = 0;
+				        ClearAllIR();
 
-
-					}
-				}
-				ClearAllIR();
-			}
-		}
+				 }
+				 ClearAllIR();
+		         
 		break;
 		case 0x42:
 		{
