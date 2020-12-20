@@ -187,7 +187,7 @@ void  CheckRun()
 		case 5:
 			if(RunMs>20)
 			{
-				InitMotorLeft();
+				InitMotorLeft(); //CCW turn round
 				RunMs=0;
 				RunStep=6;
 			}
@@ -292,7 +292,7 @@ void  CheckRun()
 		case 9:
 			if(RunMs>20)
 			{
-				InitMotorLeft();
+				InitMotorLeft(); //CCW
 				RunMs=0;
 				RunStep=10;
 			}
@@ -641,6 +641,9 @@ void  CheckRun()
 		}
 	}
 	break;
+	/********************Mode =1 END***********************************/
+	/******************************************************/
+	//Mode =2 start recharge battery
 	case 2:
 	{
 
@@ -728,31 +731,30 @@ void  CheckRun()
 			}
 		}
 		break;
+		//far target 
 		case 0x40:
 		{
 			if(RunMs>30)
 			{
 				RunMs=0;
-				#if 0
+				#if 1
 				if(SendCount>=12)
 				{
-					Usart1Send[0]=12;
-					Usart1Send[1]=IRLocation.NearMid;
-					Usart1Send[2]=IRLocation.NearPreRight;
-					Usart1Send[3]=IRLocation.NearPreLeft;
-					Usart1Send[4]=IRLocation.NearRight;
-					Usart1Send[5]=IRLocation.NearLeft;
-					Usart1Send[6]=IRLocation.FarMid;
-					Usart1Send[7]=IRLocation.FarPreRight;
-					Usart1Send[8]=IRLocation.FarPreLeft;
-					Usart1Send[9]=IRLocation.FarRight;
-					Usart1Send[10]=IRLocation.FarLeft;
-					Usart1Send[11]=RunNoIRsenorLastStep;
-					Usart1Send[12]=RunStep;
-					SendCount=1;
-					SBUF=Usart1Send[SendCount];
+					 Usart1Send[0]=3;
+					  Usart1Send[1]=Mid_ReadIR.ReadIR[0];
+					  Usart1Send[2]=Mid_ReadIR.ReadIR[1];
+					  Usart1Send[3]=Mid_ReadIR.ReadIR[2];
+					  SendCount=1;
+					  SBUF=Usart1Send[SendCount];
 				}
 				#endif 
+                //WT.EDIT
+				if(Mid_ReadIR.ReadIR[0]==0x08 && Mid_ReadIR.ReadIR[1]==0x68){
+                           //set left run one step
+                           
+						
+
+				}
 				if(IRLocation.NearMid>0)
 				{
 					RunStep=0x50;

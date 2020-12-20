@@ -93,7 +93,14 @@ void main(void)
 	//SetEdge(0xFA);
 	while(1)
 	{
-	   if(P2_1 ==1|| P1_0 ==1){//回充和电源适配器DC输入检测，没有用中??
+	  
+		//InitMotorForwardRight();//直线运行
+		//InitMotorForwardRightSlow();
+		//InitMotorRight(); //CW
+		//InitMotorLeft();  //CCW
+		
+		#if 1
+		if(P2_1 ==1|| P1_0 ==1){//回充和电源适配器DC输入检测，没有用中??
 	      SetStop();
 		 LedGreenON();
 		 Delay_ms(500);
@@ -108,6 +115,7 @@ void main(void)
 		   CheckRechargeIR();
 		  CheckMode(kk);
       }
+	  #endif 
 
 	}
 
