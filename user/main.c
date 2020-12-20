@@ -130,12 +130,12 @@ void TIMER1_Rpt(void) interrupt TIMER1_VECTOR
   static INT8U t_100ms;
   static INT8U t_1s;
   //IRTime++;
-  t_10ms++;
+  t_10ms++;  //0.1ms 
   ReadAD5ms();
 
   MidIR_Count();
 
-  if(t_10ms>99)
+  if(t_10ms>99) //10ms
   {
   	t_10ms=0;
 	t_100ms++;
