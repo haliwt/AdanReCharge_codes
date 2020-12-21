@@ -892,7 +892,11 @@ void  CheckRun()
 
 			 }
 			 
-			 //else if(IRLocation.CloseList[1] ==IRLocation.CloseList[0]){
+			 else if(IRLocation.CloseList[5] ==IRLocation.CloseList[1] && IRLocation.CloseList[1]!=0){
+						RunStep = 0x45; //line 
+						RunMs = 0;
+
+			 }
 			 else{
 
 			     	  RunMs =0 ;
@@ -1020,9 +1024,14 @@ void  CheckRun()
 			 }
 		
 			 else if(IRLocation.CloseList[5] <IRLocation.CloseList[4]){
-			 	        RunStep = 0x43; //line 
+			 	        RunStep = 0x43; //CW
 						RunMs = 0;
 			 			IRLocation.irRightValue=1;
+
+			 }
+			 else if(IRLocation.CloseList[5] ==IRLocation.CloseList[1] && IRLocation.CloseList[1]!=0){
+						RunStep = 0x45; //line 
+						RunMs = 0;
 
 			 }
               else {
