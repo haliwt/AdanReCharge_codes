@@ -761,7 +761,7 @@ void  CheckRun()
 				if(IRLocation.NearMid>0)
 				{
                     if(Mid_ReadIR.ReadIR[0] ==0x11|| Mid_ReadIR.ReadIR[0] ==0x86||Mid_ReadIR.ReadIR[0] ==0x84 \
-						  ||Mid_ReadIR.ReadIR[0] ==0x18)
+						  ||Mid_ReadIR.ReadIR[0] ==0x18  ||Mid_ReadIR.ReadIR[0] ==0xA8)
 					  RunStep=0x50;
 				}
 				
@@ -789,7 +789,7 @@ void  CheckRun()
 				else if(IRLocation.FarMid>0 )
 				{
 					if(Mid_ReadIR.ReadIR[0] ==0x11|| Mid_ReadIR.ReadIR[0] ==0x86||Mid_ReadIR.ReadIR[0] ==0x84 \
-						  ||Mid_ReadIR.ReadIR[0] ==0x18)
+						  ||Mid_ReadIR.ReadIR[0] ==0x18 ||Mid_ReadIR.ReadIR[0] ==0xA8 )
 					  RunStep=0x50;
 				}
 				else if(IRLocation.FarPreRight>0 || IRLocation.NearPreRight>0 ||IRLocation.FarRight>0)
@@ -821,7 +821,8 @@ void  CheckRun()
 				
 				else
 				{
-					
+					if(Mid_ReadIR.ReadIR[0] !=0)
+						RunStep=0x50;
 
 
 					
