@@ -738,7 +738,7 @@ void  CheckRun()
 			if(RunMs>30)
 			{
 				RunMs=0;
-				#if 1
+				#if 0
 				if(SendCount>=12)
 				{
 					  Usart1Send[0]=3;
@@ -752,12 +752,13 @@ void  CheckRun()
 			  }
 			  i++;
 			  if(i<11){
-			    if(Mid_ReadIR.ReadIR[0]==0x08 && Mid_ReadIR.ReadIR[1]==0x68){
+			    if(Mid_ReadIR.ReadIR[0] ==0x11|| Mid_ReadIR.ReadIR[0] ==0x86||Mid_ReadIR.ReadIR[0] ==0x84 \
+						  ||Mid_ReadIR.ReadIR[0] ==0x18 ||Mid_ReadIR.ReadIR[0]==0xA8 ||Mid_ReadIR.ReadIR[0]==0x08){
                       ClearAllIR();
 					  if(j==10)
 					   RunStep =0x64;
 					  else RunStep = 1;
-				  }
+				}
 				else  if(IRLocation.NearMid>0)
 					{
 						RunStep=0x50;
@@ -798,7 +799,7 @@ void  CheckRun()
 							
 								i=100;
 								j=0;
-								RunStep=0x42;  //Ö±ÐÐ
+								RunStep=0x42;  //Ö±ï¿½ï¿½
 								RunMs =0 ;
 						}
 
@@ -825,7 +826,8 @@ void  CheckRun()
 		         CheckRechargeIR();
 				 i++;
 				 if(i<11){
-						 if(IRLocation.NearMid>0)
+					if(Mid_ReadIR.ReadIR[0] ==0x11|| Mid_ReadIR.ReadIR[0] ==0x86||Mid_ReadIR.ReadIR[0] ==0x84 \
+						  ||Mid_ReadIR.ReadIR[0] ==0x18 ||Mid_ReadIR.ReadIR[0]==0xA8 ||Mid_ReadIR.ReadIR[0]==0x08)
 						{
 							RunStep=0x50;
 							i= 20;
@@ -855,22 +857,20 @@ void  CheckRun()
 							InitMotorForwardRightSlow();
 						}
 						
-				        else if(Mid_ReadIR.ReadIR[0] > 0x08){
+				        else if(Mid_ReadIR.ReadIR[0] > 0 ){
 								
 									i= 20;
-									RunStep=0x42;  //Ö±ÐÐ
+									RunStep=0x42;  //Ö±ï¿½ï¿½
 									RunMs =0 ;
 			
 								
 		                 }
 				 }
-				else if(Mid_ReadIR.ReadIR[0]==0x08 && Mid_ReadIR.ReadIR[1]==0x68){
+				else if(Mid_ReadIR.ReadIR[0]==0){
 						RunStep = 0x40;
 						RunMs = 0;
 				         i= 0;
-				       
-
-		        }
+				}
 				 	
 		         
 		break;
@@ -878,7 +878,7 @@ void  CheckRun()
 			      if(RunMs< 10){
 				  	   ClearAllIR();
 					   i=0;
-		              InitMotorForwardSlow();
+		              InitMotorForwardSlow(); //
 			      	}
 				  else RunStep = 0x43;
 				  	
@@ -926,7 +926,7 @@ void  CheckRun()
 			       
 			        else if(Mid_ReadIR.ReadIR[0] > 0x08){
 							
-								RunStep=0x40;  //Ö±ÐÐ
+								RunStep=0x40;  //Ö±ï¿½ï¿½
 								RunMs =0 ;
 								i=20;
 								
@@ -1415,7 +1415,7 @@ void CheckMode(INT8U Key)
 			}
 		}
 		break;
-		// ï¿½ï¿½ï¿½ï¿½ÐµÆ¹ï¿½Æµï¿½ï¿?0.5Hz
+		// ï¿½ï¿½ï¿½ï¿½ÐµÆ¹ï¿½Æµï¿½ï¿½?0.5Hz
 		case 5:
 		{
 			if(RunSecond>9)
