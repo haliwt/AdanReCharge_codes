@@ -52,6 +52,9 @@ version  : ¼ûÎÄ¼þÎ²¶Ë
 	INT8U  FarRight;
 	INT8U  FarPreLeft;
 	INT8U  FarPreRight;
+
+	INT8U  irLeftValue;
+	INT8U  irRightValue;
 	
 	INT8U  CloseList[6];
 	INT16U  Number;

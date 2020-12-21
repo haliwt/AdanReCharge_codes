@@ -103,7 +103,7 @@ INT8U readRunTime()
 ***********************************************************************/
 void  CheckRun()
 {
-    static INT16U i,j,z ;
+    static INT16U i,j,z,w ;
 
 	switch(RunMode)
 	{
@@ -671,7 +671,7 @@ void  CheckRun()
 			RunStep=1;
 			ClearAllIR();
 			RunMs = 0;
-			}
+			
 		}
 		break;
 		case 1:
@@ -776,7 +776,7 @@ void  CheckRun()
 				else if(IRLocation.FarPreRight>0 ||IRLocation.FarRight>0 )
 				{
                    if(Mid_ReadIR.ReadIR[0] ==0xAA){
-				   	 
+				   	     InitMotorForwardSlow();
 						 RunStep=0x50;
 				         
 						
@@ -806,20 +806,25 @@ void  CheckRun()
 			  }
 				else if (Mid_ReadIR.ReadIR[0] !=0){
 					
-						 InitMotorForwardSlow();
-						RunStep=0x50;
-
+						 
+						RunStep=0x47;
+						RunMs = 0;
 
 					
 				}
 				else if (Mid_ReadIR.ReadIR[0] ==0){
 
 						Mid_ReadIR.ReadIR[0]=0;
-		   
-						 RunStep=0x43; //CCW
-						//RunNoIRsenorTime=0;
-						//RunNoIRsenorLastStep=3;
-						RunMs = 0;
+		                w ++ ;
+				        if(w==1){
+							 RunStep=0x43; //CCW
+							RunMs = 0;
+				        }
+						else{
+							 RunStep=0x47; //CW
+							RunMs = 0;
+							w=0;
+						}
 				
 
 				}
@@ -861,14 +866,21 @@ void  CheckRun()
 			     IRLocation.CloseList[1]=Mid_ReadIR.ReadIR[0];
 				 j=0;
               }
-			 
+
+			 if(IRLocation.irRightValue==1)
+			 {
+				RunStep = 0x45; //line 
+				RunMs = 0;
+				IRLocation.irRightValue=0;
+
+			 }
+			 else {
 			 if(IRLocation.CloseList[1] >IRLocation.CloseList[0]){
 
 			 			RunStep = 0x45;//line run 
 						RunMs = 0;
-
-
-			 }
+			           IRLocation.irLeftValue =1 ;
+			   }
 			 else if(IRLocation.CloseList[1] < IRLocation.CloseList[0]){
 
 			 			RunStep = 0x47;//CW
@@ -879,12 +891,15 @@ void  CheckRun()
 						RunMs = 0;
 
 			 }
-			 else if(IRLocation.CloseList[1] ==IRLocation.CloseList[0]){
+			 
+			 //else if(IRLocation.CloseList[1] ==IRLocation.CloseList[0]){
+			 else{
 
-					    RunStep = 0x43;
-						RunMs = 0;
-			 }
-			            
+			     	  RunMs =0 ;
+				      RunStep = 0x01;
+
+				 }
+			 	}        
                   
 
 
@@ -918,32 +933,35 @@ void  CheckRun()
 			     IRLocation.CloseList[3]=Mid_ReadIR.ReadIR[0];
 				 i=0;
               }
+
+
 			 if(IRLocation.CloseList[3] >IRLocation.CloseList[2]){
 
 			 			RunStep = 0x45;
 						RunMs = 0;
 			 }
-			 if(IRLocation.CloseList[3] < IRLocation.CloseList[2]){
-
-			 			RunStep = 0x01;
-						RunMs = 0;
-             }
-			 if(IRLocation.CloseList[3] ==IRLocation.CloseList[2] && IRLocation.CloseList[2]!=0 ){
+//			 else if(IRLocation.CloseList[3] < IRLocation.CloseList[2]){
+//
+//			 			RunStep = 0x01;
+//						RunMs = 0;
+//             }
+			 else if(IRLocation.CloseList[3] ==IRLocation.CloseList[2] && IRLocation.CloseList[2]!=0 ){
                        // RunStep = 0x45;
-                       IRLocation.NearMid++;
-						RunStep = 0x50;
+                        IRLocation.NearMid++;
+						//RunStep = 0x50;
+						//RunMs = 0;
+
+						RunStep = 0x45;
 						RunMs = 0;
 						
 			 }
-			 if(IRLocation.CloseList[3] ==IRLocation.CloseList[2]){
+			else{
 
-					    RunStep = 0x1;
-						RunMs = 0;
-			            Mid_ReadIR.ReadIR[0]=0;
-			 }
-			            
-
-
+			
+			      RunMs =0 ;
+				  RunStep = 0x01;
+			 
+			}
 
 		break;
 		
@@ -977,28 +995,42 @@ void  CheckRun()
 			     IRLocation.CloseList[5]=Mid_ReadIR.ReadIR[0];
 				 z=0;
               }
+			 
+			 if(IRLocation.irLeftValue ==1){
+
+                        RunStep = 0x45; //line 
+						RunMs = 0;
+			            IRLocation.irLeftValue =0;
+
+
+
+			 }
+             else {
 			 if(IRLocation.CloseList[5] >IRLocation.CloseList[4]){
 
 			 			RunStep = 0x45; //line 
 						RunMs = 0;
 
              }
-			 if(IRLocation.CloseList[5] < IRLocation.CloseList[4]){
-
-			 			RunStep = 0x43; //ccw
-						RunMs = 0;
-             }
-			 if(IRLocation.CloseList[5] ==IRLocation.CloseList[4] && IRLocation.CloseList[4]!=0 ){
+			
+			 else if(IRLocation.CloseList[5] ==IRLocation.CloseList[4] && IRLocation.CloseList[4]!=0 ){
 						RunStep = 0x45; //line 
 						RunMs = 0;
 
 			 }
-			 if(IRLocation.CloseList[5] ==IRLocation.CloseList[4]){
-
-					    RunStep = 0x47;
+		
+			 else if(IRLocation.CloseList[5] <IRLocation.CloseList[4]){
+			 	        RunStep = 0x43; //line 
 						RunMs = 0;
+			 			IRLocation.irRightValue=1;
+
 			 }
-			
+              else {
+			            RunMs =0 ;
+				        RunStep = 0x01;
+             
+                }
+             	}
 
 		break;
 
@@ -1127,9 +1159,11 @@ void  CheckRun()
 		break;
 		}
 	}
-	break;
-	}
 }
+}	
+
+	
+
 /************************************************************************************
  * 	*
     *Function Name:void CheckMode(INT8U Key)
