@@ -437,7 +437,7 @@ void InitMotorRight(void)
 	//			= 511.5us		   		约1.955kHz
 
 	PWM0PH = 0x01;						//周期高4位设置为0x03
-	PWM0PL = 0x0;						//周期低8位设置为0xFF
+	PWM0PL = 0x10;						//周期低8位设置为0xFF
 
 	//占空比计算= 0x0155 / (Fosc / PWM分频系数)		（Fosc见系统时钟配置的部分）
 	//			= 0x0155 / (16000000 / 8)			
