@@ -665,8 +665,8 @@ void  CheckRun()
 		{
 		case 0:
 		{
-           
-			 InitMotorForward();
+           if(RunMs < 10)
+			  InitMotorForward();
 			
 			RunStep=1;
 			ClearAllIR();
@@ -950,12 +950,9 @@ void  CheckRun()
 //						RunMs = 0;
 //             }
 			 else if(IRLocation.CloseList[3] ==IRLocation.CloseList[2] && IRLocation.CloseList[2]!=0 ){
-                       // RunStep = 0x45;
+                    
                         IRLocation.NearMid++;
-						//RunStep = 0x50;
-						//RunMs = 0;
-
-						RunStep = 0x45;
+					    RunStep = 0x45;
 						RunMs = 0;
 						
 			 }
@@ -963,7 +960,7 @@ void  CheckRun()
 
 			
 			      RunMs =0 ;
-				  RunStep = 0x01;
+				  RunStep = 0x50;//WT.EDIT 
 			 
 			}
 
@@ -1039,7 +1036,7 @@ void  CheckRun()
 				        RunStep = 0x01;
              
                 }
-             	}
+             }
 
 		break;
 
