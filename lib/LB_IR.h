@@ -53,7 +53,7 @@ version  : ¼ûÎÄ¼þÎ²¶Ë
 	INT8U  FarPreLeft;
 	INT8U  FarPreRight;
 	
-	INT8U  CloseList[3];
+	INT8U  CloseList[6];
 	INT16U  Number;
 } IRLocationByte;
 
