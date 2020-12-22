@@ -113,7 +113,7 @@ void ReadIMP(void)
     *Return Ref: 1 -battery recharge   0-no recharge
     * 
 ***********************************************************/
-#if 0
+#if 1
 INT8U ReadKey(void)
 {
 

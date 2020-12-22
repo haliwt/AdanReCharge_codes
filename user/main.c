@@ -62,6 +62,7 @@ void InitSysclk(INT8U SYS)
 ***************************************************************************************/
 void main(void)
 {
+	
 	INT8U kk;
 	
 	InitSysclk(1);
@@ -111,62 +112,19 @@ void main(void)
 	  }
       else{
 	        CheckRechargeIR();
+			CheckRun();
 		    kk= HDKey_Scan(0);// kk=ReadKey();
+		    CheckMode(kk);
+			//CleanMode_Run();
 	       //CheckWall();
-		   #if 0
-		   if(kk==2){
-			LedGreenON();
-			SetBuzzerTime(4);
-			Delay_ms(50);
-			SetBuzzerTime(0);
-            Delay_ms(50);
-            SetBuzzerTime(4);
-			Delay_ms(50);
-			SetBuzzerTime(0);
-		     BuzzerOff();
-			 kk=0;
-			 }
-		   #endif 
-		   if(kk){
-			   
-			   switch(kk){
-			   case 1: 
-			        SetStop();
-					LedGreenON();
-					SetBuzzerTime(10);
-					Delay_ms(200);
-					SetBuzzerTime(0);
-					Delay_ms(200);
-					SetBuzzerTime(10);
-					Delay_ms(20);
-					BuzzerOff();
-
-			   break;
- 
-			   case 2: 
-			            SetBuzzerTime(4);
-						Delay_ms(50);
-						BuzzerOff();
-						cleanWorks.iPowerFlag =1;       
-
-			   break;
-
-			   case 3: 
-
-			   break; 
-			  
-		   }
-		   }
-	    #endif 
+		 
+		  
+	   
       }
 	  
 
 	}
-
 }
-
-
-
 void TIMER1_Rpt(void) interrupt TIMER1_VECTOR
 {
   static INT8U t_10ms;

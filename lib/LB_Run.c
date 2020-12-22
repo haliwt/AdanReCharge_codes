@@ -21,9 +21,9 @@ version  : ���ļ�β��
 #include "LB_Led.h"
 #include "LB_IR.h"
 #include "LB_Usart.h"
-#include "LB_Key.h"
-#endif
 
+#endif
+#include "..\lib\LB_Key.h"
 /*******************************************************
   * @?|¨¬???  	?¡§?¡§o?¨¤o?£¤¡§oy
   * @2?¡§oy  	fui_i : ?¡§?¡§o?¨¤¡§o?¨¤??
@@ -1243,8 +1243,11 @@ void CheckMode(INT8U Key)
    if(Key==2){ //works mode ----cleaning button
 
          // if(Mode ==0x65){
-
+               Mode =0 ;
+			   Step =1;
+			   
 				woksKeyNumber++;
+			   #if 0
 				lockled = lockled ^ 0x01;
 				if(lockled==1)
 				LedGreenOff();
@@ -1273,7 +1276,7 @@ void CheckMode(INT8U Key)
 					woksKeyNumber=0;
 				}
 			
-
+          #endif 
 		 // }
 
 			
@@ -1300,18 +1303,26 @@ void CheckMode(INT8U Key)
 			 Delay_ms(20);
 		     BuzzerOff();
 			 Mode = 0x65;
+			 Step = 0x64;
 
 		}
 		break;
 		//power on of initial:	Mode=2;Step=0;RunMode=1;RunStep=0;
 		case 1:
 		{
-			//if(RunSecond==20)
-			{
-				RunSecond=0;
-
-				//Step=2;
-			}
+			
+			   SetBuzzerTime(4);
+				Delay_ms(50);
+				SetBuzzerTime(0);
+				Delay_ms(50);
+				SetBuzzerTime(4);
+				Delay_ms(50);
+				SetBuzzerTime(0);
+				Delay_ms(50);
+				SetBuzzerTime(4);
+				BuzzerOff();
+				Mode =0x65;
+				Step = 0x64;
 		}
 
 		case 10:
