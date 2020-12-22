@@ -643,9 +643,9 @@ void  CheckRun()
 		}
 	}
 	break;
-	/********************Mode =1 END***********************************/
+	/********************RunMode =1 END***********************************/
 	/******************************************************/
-	//Mode =2 start recharge battery
+	//RunMode =2 start recharge battery RunStep RunMode =2 RunStep
 	case 2:
 	{
 
@@ -1205,7 +1205,7 @@ void  CheckRun()
 *************************************************************************************/
 void CheckMode(INT8U Key)
 {
-	static INT8U woksKeyNumber,lockled;
+	
   //  Mode=2;Step=0;RunMode=1;RunStep=0; ---default power on don't press key
 	if(Key==1)
 	{
@@ -1216,129 +1216,93 @@ void CheckMode(INT8U Key)
 			Step=0;
 			Mode =0;
 		}
-		else //  Mode=2;Step=0;RunMode=1;RunStep=0; ---default power on don't press key
-		{
-			if(Step==0)
-			{
-				//20
-				Step=1;
-				ADCtl=1;
-				RunSecond=0;
-			}
-			else	if(Step<20)
-			{
-				//LedBlueON();
-				Mode=1;
-				Step=0;
-				RunSecond=0;
-				SetStop();
-				SetFan(0);
-				SetEdge(0);
-				RunStep=0;
-				//SetBuzzerTime(2);
-			}
 
-		}
+	
 	}
-   if(Key==2){ //works mode ----cleaning button
+    else if(Key==2){ //works mode ----cleaning button
 
-         // if(Mode ==0x65){
-               Mode =0 ;
+          
+               Mode =0;
 			   Step =1;
 			   
 			   cleanWorks.worksNumber++;
-			   #if 0
-				lockled = lockled ^ 0x01;
-				if(lockled==1)
-				LedGreenOff();
-				else LedGreenON();
-			
-
-				if(woksKeyNumber==1){ //input cleaning status "one sound"
-					Mode =3;
-					Step = 0;
-				}
-				else if(woksKeyNumber==2){
-					Mode = 4;
-					Step =0 ;
-				}
-				else if(woksKeyNumber==3){//
-					Mode = 5;
-					Step =0 ;
-				}
-				else if(woksKeyNumber==4){
-					Mode = 6;
-					Step =0 ;
-				}
-				else if(woksKeyNumber==5){
-					Mode = 7;
-					Step =0 ;
-					woksKeyNumber=0;
-				}
-			
-          #endif 
-		 // }
-
-			
-			
-       }
+			   SBUF =   cleanWorks.worksNumber;
+	}
     ////power on of initial: Mode=2;Step=0;RunMode=1;RunStep=0;
 	switch(Mode)
 	{
-	case 0:
-	{
+	    case 0 :
+		{
+		
 		switch(Step)
 		{
+	        
 			//power On and power key press status 
-		case 0:
-		{
-            
-			SetStop();
-            LedGreenON();
-			SetBuzzerTime(10);
-			Delay_ms(200);
-			SetBuzzerTime(0);
-            Delay_ms(200);
-            SetBuzzerTime(10);
-			 Delay_ms(20);
-		     BuzzerOff();
-			 Mode = 0x65;
-			 Step = 0x64;
+			case 0:
+			{
+				
+				SetStop();
+				LedGreenON();
+				SetBuzzerTime(10);
+				Delay_ms(200);
+				SetBuzzerTime(0);
+				Delay_ms(200);
+				SetBuzzerTime(10);
+				Delay_ms(20);
+				BuzzerOff();
+				Mode = 0x65;
+				Step = 0x64;
 
-		}
-		break;
-		//power on of initial:	Mode=2;Step=0;RunMode=1;RunStep=0;
-		case 1:
+			}
+			break;
+         
+   
 		
-			if(cleanWorks.worksNumber ==1){
+		//power on of initial:	Mode=2;Step=0;RunMode=1;RunStep=0;
+		case 1:  //clean Mode
+	    {
+		    SBUF =   cleanWorks.worksNumber;
+			switch(cleanWorks.worksNumber){
+
+			 case runWoksStatus://if(cleanWorks.worksNumber ==1)
 			   SetBuzzerTime(4);
 			    Delay_ms(50);
 				BuzzerOff();
                 cleanWorks.iPowerFlag =1;
-				Mode =0x65;
-				Step = 0x64;
-			}
-			if(cleanWorks.worksNumber ==2){
-                Mode =0x65;
-				Step = 0x64;
+				Mode =0x66;
+			
+				LedGreenON();
+				LedRedON();
+
+			
+			break;
+			case randomMode: //else if(cleanWorks.worksNumber ==2){
+                Mode =0x66;
+			
 				SetBuzzerTime(4);
 			    Delay_ms(50);
 				BuzzerOff();
+				LedRedOff();
+				
 
-			}
-			if(cleanWorks.worksNumber ==3){
+			
+			break;
+			case  zMode://else if(cleanWorks.worksNumber ==3)
 
-					SetBuzzerTime(4);
+				SetBuzzerTime(4);
 				Delay_ms(50);
 				SetBuzzerTime(0);
 				Delay_ms(50);
 				SetBuzzerTime(4);
 				BuzzerOff();
-				 Mode =0x65;
-				Step = 0x64;
+				 Mode =0x66;
+			
+				LedGreenON();
+				LedRedON();
 
 			}
-			if(cleanWorks.worksNumber ==4){
+			break;
+			case bowMode: //else if(cleanWorks.worksNumber ==4){
 				
 			   SetBuzzerTime(4);
 				Delay_ms(50);
@@ -1350,14 +1314,16 @@ void CheckMode(INT8U Key)
 				Delay_ms(50);
 				SetBuzzerTime(4);
 				BuzzerOff();
-				 Mode =0x65;
-				Step = 0x64;
+				 Mode =0x66;
+				
+                LedGreenOff();
+				LedRedOff();
 
-
-			}
-			if(cleanWorks.worksNumber ==5){
-					 Mode =0x65;
-				Step = 0x64;
+			
+			break;
+			case fixpointMode  : //else if(cleanWorks.worksNumber ==5){
+					 Mode =0x66;
+			
 				 SetBuzzerTime(4);
 				Delay_ms(50);
 				SetBuzzerTime(0);
@@ -1372,13 +1338,47 @@ void CheckMode(INT8U Key)
 			     Delay_ms(50);
 				SetBuzzerTime(4);
 				BuzzerOff();
-               cleanWorks.worksNumber =0;
-				 Mode =0x65;
+				LedGreenON();
+				LedRedON();
+              
+				
+             
+			 break;
+			  case standbyMode: //else if(cleanWorks.worksNumber ==6)
+			   SetBuzzerTime(4);
+			    Delay_ms(50);
+				BuzzerOff();
+				Mode =0x66;
 				Step = 0x64;
-
-			}
+				LedGreenOff();
+				LedRedOff();
+			 break;
+			 case recharge: //else if(cleanWorks.worksNumber ==7){
+				SetBuzzerTime(4);
+			    Delay_ms(50);
+				BuzzerOff();
+                cleanWorks.worksNumber =0;
+				Mode =0x66;
+			
+				RunMode =2;
+				RunStep=0;
+				LedRedON();
+			    LedGreenON();
+				Delay_ms(500);
+				LedGreenOff();
+				Delay_ms(500);
+				LedGreenON();
+				Delay_ms(500);
+				LedGreenOff();
+				Delay_ms(500);
+		   }
+			break;
 		
-		break;
+			
+			
+		
+		
+		
 		case 10:
 		{
 			if(RunSecond>0)
@@ -1388,11 +1388,36 @@ void CheckMode(INT8U Key)
 
 			}
 		}
+		}
 		break;
 
+		
+		case 0x19:
+		if(cleanWorks.CleanMode == standbyMode)  //  Mode=2;Step=0;RunMode=1;RunStep=0; ---default power on don't press key
+		{
+			if(Step==0)
+			{
+				//20
+				Step=1;
+				ADCtl=1;
+				RunSecond=0;
+			}
+			else if(Step<20)
+			{
+				//LedBlueON();
+				Mode=1;
+				Step=0;
+				RunSecond=0;
+				SetStop();
+				SetFan(0);
+				SetEdge(0);
+				RunStep=0;
+				//SetBuzzerTime(2);
+			}
+
 		}
-	}
-	break;
+		} //end mode =0 
+	   break;
 	/*************************Mode 0 END**************************/
 	/**********Mode 1 start******************/
 	//power on key =1
@@ -1691,98 +1716,6 @@ void CheckMode(INT8U Key)
 	/*******************Mode 2 END **********************************/
 	/**********************************************************/
 	/*********************************************************/
-	//Mode =3 start works status
-	case 3:  //Mode 
-       switch(Step){
-		   case 0:
-            SetBuzzerTime(4);
-			Delay_ms(50);
-			BuzzerOff();
-			cleanWorks.iPowerFlag =1;
-		   break;
 
-	   }
-
-
-	break;
-	/*******************Mode 3 END **********************************/
-	/**********************************************************/
-	/*********************************************************/
-	//Mode =4 cleanMode = 1 randomMode
-	case 4:
-	            SetBuzzerTime(4);
-			    Delay_ms(50);
-				BuzzerOff();
-                if(cleanWorks.iPowerFlag ==1){
-
-                      // Mode = randomMode ;
-
-				}
-
-	break;
-     /*******************Mode 4 END **********************************/
-	/**********************************************************/
-	/*********************************************************/
-	//Mode =5 cleanMode =2 zMode
-	case 5:
-	     switch(Step){
-			 
-			case 0: 
-			
-				SetBuzzerTime(4);
-				Delay_ms(50);
-				SetBuzzerTime(0);
-				Delay_ms(50);
-				SetBuzzerTime(4);
-				BuzzerOff();
-
-            break;
-		 }
-
-	break;
-
-	case 6:
-
-			   SetBuzzerTime(4);
-				Delay_ms(50);
-				SetBuzzerTime(0);
-				Delay_ms(50);
-				SetBuzzerTime(4);
-				Delay_ms(50);
-				SetBuzzerTime(0);
-				Delay_ms(50);
-				SetBuzzerTime(4);
-				BuzzerOff();
-
-	break;
-
-	case 7:
-	    switch(Step){
-			case 0 :
-			 SetBuzzerTime(4);
-				Delay_ms(50);
-				SetBuzzerTime(0);
-				Delay_ms(50);
-				SetBuzzerTime(4);
-				Delay_ms(50);
-				SetBuzzerTime(0);
-				Delay_ms(50);
-				SetBuzzerTime(4);
-				Delay_ms(50);
-				SetBuzzerTime(0);
-			     Delay_ms(50);
-				SetBuzzerTime(4);
-				BuzzerOff();
-			
-			break;
-
-
-
-
-
-		}
-
-	break;
-
-	}
+    }
 }

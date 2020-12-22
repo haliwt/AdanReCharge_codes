@@ -31,12 +31,14 @@ enum  woksmode{
    zMode ,
    bowMode,
    fixpointMode ,
-   standbyMode
+   standbyMode,
+   recharge
 };
 struct _CleanMode{
     INT8U iPowerFlag;
     INT8U worksNumber; 
     INT8U CleanMode ;
+    INT8U rechargeMode ;
 
 
 };
