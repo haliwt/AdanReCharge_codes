@@ -1209,14 +1209,21 @@ void CheckMode(INT8U Key)
 	if(Key==1)
 	{
 
-		if(Mode==0)
+		if(Mode==0x64)
 		{
 			//default power on 
-			Mode=1;
-			Step=1;
-			LedGreenOff();
-			LedRedOff();
-
+			
+			LedGreenON();
+			SetBuzzerTime(4);
+			Delay_ms(300);
+			SetBuzzerTime(0);
+            Delay_ms(300);
+            SetBuzzerTime(4);
+			Delay_ms(300);
+			SetBuzzerTime(0);
+			//Mode=0;
+			Step=0;
+			Mode =0;
 		}
 		else //  Mode=2;Step=0;RunMode=1;RunStep=0; ---default power on don't press key
 		{
@@ -1254,6 +1261,18 @@ void CheckMode(INT8U Key)
 		{
 
 			SetStop();
+			//default power on 
+			
+			LedGreenON();
+			SetBuzzerTime(4);
+			Delay_ms(20);
+			SetBuzzerTime(0);
+            Delay_ms(20);
+            SetBuzzerTime(4);
+			Delay_ms(20);
+			SetBuzzerTime(0);
+			Mode = 0x65;
+			Step =0x64;
 
 		}
 		break;
@@ -1284,6 +1303,8 @@ void CheckMode(INT8U Key)
 	break;
 	/*************************Mode 0 END**************************/
 	/**********Mode 1 start******************/
+	//power on key =1
+	//  Mode=2;Step=0;RunMode=1;RunStep=0; ---default power on don't press key
 	case 1:
 	{
 		switch(Step)

@@ -17,6 +17,7 @@ version  : ���ļ�β��
 #include "..\include\HC89F0541.h"
 #include "..\include\PJ_TypeRedefine.h"
 #include "LB_Led.h"
+#include "..\lib\LB_Run.h"
 
 #endif
 
@@ -76,10 +77,10 @@ void LedGreenOff()
 }
 void InitKey(void)
 {
-  P3M4 = 0x60;                        //P00����Ϊʩ�������ִ���������
-  P3_4=1;
-  P3M5 = 0x60;                        //P00����Ϊʩ�������ִ���������
-  P3_5=1;
+  P3M4 = 0x51;                        //P00����Ϊʩ�������ִ���������
+  P3M5 = 0x51;
+  P3_4=0;                        //P00����Ϊʩ�������ִ���������
+  P3_5=0;
 
 }
 
@@ -120,19 +121,19 @@ INT8U HDKey_Scan(INT8U mode)
     if(key_up&&(Power_Key== 1) && (Cleaning_Key ==1)){
 
        key_up =0 ;
-			Delay_ms(20);
+			Delay_ms(10);
 			if((Power_Key== 1) && (Cleaning_Key ==1) )  return GROUP_PRES;
      }
-		else if(key_up&&(Power_Key== 1))
+	  else if(key_up&&(Power_Key== 1))
 		{
 		  key_up =0 ;
-			Delay_ms(20);
-			if(POWER_KEY== 1 )  return POWER_PRES;
+			Delay_ms(10);
+			if(Power_Key== 1 )  return POWER_PRES;
 		
 		}
     else if(key_up &&(Cleaning_Key ==1)){
           key_up =0;
-          Delay_ms(20);
+          Delay_ms(10);
           if(Cleaning_Key== 1 )  return CLEANING_PRES;
     }
 		else if(Power_Key==0 && Cleaning_Key==0)key_up=1;
@@ -210,7 +211,7 @@ void InitPowerIn(void)
      P2M1 = 0X58 ; //ReCharge input SMT pull down
      P1M0 = 0x58;  //DC INPUT pull down 
      P2_1 =1; 
-	 P1_0 =1;
+	   P1_0 =1;
 }
 
 /***********************************************************
@@ -282,8 +283,8 @@ void BuzzerON()
 void BuzzerOff()
 {
  // BuzzerFlag=0;
-//  PWM3C = 0x06; 						//ʹ��PWM3���ر��жϣ����������ʱ��32��Ƶ
-//  P2_2=1;
+  PWM3C = 0x00; 						//ʹ��PWM3���ر��жϣ����������ʱ��32��Ƶ
+  P2_2=1;
 }
 
 void SetBuzzerTime(INT8U time)
@@ -291,6 +292,7 @@ void SetBuzzerTime(INT8U time)
 	BuzzerTime=time;
 	
 	PWM3C = 0x96; 						//ʹ��PWM3���ر��жϣ����������ʱ��32��Ƶ	
+    
 }
 
 void CheckBuzzer()

@@ -79,8 +79,8 @@ void main(void)
 	InitIMP();
 	ADCtl=0;   //ǿ���ź� IR �����־ 0--�رգ� 1 --��
 	//LedRedON();
-	Mode=2;
-	Step=0;
+	Mode = 0x64 ;//Mode=2;
+	Step= 0x64 ;  //0;
 	RunMode=1;
 	RunStep=0;
 	RCurrentMax=150;
@@ -111,10 +111,23 @@ void main(void)
       else{
 	        kk= HDKey_Scan(0);// kk=ReadKey();
 	       //CheckWall();
-		   
+		   if(kk==1){
+			LedGreenON();
+			SetBuzzerTime(10);
+			Delay_ms(100);
+			SetBuzzerTime(0);
+            Delay_ms(100);
+            SetBuzzerTime(10);
+			Delay_ms(100);
+			SetBuzzerTime(0);
+		     BuzzerOff();
+			 kk=0;
+
+
+		   }
 		   CheckRechargeIR();
 	       CheckRun();
-		    CheckMode(kk);
+		   CheckMode(kk);
       }
 	  #endif 
 
