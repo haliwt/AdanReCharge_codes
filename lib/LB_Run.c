@@ -1187,9 +1187,9 @@ void  CheckRun()
 		}
 	}
 
-}	
-}
-}
+	}	
+	}
+	}
 }	
 	
 
@@ -1212,16 +1212,6 @@ void CheckMode(INT8U Key)
 		if(Mode==0x64)
 		{
 			//default power on 
-			
-			LedGreenON();
-			SetBuzzerTime(4);
-			Delay_ms(300);
-			SetBuzzerTime(0);
-            Delay_ms(300);
-            SetBuzzerTime(4);
-			Delay_ms(300);
-			SetBuzzerTime(0);
-			//Mode=0;
 			Step=0;
 			Mode =0;
 		}
@@ -1264,13 +1254,13 @@ void CheckMode(INT8U Key)
 			//default power on 
 			
 			LedGreenON();
-			SetBuzzerTime(4);
-			Delay_ms(20);
+			SetBuzzerTime(10);
+			Delay_ms(200);
 			SetBuzzerTime(0);
-            Delay_ms(20);
-            SetBuzzerTime(4);
-			Delay_ms(20);
-			SetBuzzerTime(0);
+            Delay_ms(200);
+            SetBuzzerTime(10);
+			 Delay_ms(200);
+		     BuzzerOff();
 			Mode = 0x65;
 			Step =0x64;
 
