@@ -105,37 +105,6 @@ void ReadIMP(void)
 	IMP&=0xfd;
 }
 
-/****************************************************
-	*
-	*Function Name: uint8_t HDKey_Scan(uint8_t mode)
-	*Function :
-	*Inpute Ref: 0 ---不支持连续按键
-	*Return Ref: 0 --没有按键按下， 1---有按键按下
-	*
-*****************************************************/
-INT8U HDKey_Scan(INT8U mode)
-{
-	
-		static INT8U key_up=1;	 //°´¼üËÉ¿ª±êÖ¾
-		if(mode==1)key_up=1;	// 支持连续按键
-    if(key_up&&(Power_Key==1||Cleaning_Key==1)){
-       
-       
-       Delay_ms(10);
-       key_up =0 ;
-       if((Power_Key== 1) && Cleaning_Key ==1)  return GROUP_PRES ;
-		else if(Power_Key== 1){
-           Delay_ms(400);
-           if(Power_Key== 1)  return POWER_PRES;
-
-       }
-	    else if (Cleaning_Key ==1) return CLEANING_PRES;
-           
-    }
-    
-		else if(Power_Key==0 && Cleaning_Key==0 )key_up=1;
-		return 0;	//没有按键按下
-}
 /***********************************************************
  *  *
     *Function Name: INT8U ReadPowerAutoIn(void)

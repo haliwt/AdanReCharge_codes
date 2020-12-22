@@ -41,6 +41,7 @@
 #include "..\lib\LB_Motor.h"
 #include "..\lib\LB_IR.h"
 #include "..\lib\LB_Run.h"
+#include "..\lib\LB_Key.h"
 
 void InitSysclk(INT8U SYS)
 {
@@ -109,9 +110,10 @@ void main(void)
 	  
 	  }
       else{
-	        kk= HDKey_Scan(0);// kk=ReadKey();
+	        CheckRechargeIR();
+		    kk= HDKey_Scan(0);// kk=ReadKey();
 	       //CheckWall();
-		   #if 1
+		   #if 0
 		   if(kk==2){
 			LedGreenON();
 			SetBuzzerTime(4);
@@ -123,15 +125,41 @@ void main(void)
 			SetBuzzerTime(0);
 		     BuzzerOff();
 			 kk=0;
-
-
-		   }
+			 }
 		   #endif 
-		   CheckRechargeIR();
-	     //  CheckRun();
-		   CheckMode(kk);
+		   if(kk){
+			   
+			   switch(kk){
+			   case 1: 
+			        SetStop();
+					LedGreenON();
+					SetBuzzerTime(10);
+					Delay_ms(200);
+					SetBuzzerTime(0);
+					Delay_ms(200);
+					SetBuzzerTime(10);
+					Delay_ms(20);
+					BuzzerOff();
+
+			   break;
+ 
+			   case 2: 
+			            SetBuzzerTime(4);
+						Delay_ms(50);
+						BuzzerOff();
+						cleanWorks.iPowerFlag =1;       
+
+			   break;
+
+			   case 3: 
+
+			   break; 
+			  
+		   }
+		   }
+	    #endif 
       }
-	  #endif 
+	  
 
 	}
 

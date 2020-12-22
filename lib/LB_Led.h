@@ -33,11 +33,7 @@ version  : ���ļ�β��
 #define CloseSwitch_L  			P1_5	
 #define CloseSwitch_R  			P3_2
 
-#define Power_Key             P3_4
-#define Cleaning_Key          P3_5
-#define POWER_PRES             1
-#define CLEANING_PRES          2 
-#define GROUP_PRES            3     
+  
 
 KAKA_Led_EXT  INT8U BuzzerTime;
 KAKA_Led_EXT  INT8U IMP;
@@ -60,5 +56,5 @@ KAKA_Led_EXT void BuzzerON()	;
 KAKA_Led_EXT void BuzzerOff() ;
 KAKA_Led_EXT void SetBuzzerTime(INT8U time);
 KAKA_Led_EXT void CheckBuzzer();
-KAKA_Led_EXT INT8U HDKey_Scan(INT8U mode);//WT.EDIT 2020.12.22
+
 #endif

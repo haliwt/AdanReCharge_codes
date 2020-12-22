@@ -21,6 +21,7 @@ version  : ���ļ�β��
 #include "LB_Led.h"
 #include "LB_IR.h"
 #include "LB_Usart.h"
+#include "LB_Key.h"
 #endif
 
 /*******************************************************
