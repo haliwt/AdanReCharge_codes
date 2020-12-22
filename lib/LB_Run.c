@@ -665,9 +665,8 @@ void  CheckRun()
 		{
 		case 0:
 		{
-           if(RunMs < 20)
+           if(RunMs > 20 && RunMs< 70)
 			  InitMotorForward();
-			
 			RunStep=1;
 			ClearAllIR();
 			RunMs = 0;

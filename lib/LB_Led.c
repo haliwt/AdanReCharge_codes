@@ -85,19 +85,11 @@ void InitKey(void)
 
 void InitIMP(void)
 {
-
   P1M5 = 0X50;   //close switch Left   pull down 
   P3M2 = 0x50;   //close switch Right  pull down
-
-
   P1_5 =0;
   P3_2 =0;
-
-  
   IMP=0;
-
-
-  
 }
 
 void ReadIMP(void)
@@ -111,13 +103,56 @@ void ReadIMP(void)
   else
 	IMP&=0xfd;
 }
+
+/****************************************************
+	*
+	*Function Name: uint8_t HDKey_Scan(uint8_t mode)
+	*Function :
+	*Inpute Ref: 0 ---不支持连续按键
+	*Return Ref: 0 --没有按键按下， 1---有按键按下
+	*
+*****************************************************/
+INT8U HDKey_Scan(INT8U mode)
+{
+	
+		static INT8U key_up=1;	 //°´¼üËÉ¿ª±êÖ¾
+		if(mode==1)key_up=1;	// 支持连续按键
+    if(key_up&&(Power_Key== 1) && (Cleaning_Key ==1)){
+
+       key_up =0 ;
+			Delay_ms(20);
+			if((Power_Key== 1) && (Cleaning_Key ==1) )  return GROUP_PRES;
+     }
+		else if(key_up&&(Power_Key== 1))
+		{
+		  key_up =0 ;
+			Delay_ms(20);
+			if(POWER_KEY== 1 )  return POWER_PRES;
+		
+		}
+    else if(key_up &&(Cleaning_Key ==1)){
+          key_up =0;
+          Delay_ms(20);
+          if(Cleaning_Key== 1 )  return CLEANING_PRES;
+    }
+		else if(Power_Key==0 && Cleaning_Key==0)key_up=1;
+		return 0;	//没有按键按下
+}
+/***********************************************************
+ *  *
+    *Function Name: INT8U ReadPowerAutoIn(void)
+    *Function: ReCharge battery be detected
+    *Input Ref: NO
+    *Return Ref: 1 -battery recharge   0-no recharge
+    * 
+***********************************************************/
 INT8U ReadKey(void)
 {
 
-  static INT16U  K1=0;
-  static INT16U  K2=0;
+  static INT8U  K1=0;
+  static INT8U  K2=0;
   INT8U	 tmp;
-  if(P3_4==0)
+  if(P3_4==0)  //KEY2 --- recharge battery button
   {
     // LedBlueON();
     if(K1<200)
@@ -129,7 +164,7 @@ INT8U ReadKey(void)
    	K1=0;
   }
 
-   if(P3_5==0)
+   if(P3_5==0)  //KEY1 --cleaning button
   {
     // LedBlueON();
     if(K2<200)
@@ -146,7 +181,8 @@ INT8U ReadKey(void)
     //
     K1=201;
 	//LedBlueON();
-    tmp|=1;;
+    tmp|=1;
+  
 
   }
   if(K2>190)
@@ -154,11 +190,21 @@ INT8U ReadKey(void)
     //
     K2=201;
 	//LedBlueON();
-    tmp|=2;;
+    tmp|=2;
+     
 
   }
   return (tmp);
 }
+
+/***********************************************************
+ *  *
+    *Function Name: INT8U ReadPowerAutoIn(void)
+    *Function: ReCharge battery be detected
+    *Input Ref: NO
+    *Return Ref: 1 -battery recharge   0-no recharge
+    * 
+***********************************************************/
 void InitPowerIn(void)
 {
      P2M1 = 0X58 ; //ReCharge input SMT pull down

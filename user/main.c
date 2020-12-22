@@ -109,7 +109,7 @@ void main(void)
 	  
 	  }
       else{
-	      kk=ReadKey();
+	        kk= HDKey_Scan(0);// kk=ReadKey();
 	       //CheckWall();
 		   
 		   CheckRechargeIR();

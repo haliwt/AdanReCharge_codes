@@ -2,8 +2,8 @@
 
 ---------- file information -----------------------------------------------
 file name: 
-define   : <文件说明>
-version  : 见文件尾端
+define   : <锟侥硷拷说锟斤拷>
+version  : 锟斤拷锟侥硷拷尾锟斤拷
 ---------------------------------------------------------------------------
 */
 #ifndef  LB_Led_h
@@ -21,7 +21,7 @@ version  : 见文件尾端
 #endif
 
 
-//全局变量声明
+//全锟街憋拷锟斤拷锟斤拷锟斤拷
 #ifdef  KAKA_Led_GB
 #define KAKA_Led_EXT
 #else
@@ -32,6 +32,13 @@ version  : 见文件尾端
 #define BatterCharge    		P2_1 
 #define CloseSwitch_L  			P1_5	
 #define CloseSwitch_R  			P3_2
+
+#define Power_Key             P3_4
+#define Cleaning_Key          P3_5
+#define POWER_PRES             1
+#define CLEANING_PRES          2 
+#define GROUP_PRES            3     
+
 KAKA_Led_EXT  INT8U BuzzerTime;
 KAKA_Led_EXT  INT8U IMP;
 KAKA_Led_EXT  void InitLed(void);
@@ -53,4 +60,5 @@ KAKA_Led_EXT void BuzzerON()	;
 KAKA_Led_EXT void BuzzerOff() ;
 KAKA_Led_EXT void SetBuzzerTime(INT8U time);
 KAKA_Led_EXT void CheckBuzzer();
+KAKA_Led_EXT INT8U HDKey_Scan(INT8U mode);//WT.EDIT 2020.12.22
 #endif
