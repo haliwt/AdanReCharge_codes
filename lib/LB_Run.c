@@ -516,7 +516,7 @@ void  CheckRun()
 				RunStep=0x19;
 
 			}
-			else 	  if(WallDp[1]<WallMin)
+			else if(WallDp[1]<WallMin)
 			{
 				CurrentMax++;
 				NoImpSecond=0;
@@ -1223,10 +1223,10 @@ void CheckMode(INT8U Key)
 
           
                Mode =0;
-			   Step =1;
+			   Step ++ ;
 			   
 			   cleanWorks.worksNumber++;
-			   SBUF =   cleanWorks.worksNumber;
+			   SBUF =  Step;
 	}
     ////power on of initial: Mode=2;Step=0;RunMode=1;RunStep=0;
 	switch(Mode)
@@ -1260,12 +1260,7 @@ void CheckMode(INT8U Key)
 		
 		//power on of initial:	Mode=2;Step=0;RunMode=1;RunStep=0;
 		case 1:  //clean Mode
-	    {
-		    SBUF =   cleanWorks.worksNumber;
-			switch(cleanWorks.worksNumber){
-
-			 case runWoksStatus://if(cleanWorks.worksNumber ==1)
-			   SetBuzzerTime(4);
+	            SetBuzzerTime(4);
 			    Delay_ms(50);
 				BuzzerOff();
                 cleanWorks.iPowerFlag =1;
@@ -1276,7 +1271,7 @@ void CheckMode(INT8U Key)
 
 			
 			break;
-			case randomMode: //else if(cleanWorks.worksNumber ==2){
+		case 2: //else if(cleanWorks.worksNumber ==2){
                 Mode =0x66;
 			
 				SetBuzzerTime(4);
@@ -1287,8 +1282,7 @@ void CheckMode(INT8U Key)
 
 			
 			break;
-			case  zMode://else if(cleanWorks.worksNumber ==3)
-
+			case  3:
 				SetBuzzerTime(4);
 				Delay_ms(50);
 				SetBuzzerTime(0);
@@ -1300,9 +1294,9 @@ void CheckMode(INT8U Key)
 				LedGreenON();
 				LedRedON();
 
-			}
+			
 			break;
-			case bowMode: //else if(cleanWorks.worksNumber ==4){
+			case 4: //else if(cleanWorks.worksNumber ==4)
 				
 			   SetBuzzerTime(4);
 				Delay_ms(50);
@@ -1321,7 +1315,7 @@ void CheckMode(INT8U Key)
 
 			
 			break;
-			case fixpointMode  : //else if(cleanWorks.worksNumber ==5){
+			case 5  : //else if(cleanWorks.worksNumber ==5){
 					 Mode =0x66;
 			
 				 SetBuzzerTime(4);
@@ -1344,20 +1338,21 @@ void CheckMode(INT8U Key)
 				
              
 			 break;
-			  case standbyMode: //else if(cleanWorks.worksNumber ==6)
+			  case 6: //else if(cleanWorks.worksNumber ==6)
 			   SetBuzzerTime(4);
 			    Delay_ms(50);
 				BuzzerOff();
 				Mode =0x66;
-				Step = 0x64;
+			
 				LedGreenOff();
 				LedRedOff();
 			 break;
-			 case recharge: //else if(cleanWorks.worksNumber ==7){
+			 case 7: //else if(cleanWorks.worksNumber ==7){
 				SetBuzzerTime(4);
 			    Delay_ms(50);
 				BuzzerOff();
                 cleanWorks.worksNumber =0;
+				Step =0;
 				Mode =0x66;
 			
 				RunMode =2;
@@ -1371,25 +1366,23 @@ void CheckMode(INT8U Key)
 				Delay_ms(500);
 				LedGreenOff();
 				Delay_ms(500);
-		   }
+				RunMode =2;
+				RunStep=0;
+				RunMs = 0;
+		
 			break;
 		
-			
-			
+		    case 10:
 		
-		
-		
-		case 10:
-		{
 			if(RunSecond>0)
 			{
 				Step=0;
 				RunSecond=0;
 
 			}
-		}
-		}
-		break;
+		
+		
+		   break;
 
 		
 		case 0x19:
@@ -1414,9 +1407,10 @@ void CheckMode(INT8U Key)
 				RunStep=0;
 				//SetBuzzerTime(2);
 			}
-
-		}
-		} //end mode =0 
+		  }
+		
+		}//Mode =0 END
+	}
 	   break;
 	/*************************Mode 0 END**************************/
 	/**********Mode 1 start******************/
@@ -1719,3 +1713,4 @@ void CheckMode(INT8U Key)
 
     }
 }
+	
