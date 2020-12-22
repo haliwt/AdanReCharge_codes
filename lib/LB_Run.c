@@ -1246,7 +1246,7 @@ void CheckMode(INT8U Key)
                Mode =0 ;
 			   Step =1;
 			   
-				woksKeyNumber++;
+			   cleanWorks.worksNumber++;
 			   #if 0
 				lockled = lockled ^ 0x01;
 				if(lockled==1)
@@ -1292,7 +1292,7 @@ void CheckMode(INT8U Key)
 			//power On and power key press status 
 		case 0:
 		{
-
+            
 			SetStop();
             LedGreenON();
 			SetBuzzerTime(10);
@@ -1309,8 +1309,37 @@ void CheckMode(INT8U Key)
 		break;
 		//power on of initial:	Mode=2;Step=0;RunMode=1;RunStep=0;
 		case 1:
-		{
-			
+		
+			if(cleanWorks.worksNumber ==1){
+			   SetBuzzerTime(4);
+			    Delay_ms(50);
+				BuzzerOff();
+                cleanWorks.iPowerFlag =1;
+				Mode =0x65;
+				Step = 0x64;
+			}
+			if(cleanWorks.worksNumber ==2){
+                Mode =0x65;
+				Step = 0x64;
+				SetBuzzerTime(4);
+			    Delay_ms(50);
+				BuzzerOff();
+
+			}
+			if(cleanWorks.worksNumber ==3){
+
+					SetBuzzerTime(4);
+				Delay_ms(50);
+				SetBuzzerTime(0);
+				Delay_ms(50);
+				SetBuzzerTime(4);
+				BuzzerOff();
+				 Mode =0x65;
+				Step = 0x64;
+
+			}
+			if(cleanWorks.worksNumber ==4){
+				
 			   SetBuzzerTime(4);
 				Delay_ms(50);
 				SetBuzzerTime(0);
@@ -1321,10 +1350,35 @@ void CheckMode(INT8U Key)
 				Delay_ms(50);
 				SetBuzzerTime(4);
 				BuzzerOff();
-				Mode =0x65;
+				 Mode =0x65;
 				Step = 0x64;
-		}
 
+
+			}
+			if(cleanWorks.worksNumber ==5){
+					 Mode =0x65;
+				Step = 0x64;
+				 SetBuzzerTime(4);
+				Delay_ms(50);
+				SetBuzzerTime(0);
+				Delay_ms(50);
+				SetBuzzerTime(4);
+				Delay_ms(50);
+				SetBuzzerTime(0);
+				Delay_ms(50);
+				SetBuzzerTime(4);
+				Delay_ms(50);
+				SetBuzzerTime(0);
+			     Delay_ms(50);
+				SetBuzzerTime(4);
+				BuzzerOff();
+               cleanWorks.worksNumber =0;
+				 Mode =0x65;
+				Step = 0x64;
+
+			}
+		
+		break;
 		case 10:
 		{
 			if(RunSecond>0)
