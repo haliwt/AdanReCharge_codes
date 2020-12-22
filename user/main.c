@@ -111,15 +111,15 @@ void main(void)
       else{
 	        kk= HDKey_Scan(0);// kk=ReadKey();
 	       //CheckWall();
-		   #if 0
-		   if(kk==1){
+		   #if 1
+		   if(kk==2){
 			LedGreenON();
-			SetBuzzerTime(10);
-			Delay_ms(100);
+			SetBuzzerTime(4);
+			Delay_ms(50);
 			SetBuzzerTime(0);
-            Delay_ms(100);
-            SetBuzzerTime(10);
-			Delay_ms(100);
+            Delay_ms(50);
+            SetBuzzerTime(4);
+			Delay_ms(50);
 			SetBuzzerTime(0);
 		     BuzzerOff();
 			 kk=0;
@@ -128,7 +128,7 @@ void main(void)
 		   }
 		   #endif 
 		   CheckRechargeIR();
-	       CheckRun();
+	     //  CheckRun();
 		   CheckMode(kk);
       }
 	  #endif 

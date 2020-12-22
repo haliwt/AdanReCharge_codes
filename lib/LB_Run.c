@@ -1204,7 +1204,7 @@ void  CheckRun()
 *************************************************************************************/
 void CheckMode(INT8U Key)
 {
-
+	static INT8U woksKeyNumber,lockled;
   //  Mode=2;Step=0;RunMode=1;RunStep=0; ---default power on don't press key
 	if(Key==1)
 	{
@@ -1239,6 +1239,45 @@ void CheckMode(INT8U Key)
 
 		}
 	}
+   if(Key==2){ //works mode ----cleaning button
+
+         // if(Mode ==0x65){
+
+				woksKeyNumber++;
+				lockled = lockled ^ 0x01;
+				if(lockled==1)
+				LedGreenOff();
+				else LedGreenON();
+			
+
+				if(woksKeyNumber==1){ //input cleaning status "one sound"
+					Mode =3;
+					Step = 0;
+				}
+				else if(woksKeyNumber==2){
+					Mode = 4;
+					Step =0 ;
+				}
+				else if(woksKeyNumber==3){//
+					Mode = 5;
+					Step =0 ;
+				}
+				else if(woksKeyNumber==4){
+					Mode = 6;
+					Step =0 ;
+				}
+				else if(woksKeyNumber==5){
+					Mode = 7;
+					Step =0 ;
+					woksKeyNumber=0;
+				}
+			
+
+		 // }
+
+			
+			
+       }
     ////power on of initial: Mode=2;Step=0;RunMode=1;RunStep=0;
 	switch(Mode)
 	{
@@ -1246,23 +1285,20 @@ void CheckMode(INT8U Key)
 	{
 		switch(Step)
 		{
-			//
+			//power On and power key press status 
 		case 0:
 		{
 
 			SetStop();
-			//default power on 
-			
-			LedGreenON();
+            LedGreenON();
 			SetBuzzerTime(10);
 			Delay_ms(200);
 			SetBuzzerTime(0);
             Delay_ms(200);
             SetBuzzerTime(10);
-			 Delay_ms(200);
+			 Delay_ms(20);
 		     BuzzerOff();
-			Mode = 0x65;
-			Step =0x64;
+			 Mode = 0x65;
 
 		}
 		break;
@@ -1354,28 +1390,7 @@ void CheckMode(INT8U Key)
 			{
 				WallSecond=0;
 			}
-			/*
-			if((SysSecond==300)||(CurrentMax>5))
-			{
-				SetStop();
-				SysSecond=301;
-				RunMode=2;
-				RunStep=0x50;
-				CurrentMax=0;
-				Imp2Time=0;
-				Imp2Second=0;
-			}
-
-			else if(SysSecond>360)
-
-			{
-				SetStop();
-				SysSecond=0;
-				RunMode=2;
-				RunStep=1;
-				RunMs=0;
-			}
-			*/
+		
 
 			else if(Voltage<650)
 			{
@@ -1389,77 +1404,7 @@ void CheckMode(INT8U Key)
 				SetEdge(0);
 
 			}
-			/*
-						else if(WallSecond>1)
-						{
-							ADCtl=0;
-							RunStep=0;
-							SetStop();
-							SetFan(0);
-							SetEdge(0);
-							Step=0;
-						}
-
-						else  if(ReadPowerAutoIn()||ReadPowerDCIn())
-						{
-							ADCtl=0;
-							RunStep=0;
-							SetStop();
-							SetFan(0);
-							SetEdge(0);
-
-							Step=0;
-							Mode=0;
-
-						}
-						else if(NoImpSecond==40)
-						{
-							NoImpSecond=41;
-							RunMode=2;
-							RunStep=0x40;
-						}
-						else if(NoImpSecond>100)
-						{
-							ADCtl=0;
-							RunStep=0;
-							SetStop();
-							SetEdge(0);
-							SetFan(0);
-							Step=8;
-						}
-						else if(EdgeCurrentLessCount>100)
-						{
-							RunStep=0;
-							EdgeTime=0;
-							SetStop();
-							SetFan(0);
-							SetEdge(0);
-							Step=8;
-						}
-						else if(EdgeCurrentOverCount>100)
-						{
-
-							EdgeTime++;
-							EdgeCurrentOverCount=0;
-
-							if(EdgeTime>4)
-							{
-								RunStep=0;
-								EdgeTime=0;
-								SetStop();
-								SetFan(0);
-								SetEdge(0);
-								Step=8;
-							}
-							else
-
-							{
-								RunStep=0x30;
-								SetFan(0);
-								SetEdge(0);
-							}
-						}
-			*/
+			
 
 
 		}
@@ -1546,7 +1491,7 @@ void CheckMode(INT8U Key)
 			}
 		}
 		break;
-		// ����еƹ�Ƶ��?0.5Hz
+		// ����еƹ�Ƶ�ￄ1�7?0.5Hz
 		case 5:
 		{
 			if(RunSecond>9)
@@ -1676,6 +1621,101 @@ void CheckMode(INT8U Key)
 		}
 
 	}
+	break;
+	/*******************Mode 2 END **********************************/
+	/**********************************************************/
+	/*********************************************************/
+	//Mode =3 start works status
+	case 3:  //Mode 
+       switch(Step){
+		   case 0:
+            SetBuzzerTime(4);
+			Delay_ms(50);
+			BuzzerOff();
+			cleanWorks.iPowerFlag =1;
+		   break;
+
+	   }
+
+
+	break;
+	/*******************Mode 3 END **********************************/
+	/**********************************************************/
+	/*********************************************************/
+	//Mode =4 cleanMode = 1 randomMode
+	case 4:
+	            SetBuzzerTime(4);
+			    Delay_ms(50);
+				BuzzerOff();
+                if(cleanWorks.iPowerFlag ==1){
+
+                      // Mode = randomMode ;
+
+				}
+
+	break;
+     /*******************Mode 4 END **********************************/
+	/**********************************************************/
+	/*********************************************************/
+	//Mode =5 cleanMode =2 zMode
+	case 5:
+	     switch(Step){
+			 
+			case 0: 
+			
+				SetBuzzerTime(4);
+				Delay_ms(50);
+				SetBuzzerTime(0);
+				Delay_ms(50);
+				SetBuzzerTime(4);
+				BuzzerOff();
+
+            break;
+		 }
+
+	break;
+
+	case 6:
+
+			   SetBuzzerTime(4);
+				Delay_ms(50);
+				SetBuzzerTime(0);
+				Delay_ms(50);
+				SetBuzzerTime(4);
+				Delay_ms(50);
+				SetBuzzerTime(0);
+				Delay_ms(50);
+				SetBuzzerTime(4);
+				BuzzerOff();
+
+	break;
+
+	case 7:
+	    switch(Step){
+			case 0 :
+			 SetBuzzerTime(4);
+				Delay_ms(50);
+				SetBuzzerTime(0);
+				Delay_ms(50);
+				SetBuzzerTime(4);
+				Delay_ms(50);
+				SetBuzzerTime(0);
+				Delay_ms(50);
+				SetBuzzerTime(4);
+				Delay_ms(50);
+				SetBuzzerTime(0);
+			     Delay_ms(50);
+				SetBuzzerTime(4);
+				BuzzerOff();
+			
+			break;
+
+
+
+
+
+		}
+
 	break;
 
 	}

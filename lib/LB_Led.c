@@ -77,8 +77,8 @@ void LedGreenOff()
 }
 void InitKey(void)
 {
-  P3M4 = 0x51;                        //P00����Ϊʩ�������ִ���������
-  P3M5 = 0x51;
+  P3M4 = 0x58;                        //P00����Ϊʩ�������ִ���������
+  P3M5 = 0x58;
   P3_4=0;                        //P00����Ϊʩ�������ִ���������
   P3_5=0;
 
@@ -118,25 +118,22 @@ INT8U HDKey_Scan(INT8U mode)
 	
 		static INT8U key_up=1;	 //°´¼üËÉ¿ª±êÖ¾
 		if(mode==1)key_up=1;	// 支持连续按键
-    if(key_up&&(Power_Key== 1) && (Cleaning_Key ==1)){
-
+    if(key_up&&(Power_Key==1||Cleaning_Key==1)){
+       
+       
+       Delay_ms(10);
        key_up =0 ;
-			Delay_ms(500);
-			while((Power_Key== 0) && (Cleaning_Key ==0) )  return GROUP_PRES;
-     }
-	  else if(key_up&&(Power_Key== 1))
-		{
-		  key_up =0 ;
-			Delay_ms(10);
-			while(Power_Key== 0)  return POWER_PRES;
-		
-		}
-    else if(key_up &&(Cleaning_Key ==1)){
-          key_up =0;
-          Delay_ms(10);
-          while(Cleaning_Key== 0)  return CLEANING_PRES;
+       if((Power_Key== 1) && Cleaning_Key ==1)  return GROUP_PRES ;
+		else if(Power_Key== 1){
+           Delay_ms(400);
+           if(Power_Key== 1)  return POWER_PRES;
+
+       }
+	    else if (Cleaning_Key ==1) return CLEANING_PRES;
+           
     }
-		else if(Power_Key==0 && Cleaning_Key==0)key_up=1;
+    
+		else if(Power_Key==0 && Cleaning_Key==0 )key_up=1;
 		return 0;	//没有按键按下
 }
 /***********************************************************
@@ -147,6 +144,7 @@ INT8U HDKey_Scan(INT8U mode)
     *Return Ref: 1 -battery recharge   0-no recharge
     * 
 ***********************************************************/
+#if 0
 INT8U ReadKey(void)
 {
 
@@ -197,7 +195,7 @@ INT8U ReadKey(void)
   }
   return (tmp);
 }
-
+#endif 
 /***********************************************************
  *  *
     *Function Name: INT8U ReadPowerAutoIn(void)

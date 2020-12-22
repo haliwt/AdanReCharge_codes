@@ -28,6 +28,26 @@ version  : ���ļ�β��
 #define  KAKA_Run_EXT extern
 #endif
 #define  WallMin 4
+
+enum  woksmode{
+   runWoksStatus =1,
+   randomMode  ,
+   zMode ,
+   bowMode,
+   fixpointMode ,
+   standbyMode
+};
+struct _CleanMode{
+    INT8U iPowerFlag; 
+    INT8U CleanMode ;
+
+
+};
+
+
+KAKA_Run_EXT xdata struct _CleanMode cleanWorks;
+
+
 KAKA_Run_EXT   INT8U Mode;
 KAKA_Run_EXT  INT8U Step;
 KAKA_Run_EXT  INT8U RunMode;
