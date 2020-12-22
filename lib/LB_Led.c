@@ -121,20 +121,20 @@ INT8U HDKey_Scan(INT8U mode)
     if(key_up&&(Power_Key== 1) && (Cleaning_Key ==1)){
 
        key_up =0 ;
-			Delay_ms(10);
-			if((Power_Key== 1) && (Cleaning_Key ==1) )  return GROUP_PRES;
+			Delay_ms(500);
+			while((Power_Key== 0) && (Cleaning_Key ==0) )  return GROUP_PRES;
      }
 	  else if(key_up&&(Power_Key== 1))
 		{
 		  key_up =0 ;
 			Delay_ms(10);
-			if(Power_Key== 1 )  return POWER_PRES;
+			while(Power_Key== 0)  return POWER_PRES;
 		
 		}
     else if(key_up &&(Cleaning_Key ==1)){
           key_up =0;
           Delay_ms(10);
-          if(Cleaning_Key== 1 )  return CLEANING_PRES;
+          while(Cleaning_Key== 0)  return CLEANING_PRES;
     }
 		else if(Power_Key==0 && Cleaning_Key==0)key_up=1;
 		return 0;	//没有按键按下
