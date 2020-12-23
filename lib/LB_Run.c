@@ -106,7 +106,8 @@ INT8U readRunTime()
 ************************************************************************/
 void Auto_ReChargeBattery(void)
 {
-	static INT8U j,z,left_Circular,i;
+	static INT8U j,z,left_Circular,i,w;
+	static INT16U  line;
 	switch(RunStep)
 	{
 
@@ -297,8 +298,6 @@ void Auto_ReChargeBattery(void)
 		break;
 
 		case 0x44 :
-
-	          j++ ;
 			 SetStop();
 			 Delay_ms(500);
 		  
@@ -326,10 +325,11 @@ void Auto_ReChargeBattery(void)
 
 		case 45:  //line
 			
-		      if(z==1){
+		      if(z==1 ||w==20){
 				  if(RunMs< 3)
 						InitMotorForwardSlow();//line run 
 					z=0;
+					w=0;
 			  }
 		      else if(RunMs< 5){
 
@@ -349,28 +349,32 @@ void Auto_ReChargeBattery(void)
 
 		case 0x46:
 			 
+			 line++;
 			 SetStop();
 			 Delay_ms(500);
-		   
+		    
 			 
-			   IRLocation.CloseList[2]=Mid_ReadIR.ReadIR[0];
+			 IRLocation.CloseList[2]=Mid_ReadIR.ReadIR[0];
 			
 			 if(IRLocation.CloseList[2] >0){
 
 			 			RunStep = 0x45;
 						RunMs = 0;
+						i=0;
 			 }
-		
-			 else if(IRLocation.CloseList[2] ==0){
+		     else if(IRLocation.CloseList[2] ==0){
 
-					    RunStep = 0x1;
-						RunMs = 0;
-			           
-			 }
-			            
-
-
-
+				  		
+						if(line>1000){
+						  line=0;
+						  RunStep = 0x43 ; //CCW
+						  RunMs = 0;
+						}
+						else{
+							RunStep = 0x1;
+							RunMs = 0;
+						}
+			}
 		break;
 		
 		case 0x47 : //cw
@@ -524,13 +528,14 @@ void Auto_ReChargeBattery(void)
 					//RunMs =0;
 					//left_Circular = 1;
 					#if 1
-					i++;
-					if(i<10){
+					
+					j++;
+					if(j<60){
 						RunMs =0 ;
 						RunStep=1;
 					}
 					else{
-						i=0;
+						j=0;
 					    // InitMotorForwardRightSlow_left();
 						RunStep =0x47;
 					    RunMs =0;
