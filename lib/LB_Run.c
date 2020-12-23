@@ -1205,28 +1205,33 @@ void  CheckRun()
 *************************************************************************************/
 void CheckMode(INT8U Key)
 {
-	
+	 static INT8U lockNumber=0;
   //  Mode=2;Step=0;RunMode=1;RunStep=0; ---default power on don't press key
 	if(Key==1)
 	{
-
-		if(Mode==0x64)
+       
+	   if(lockNumber!=1)
 		{
-			//default power on 
-			Step=0;
-			Mode =0;
+			//default power on
+			lockNumber =1;
+			Mode =0; 
+            cleanWorks.powerKey=cleanWorks.powerKey+1; 
+             Step =cleanWorks.powerKey;
+		   
+		   //Step = cleanWorks.powerKey;
+		   SBUF =  Step;
 		}
-
-	
-	}
+    }
     else if(Key==2){ //works mode ----cleaning button
-
-          
-               Mode =0;
-			   Step ++ ;
-			   
-			   cleanWorks.worksNumber++;
-			   SBUF =  Step;
+	   
+	   if(cleanWorks.iPowerFlag==1 ){
+		   
+			Mode =0;
+			cleanWorks.worksNumber= cleanWorks.worksNumber + 1;
+			Step =  9+ cleanWorks.worksNumber;
+			SBUF =  Step;
+	   }
+	  
 	}
     ////power on of initial: Mode=2;Step=0;RunMode=1;RunStep=0;
 	switch(Mode)
@@ -1236,53 +1241,114 @@ void CheckMode(INT8U Key)
 		
 		switch(Step)
 		{
-	        
+	        //KEY1
 			//power On and power key press status 
-			case 0:
+			case 1:
 			{
-				
+				cleanWorks.iPowerFlag=1;
+				LedGreenON();
 				SetStop();
 				LedGreenON();
 				SetBuzzerTime(10);
 				Delay_ms(200);
-				SetBuzzerTime(0);
+				SetBuzzerTime(10);
 				Delay_ms(200);
 				SetBuzzerTime(10);
 				Delay_ms(20);
 				BuzzerOff();
 				Mode = 0x65;
 				Step = 0x64;
+				
+				lockNumber=0;
 
 			}
 			break;
+			case 2: //standbyMode 
+			    SetBuzzerTime(5);
+			    Delay_ms(50);
+				BuzzerOff();
+				Mode =0x66;
+			    cleanWorks.CleanMode = standbyMode;
+				LedGreenOff();
+				LedRedOff();
+				lockNumber=0;
+			 break;
+			 case 3: // recharge battery 
+				SetBuzzerTime(5);
+			    Delay_ms(50);
+				BuzzerOff();
+
+				Mode =0x66;
+			    LedGreenON();
+				Delay_ms(10);
+				LedGreenOff();
+				Delay_ms(10);
+				LedGreenON();
+				Delay_ms(10);
+				LedGreenOff();
+				Delay_ms(10);
+			    LedGreenON();
+				Delay_ms(10);
+				LedGreenOff();
+				lockNumber=0;
+				RunMode =2;
+				RunStep=0;
+				RunMs = 0;
+		
+			break;
+
+			case 4: //Power Off  buzzer three sound
+			   cleanWorks.powerKey=0;
+			   SetStop();
+			    SetBuzzerTime(4);
+				Delay_ms(50);
+				SetBuzzerTime(0);
+				Delay_ms(50);
+				SetBuzzerTime(4);
+				Delay_ms(50);
+				SetBuzzerTime(0);
+				Delay_ms(50);
+				SetBuzzerTime(4);
+				BuzzerOff();
+				Mode =0x66;
+			   
+				LedGreenOff();
+				LedRedOff();
+				lockNumber=0;
+			 break;
          
    
-		
+		//KEY2 CLEANING BUTTON
 		//power on of initial:	Mode=2;Step=0;RunMode=1;RunStep=0;
-		case 1:  //clean Mode
+		     case 10:  //clean Mode
+		     
 	            SetBuzzerTime(4);
 			    Delay_ms(50);
 				BuzzerOff();
-                cleanWorks.iPowerFlag =1;
+
 				Mode =0x66;
 			
 				LedGreenON();
 				LedRedON();
-
+				lockNumber=0;
+			
 			
 			break;
-		case 2: //else if(cleanWorks.worksNumber ==2){
-                Mode =0x66;
+		case 11: //else if(cleanWorks.worksNumber ==2){
+                
+				
+				Mode =0x66;
 			
 				SetBuzzerTime(4);
 			    Delay_ms(50);
 				BuzzerOff();
 				LedRedOff();
+				lockNumber=0;
 				
 
 			
 			break;
-			case  3:
+			case  12:
 				SetBuzzerTime(4);
 				Delay_ms(50);
 				SetBuzzerTime(0);
@@ -1290,13 +1356,14 @@ void CheckMode(INT8U Key)
 				SetBuzzerTime(4);
 				BuzzerOff();
 				 Mode =0x66;
-			
+
 				LedGreenON();
 				LedRedON();
+				lockNumber=0;
 
 			
 			break;
-			case 4: //else if(cleanWorks.worksNumber ==4)
+			case 13: //else if(cleanWorks.worksNumber ==4)
 				
 			   SetBuzzerTime(4);
 				Delay_ms(50);
@@ -1312,10 +1379,11 @@ void CheckMode(INT8U Key)
 				
                 LedGreenOff();
 				LedRedOff();
+				lockNumber=0;
 
 			
 			break;
-			case 5  : //else if(cleanWorks.worksNumber ==5){
+			case 14  : //else if(cleanWorks.worksNumber ==5){
 					 Mode =0x66;
 			
 				 SetBuzzerTime(4);
@@ -1334,45 +1402,13 @@ void CheckMode(INT8U Key)
 				BuzzerOff();
 				LedGreenON();
 				LedRedON();
+				cleanWorks.worksNumber=0;
+				lockNumber=0;
               
-				
-             
-			 break;
-			  case 6: //else if(cleanWorks.worksNumber ==6)
-			   SetBuzzerTime(4);
-			    Delay_ms(50);
-				BuzzerOff();
-				Mode =0x66;
-			
-				LedGreenOff();
-				LedRedOff();
-			 break;
-			 case 7: //else if(cleanWorks.worksNumber ==7){
-				SetBuzzerTime(4);
-			    Delay_ms(50);
-				BuzzerOff();
-                cleanWorks.worksNumber =0;
-				Step =0;
-				Mode =0x66;
-			
-				RunMode =2;
-				RunStep=0;
-				LedRedON();
-			    LedGreenON();
-				Delay_ms(500);
-				LedGreenOff();
-				Delay_ms(500);
-				LedGreenON();
-				Delay_ms(500);
-				LedGreenOff();
-				Delay_ms(500);
-				RunMode =2;
-				RunStep=0;
-				RunMs = 0;
+				break;
+			 
 		
-			break;
-		
-		    case 10:
+		    case 15:
 		
 			if(RunSecond>0)
 			{
@@ -1385,7 +1421,7 @@ void CheckMode(INT8U Key)
 		   break;
 
 		
-		case 0x19:
+		case 0x16:
 		if(cleanWorks.CleanMode == standbyMode)  //  Mode=2;Step=0;RunMode=1;RunStep=0; ---default power on don't press key
 		{
 			if(Step==0)

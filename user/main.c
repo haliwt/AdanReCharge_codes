@@ -82,7 +82,7 @@ void main(void)
 	ADCtl=0;   //ǿ���ź� IR �����־ 0--�رգ� 1 --��
 	//LedRedON();
 	Mode = 0x64 ;//Mode=2;
-	Step= 0x0 ;  //0;
+	Step= 0;
 	RunMode=1;
 	RunStep=0;
 	RCurrentMax=150;

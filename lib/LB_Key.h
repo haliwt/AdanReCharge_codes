@@ -39,6 +39,8 @@ struct _CleanMode{
     INT8U worksNumber; 
     INT8U CleanMode ;
     INT8U rechargeMode ;
+    INT8U  powerKey;
+    INT8U  cleanKey;
 
 
 };
