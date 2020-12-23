@@ -94,18 +94,18 @@ INT8U readRunTime()
 		i= 61;
 	return (i+40);
 }
-/**********************************************************************
- * 	*
-    *Function Name:void  CheckRun()
-	*Function: 
-	*Input Ref:NO
-	*Return Ref: NO
-	*
-***********************************************************************/
-void  CheckRun()
+/***********************************************************************
+ * ***
+ *Function Name:void ReChargeBattery(void) 
+ *Function :Auto recharge batter 
+ * 
+ * 
+ * 
+ * 
+************************************************************************/
+void Auto_ReChargeBattery(void)
 {
-    static INT16U i,j,z,w ;
-
+	static INT8U w,j,i,z;
 	switch(RunMode)
 	{
 		/********************Mode =1 END***********************************/
@@ -377,7 +377,7 @@ void  CheckRun()
 		break;
 
 		case 45:  //line
-			 if(RunMs< 10){
+			 if(RunMs< 5){
 
                 InitMotorForwardSlow();//line run 
 
@@ -431,7 +431,7 @@ void  CheckRun()
 		break;
 		
 		case 0x47 : //cw
-               if(RunMs< 3){
+               if(RunMs< 5){
 
                 InitMotorRight();//CW 
 
@@ -440,28 +440,24 @@ void  CheckRun()
 			   else {
 
 					RunMs =0 ;
-					RunStep = 0x46;
+					RunStep = 0x48;//The bug 
 
                }
 
 
 		break;
 
-
-
-
 		case 0x48:
-			   z++ ;
+			 
 			 SetStop();
 			 Delay_ms(500);
 			 if(z ==1)
-			   IRLocation.CloseList[4]=Mid_ReadIR.ReadIR[0];
-			 else {
-			     IRLocation.CloseList[5]=Mid_ReadIR.ReadIR[0];
-				 z=0;
-              }
 			 
-			 if(IRLocation.irLeftValue ==1 && (IRLocation.CloseList[4]==0||IRLocation.CloseList[5]==0 )){
+			     IRLocation.CloseList[5]=Mid_ReadIR.ReadIR[0];
+			
+              
+			 
+			 if(IRLocation.irLeftValue ==1 && IRLocation.CloseList[5]==0 ){
 
                         RunStep = 0x45; //line 
 						RunMs = 0;
@@ -471,37 +467,36 @@ void  CheckRun()
 
 			 }
              else {
-			 if(IRLocation.CloseList[5] >IRLocation.CloseList[4]){
-
-			 			RunStep = 0x45; //line 
-						RunMs = 0;
-
-             }
 			
-			 else if(IRLocation.CloseList[5] ==IRLocation.CloseList[4] && IRLocation.CloseList[4]!=0 ){
-						RunStep = 0x45; //line 
-						RunMs = 0;
+			
+			 if(IRLocation.CloseList[5] >0 ){
+				         z++ ;
+						 if(z< 3){
+							RunStep = 0x45; //line 
+							RunMs = 0;
+						 }
+						 else {
+							 
+							    RunStep = 0x43; //CW
+						       RunMs = 0;
+								z=0;
+							}
 
 			 }
 		
-			 else if(IRLocation.CloseList[5] <IRLocation.CloseList[4]){
-			 	        RunStep = 0x43; //CW
-						RunMs = 0;
-			 			IRLocation.irRightValue=1;
-
-			 }
-			 else if(IRLocation.CloseList[5] ==IRLocation.CloseList[1] && IRLocation.CloseList[1]!=0){
+		    else if(IRLocation.CloseList[5] ==IRLocation.CloseList[1] && IRLocation.CloseList[1]!=0){
 						RunStep = 0x45; //line 
 						RunMs = 0;
 
 			 }
               else {
-			            RunMs =0 ;
-				        RunStep = 0x01;
+			            RunStep = 0x43; //CW
+						RunMs = 0;
+			 			IRLocation.irRightValue=1;
              
                 }
-             }
-
+             
+			 }
 		break;
 
        case 0x50:
@@ -592,14 +587,18 @@ void  CheckRun()
 				}
 				else if(IRLocation.FarLeft>0)
 				{
-					//RunStep=0x5c;
-					InitMotorForwardRightSlow();
+					
+                    
+					RunStep=0x01;//InitMotorForwardRightSlow();
+					RunMs =0;
+				
 					RunNoIRsenorTime=0;
 					RunNoIRsenorLastStep=2;					
 				}
 				else
 				{
-					RunNoIRsenorTime++;
+				
+			        RunNoIRsenorTime++;
 					if(RunNoIRsenorTime>4)
 					{
 
@@ -608,7 +607,7 @@ void  CheckRun()
 						{
 
 						}
-						else	if(RunNoIRsenorLastStep==2)
+						else if(RunNoIRsenorLastStep==2)
 						{
 							InitMotorForwardRightSlow();
 							RunNoIRsenorTime=0;
@@ -623,19 +622,658 @@ void  CheckRun()
 
 
 					}
-				}
+				
+				
 				ClearAllIR();
 			}
+		 }
 		}
 		break;
 		}
 		
 	
 	}
-	
-	
+
 }
 }
+/***********************************************************************
+ * ***
+ *Function Name:void ReChargeBattery(void) 
+ *Function :void CleanMode_BOW(void)
+ * 
+ * 
+ * 
+ * 
+************************************************************************/
+void CleanMode_BOW(void)
+{
+
+// 弓形
+	
+		
+		switch(RunStep)
+		{
+		case 0:
+		{
+
+		}
+		break;
+		case 1:
+		{
+		   //InitMotorLeft();
+			InitMotorForward();
+			RunStep=2;
+		}
+		break;
+		case 2:
+		{
+			if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+			{
+
+				NoImpSecond=0;
+				RunStep=0x4;
+				InitMotorRetreat();
+				RunMs=30;
+				CurrentMax++;
+			}
+            else if(IMP>0)
+			{
+				NoImpSecond=0;
+				RunStep=0x4;
+				InitMotorRetreat();
+				RunMs=0;
+				CurrentMax++;			
+			}
+			else if((LCurrent>LCurrentMax)||(RCurrent>RCurrentMax))
+			{
+				CurrentMax++;
+				NoImpSecond=0;
+				RunStep=0x3;
+				SetStop();
+				RunMs=0;
+			}
+			else  if(RunMs>500)
+			{
+				CurrentMax=0;
+			}
+		}
+			break;
+		case 3:
+		{
+			if(RunMs>90)
+			{
+				InitMotorRetreat();
+				RunMs=0;
+				RunStep=4;
+			}
+			break;
+        }
+		case 4:
+		{
+			if(RunMs>90)
+			{
+				SetStop();
+				RunMs=0;
+				RunStep=5;
+			}
+		}
+			break;
+		case 5:
+		{
+			if(RunMs>20)
+			{
+				InitMotorLeft();
+				RunMs=0;
+				RunStep=6;
+			}
+		}
+			break;
+
+		case 6:
+		{
+			if(RunMs>readRunTime())
+			{
+				SetStop();
+				//InitMotorForward();
+				RunMs=0;
+				RunStep=7;
+				LCurrent=0;
+				RCurrent=0;
+			}
+			else if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+			{
+
+				NoImpSecond=0;
+				RunStep=4;
+				InitMotorRetreat();
+				RunMs=30;
+
+			}
+            else if(IMP>0)
+			{
+				NoImpSecond=0;
+				RunStep=0x4;
+				InitMotorRetreat();
+				RunMs=0;
+				CurrentMax++;			
+			}
+
+        }
+			break;
+		case 7:
+		{
+			if(RunMs>40)
+			{
+				InitMotorForward();
+				RunMs=0;
+				RunStep=8;
+				LCurrent=0;
+				RCurrent=0;
+			}
+		}
+		break;
+		case 8:
+		{
+			if(RunMs>150)
+			{
+				SetStop();
+				RunMs=0;
+				RunStep=9;
+
+			}
+			else if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+			{
+				NoImpSecond=0;
+				RunStep=9;
+				InitMotorRetreat();
+				RunMs=0;
+				CurrentMax++;
+			}
+			else if(IMP>0)
+			{
+
+				NoImpSecond=0;
+				RunStep=9;
+				InitMotorLeftMax();
+				RunMs=0;
+				CurrentMax++;
+			}
+
+			else if((LCurrent>LCurrentMax)||(RCurrent>RCurrentMax))
+			{
+
+				CurrentMax++;
+				InitMotorRetreat();
+				RunMs=0;
+				RunStep=9;
+			}
+		}
+			break;
+		case 9:
+		{
+			if(RunMs>90)
+			{
+				InitMotorLeft();
+				RunMs=0;
+				RunStep=10;
+			}
+		}
+			break;
+
+		case 10:
+			if(RunMs>readRunTime())
+			{
+
+				{
+					//InitMotorForward();
+					SetStop();
+					RunMs=0;
+					RunStep=11;
+					LCurrent=0;
+					RCurrent=0;
+				}
+			}
+
+			else if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+			{
+
+				NoImpSecond=0;
+				RunStep=4;
+				InitMotorRetreat();
+				RunMs=20;
+
+			}
+			else if(IMP>0)
+			{
+
+				NoImpSecond=0;
+				RunStep=4;
+				InitMotorLeftMax();
+				RunMs=0;
+
+			}
+
+
+			break;
+		case 11:
+			if(RunMs>20)
+			{
+				InitMotorForward();
+				RunMs=0;
+				RunStep=0x12;
+				ImpSecond=0;
+				LCurrent=0;
+				RCurrent=0;
+			}
+			else if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+			{
+
+				NoImpSecond=0;
+				RunStep=9;
+				InitMotorRetreat();
+				RunMs=0;
+
+			}
+			else if(IMP>0)
+			{
+
+				NoImpSecond=0;
+				RunStep=9;
+				InitMotorRetreat();
+				RunMs=0;
+
+			}
+			break;
+		case 0x12:
+		{
+			if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+			{
+				CurrentMax++;
+				NoImpSecond=10;
+				RunStep=0x14;
+				InitMotorRetreat();
+				RunMs=20;
+
+			}
+			else if(IMP>0)
+			{
+				CurrentMax++;
+				NoImpSecond=0;
+				RunStep=0x14;
+				InitMotorRetreat();
+				RunMs=0;
+			
+			}
+			else if((LCurrent>LCurrentMax)||(RCurrent>RCurrentMax))
+			{
+
+				CurrentMax++;
+				EdgeTime=0;
+				NoImpSecond=0;
+				RunStep=0x13;
+				SetStop();
+				RunMs=0;
+			}
+			else  if(RunMs>500)
+			{
+				CurrentMax=0;
+			}
+		}
+		break;
+		case 0x13:
+		{
+			if(RunMs>30)
+			{
+				InitMotorRetreat();
+				RunMs=0;
+				RunStep=0x14;
+			}
+			break;
+		}
+		case 0x14:
+		{
+			if(RunMs>90)
+			{
+				SetStop();
+				RunMs=0;
+				RunStep=0x15;
+			}
+		}
+			break;
+		case 0x15:
+		{
+			if(RunMs>10)
+			{
+				InitMotorRight();
+				RunMs=0;
+				RunStep=0x16;
+			}
+		}
+			break;
+
+		case 0x16:
+		{
+			if(RunMs>readRunTime())
+			{
+				SetStop();
+				//InitMotorForward();
+				RunMs=0;
+				RunStep=0x17;
+				LCurrent=0;
+				RCurrent=0;
+			}
+			else if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+			{
+				CurrentMax++;
+				NoImpSecond=0;
+				RunStep=0x14;
+				InitMotorRetreat();
+				RunMs=0;
+
+			}
+ 			else if(IMP>0)
+			{
+				CurrentMax++;
+				NoImpSecond=0;
+				RunStep=0x14;
+				InitMotorRetreat();
+				RunMs=0;
+			
+			}
+			else if((LCurrent>LCurrentMax)||(RCurrent>RCurrentMax))
+			{
+				CurrentMax++;
+				NoImpSecond=0;
+				RunStep=0x14;
+				InitMotorRetreat();
+				RunMs=0;
+
+			}
+
+	   }
+			break;
+		case 0x17:
+		{
+			if(RunMs>20)
+			{
+				InitMotorForward();
+				RunMs=0;
+				RunStep=0x18;
+				LCurrent=0;
+				RCurrent=0;
+			}
+		}
+		break;
+		case 0x18:
+		{
+			if(RunMs>150)
+			{
+				SetStop();
+				RunMs=0;
+				RunStep=0x19;
+
+			}
+			else  if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+			{
+				CurrentMax++;
+				NoImpSecond=0;
+				RunStep=0x19;
+				InitMotorRetreat();
+				RunMs=0;
+
+			}
+		   else if(IMP>0)
+		   {
+				CurrentMax++;
+				NoImpSecond=0;
+				RunStep=0x19;
+				InitMotorRetreat();
+				RunMs=0;		   
+		   }
+			else if((LCurrent>LCurrentMax)||(RCurrent>RCurrentMax))
+			{
+				CurrentMax++;
+				InitMotorRetreat();
+				RunMs=0;
+				RunStep=0x19;
+			}
+		}
+			break;
+		case 0x19:
+		{
+			if(RunMs>20)
+			{
+				InitMotorRight();
+				RunMs=0;
+				RunStep=0x1a;
+			}
+			}
+			break;
+
+		case 0x1a:
+		{
+			if(RunMs>readRunTime())
+			{
+				//InitMotorForward();
+				SetStop();
+				RunMs=0;
+				RunStep=0x1b;
+				LCurrent=0;
+				RCurrent=0;
+
+			}
+			else if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+			{
+				CurrentMax++;
+				NoImpSecond=0;
+				RunStep=0x19;
+				InitMotorRetreat();
+				RunMs=0;
+
+			}
+		   else if(IMP>0)
+		   {
+				CurrentMax++;
+				NoImpSecond=0;
+				RunStep=0x19;
+				InitMotorRetreat();
+				RunMs=0;		   
+		   }
+			else if((LCurrent>LCurrentMax)||(RCurrent>RCurrentMax))
+			{
+				CurrentMax++;
+				InitMotorRetreat();
+				RunMs=0;
+				RunStep=0x19;
+			}
+		}
+			break;
+		case 0x1b:
+		{
+			if(RunMs>20)
+			{
+				InitMotorForward();
+				RunMs=0;
+				RunStep=0x2;
+				ImpSecond=0;
+				LCurrent=0;
+				RCurrent=0;
+			}
+			else if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+			{
+				CurrentMax++;
+				NoImpSecond=0;
+				RunStep=0x19;
+				InitMotorRetreat();
+				RunMs=0;
+
+			}
+		   else if(IMP>0)
+		   {
+				CurrentMax++;
+				NoImpSecond=0;
+				RunStep=0x19;
+				InitMotorRetreat();
+				RunMs=0;		   
+		   }
+			else if((LCurrent>LCurrentMax)||(RCurrent>RCurrentMax))
+			{
+				CurrentMax++;
+				InitMotorRetreat();
+				RunMs=0;
+				RunStep=0x19;
+			}
+		   }
+			break;
+
+		}
+		
+	
+}
+/***********************************************************************
+ * ***
+ *Function Name:void CleanMode_Random(void)
+ *Function :void CleanMode_BOW(void)
+ * 
+ * 
+ * 
+ * 
+************************************************************************/
+void CleanMode_Random(void)
+{
+	
+	  	switch(RunStep)
+		{
+		case 0:
+		{
+
+		}
+		break;
+		case 1:
+		{
+
+			InitMotorForward();
+			RunStep=2;
+		}
+		break;
+		case 2:
+		{
+			if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+			{
+
+				NoImpSecond=0;
+				RunStep=0x3;
+				InitMotorRetreat();
+				RunMs=10;
+				CurrentMax++;
+			}
+            else if(IMP>0)
+			{
+				NoImpSecond=0;
+				RunStep=0x3;
+				InitMotorRetreat();
+				RunMs=0;
+				CurrentMax++;			
+			}
+			else if((LCurrent>LCurrentMax)||(RCurrent>RCurrentMax))
+			{
+				CurrentMax++;
+				NoImpSecond=0;
+				RunStep=0x3;
+				SetStop();
+				RunMs=0;
+			}
+			else  if(RunMs>500)
+			{
+				CurrentMax=0;
+			}
+		}
+			break;
+		case 3:
+		{
+			if(RunMs>30)
+			{
+				InitMotorRetreat();
+				RunMs=0;
+				RunStep=4;
+			}
+			break;
+        }
+		case 4:
+		{
+			if(RunMs>30)
+			{
+				SetStop();
+				RunMs=0;
+				RunStep=5;
+			}
+		}
+			break;
+		case 5:
+		{
+			if(RunMs>20)
+			{
+				InitMotorLeft();
+				RunMs=0;
+				RunStep=6;
+			}
+		}
+			break;
+
+		case 6:
+		{
+			if(RunMs>readRunTime())
+			{
+				//SetStop();
+				InitMotorForward();
+				RunMs=0;
+				RunStep=2;
+				LCurrent=0;
+				RCurrent=0;
+			}
+			else if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+			{
+
+				NoImpSecond=0;
+				RunStep=3;
+				InitMotorRetreat();
+				RunMs=10;
+
+			}
+            else if(IMP>0)
+			{
+				NoImpSecond=0;
+				RunStep=0x3;
+				InitMotorRetreat();
+				RunMs=0;
+				CurrentMax++;			
+			}
+
+        }
+			break;			
+			}
+	}
+	
+
+
+
+/**********************************************************************
+ * 	*
+    *Function Name:void  CheckRun()
+	*Function: 
+	*Input Ref:NO
+	*Return Ref: NO
+	*
+***********************************************************************/
+void  CheckRun()
+{
+    
+
+	
+	
+
+}
+
 /************************************************************************************
  * 	*
     *Function Name:void CheckMode(INT8U Key)
@@ -712,6 +1350,7 @@ void CheckMode(INT8U Key)
 			    LedGreenON();
 				LedRedOff();
 				n=0;
+				Step = 0x19 ;
 
 			
 			break;
@@ -737,14 +1376,15 @@ void CheckMode(INT8U Key)
 			break;
 			case  4: //power off 
 				 Mode =0x66;
-			
+				SetStop();
 				SetBuzzerTime(4);
 			    Delay_ms(10);
 				BuzzerOff();
-               LedGreenOff();
+                LedGreenOff();
 				LedRedON();
 				n=0;
 
+				Step = 0x19 ;
 
 			
 			break;
@@ -754,7 +1394,7 @@ void CheckMode(INT8U Key)
 
 		
 		case 0x19:
-		if(cleanWorks.CleanMode == standbyMode)  //  Mode=2;Step=0;RunMode=1;RunStep=0; ---default power on don't press key
+		//if(cleanWorks.CleanMode == standbyMode)  //  Mode=2;Step=0;RunMode=1;RunStep=0; ---default power on don't press key
 		{
 			if(Step==0)
 			{
@@ -763,7 +1403,7 @@ void CheckMode(INT8U Key)
 				ADCtl=1;
 				RunSecond=0;
 			}
-			else if(Step<20)
+			else if(Step<0x20)
 			{
 				//LedBlueON();
 				Mode=1;
@@ -797,7 +1437,7 @@ void CheckMode(INT8U Key)
 		case 1://prepare clean mode 
 		{
 		      
-			     Mode =0x66;
+			    Mode =0x66;
 				SetBuzzerTime(4);
 			    Delay_ms(10);
 				BuzzerON();
@@ -998,3 +1638,580 @@ void CheckMode(INT8U Key)
     }
 }
 	
+/****************************************************************
+ * *
+ * * * Function Name:void circleMode(void)
+ *     Function: 
+ * 
+ * 
+*****************************************************************/
+void circleMode(void)
+{
+ 		switch(RunStep)
+		{
+			case 0:
+			{
+
+			}
+				break;
+
+			case 1:  //初始原地右转圈
+			{								
+				InitMotorRightCircle();
+				RunStep=2;
+				RunMs=0;
+			}
+				break;
+
+			case 2:  //normal run
+			{
+				if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+				{
+					NoImpSecond=0;
+					RunStep=0x3;
+					InitMotorRetreat();
+					RunMs=10;
+					CurrentMax++;
+				}
+				else if(IMP>0)
+				{
+					NoImpSecond=0;
+					RunStep=0x3;
+					InitMotorRetreat();
+					RunMs=0;
+					CurrentMax++;			
+				}
+				else 
+					if((LCurrent>LCurrentMax)||(RCurrent>RCurrentMax))
+				{
+					CurrentMax++;
+					NoImpSecond=0;
+					RunStep=0x3;
+					SetStop();
+					RunMs=0;
+				}
+				else if(RunMs>600)
+				{
+					InitMotorForwardRightUp1();
+					RunStep = 0x10;
+					RunMs = 0;
+					CurrentMax = 0;
+				}
+			}
+				break;
+			
+			case 3:   //后退
+			{
+				if(RunMs>30)
+				{
+					InitMotorRetreat();
+					RunMs=0;
+					RunStep=4;
+				}
+			}
+				break;
+			
+			case 4:  //停止
+			{
+				if(RunMs>40)
+				{
+					SetStop();
+					RunMs=0;
+					RunStep=5;
+				}
+			}
+				break;
+
+			case 5:  //转弯
+			{
+				if(RunMs>20)
+				{
+					InitMotorLeftCircle();
+					RunMs=0;
+					RunStep=6;
+				}
+			}
+				break;
+
+			case 6:  //直走
+			{			
+				if(RunMs>80)
+				{
+					InitMotorForward();
+					RunMs=0;
+					RunStep=7;
+				}	
+			}
+				break;			
+					
+			case 7:
+			{
+			if(RunMs>300)  //直走一段距离，然后换转向
+				{
+					SetStop();				
+					RunStep=1;				
+					RunMs=0;
+					LCurrent=0;
+					RCurrent=0;
+				}
+				else if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+				{
+					NoImpSecond=0;
+					RunStep=3;
+					InitMotorRetreat();
+					RunMs=10;
+
+				}
+				else if(IMP>0)
+				{
+					NoImpSecond=0;
+					RunStep=0x3;
+					InitMotorRetreat();
+					RunMs=0;
+					CurrentMax++;			
+				}			
+			}
+				break;
+			
+						
+			//右内圈
+			case 0x10:{
+				if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+				{
+					NoImpSecond=0;
+					RunStep=0x3;
+					InitMotorRetreat();
+					RunMs=10;
+					CurrentMax++;
+				}
+				else if(IMP>0)
+				{
+					NoImpSecond=0;
+					RunStep=0x3;
+					InitMotorRetreat();
+					RunMs=0;
+					CurrentMax++;			
+				}
+				else if((LCurrent>LCurrentMax)||(RCurrent>RCurrentMax))
+				{
+					CurrentMax++;
+					NoImpSecond=0;
+					RunStep=0x3;
+					SetStop();
+					RunMs=0;
+				}
+				else  if(RunMs>2000)
+				{
+					InitMotorForwardRightUp2();
+					RunStep = 0x11;
+					CurrentMax = 0;
+				}
+			}
+				break;
+			
+			//右中圈
+			case 0x11:{
+				if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+				{
+					NoImpSecond=0;
+					RunStep=0x3;
+					InitMotorRetreat();
+					RunMs=10;
+					CurrentMax++;
+				}
+				else if(IMP>0)
+				{
+					NoImpSecond=0;
+					RunStep=0x3;
+					InitMotorRetreat();
+					RunMs=0;
+					CurrentMax++;			
+				}
+				else if((LCurrent>LCurrentMax)||(RCurrent>RCurrentMax))
+				{
+					CurrentMax++;
+					NoImpSecond=0;
+					RunStep=0x3;
+					SetStop();
+					RunMs=0;
+				}
+				else  if(RunMs>2200)
+				{
+					InitMotorForwardRightUp3();
+					RunStep = 0x12;
+					CurrentMax = 0;
+					RunMs=0;
+				}
+			}
+				break;	
+
+			//右外圈
+			case 0x12:{
+				if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+				{
+					NoImpSecond=0;
+					RunStep=0x3;
+					InitMotorRetreat();
+					RunMs=10;
+					CurrentMax++;
+				}
+				else if(IMP>0)
+				{
+					NoImpSecond=0;
+					RunStep=0x3;
+					InitMotorRetreat();
+					RunMs=0;
+					CurrentMax++;			
+				}
+				else if((LCurrent>LCurrentMax)||(RCurrent>RCurrentMax))
+				{
+					CurrentMax++;
+					NoImpSecond=0;
+					RunStep=0x3;
+					SetStop();
+					RunMs=0;
+				}
+				else  if(RunMs>1600)
+				{
+					SetStop();
+					RunStep=0x06;
+					RunMs= 75;
+					CurrentMax = 0;
+				}
+			}
+				break;	
+
+#if 0   
+			case 0x08:   //原地左转
+			{
+				InitMotorLeftCircle();
+				RunStep= 0x02;
+				rightLeftFlag = 0;
+				RunMs=0;				
+			}
+				break;			
+			
+			
+			//左内圈
+			case 0x20:{
+				if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+				{
+					NoImpSecond=0;
+					RunStep=0x3;
+					InitMotorRetreat();
+					RunMs=10;
+					CurrentMax++;
+				}
+				else if(IMP>0)
+				{
+					NoImpSecond=0;
+					RunStep=0x3;
+					InitMotorRetreat();
+					RunMs=0;
+					CurrentMax++;			
+				}
+				else if((LCurrent>LCurrentMax)||(RCurrent>RCurrentMax))
+				{
+					CurrentMax++;
+					NoImpSecond=0;
+					RunStep=0x3;
+					SetStop();
+					RunMs=0;
+				}
+				else  if(RunMs>1000)
+				{
+					InitMotorForwardLeftUp2();
+					RunStep = 0x21;
+					CurrentMax = 0;
+					RunMs=0;
+				}
+			}
+				break;
+			
+			//左中圈
+			case 0x21:{
+				if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+				{
+					NoImpSecond=0;
+					RunStep=0x3;
+					InitMotorRetreat();
+					RunMs=10;
+					CurrentMax++;
+				}
+				else if(IMP>0)
+				{
+					NoImpSecond=0;
+					RunStep=0x3;
+					InitMotorRetreat();
+					RunMs=0;
+					CurrentMax++;			
+				}
+				else if((LCurrent>LCurrentMax)||(RCurrent>RCurrentMax))
+				{
+					CurrentMax++;
+					NoImpSecond=0;
+					RunStep=0x3;
+					SetStop();
+					RunMs=0;
+				}
+				else  if(RunMs>2000)
+				{
+					RunMs=0;
+					InitMotorForwardLeftUp3();
+					RunStep = 0x22;
+					CurrentMax = 0;
+				}
+			}
+				break;	
+
+			//左外圈
+			case 0x22:{
+				if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+				{
+					NoImpSecond=0;
+					RunStep=0x3;
+					InitMotorRetreat();
+					RunMs=10;
+					CurrentMax++;
+				}
+				else if(IMP>0)
+				{
+					NoImpSecond=0;
+					RunStep=0x3;
+					InitMotorRetreat();
+					RunMs=0;
+					CurrentMax++;			
+				}
+				else if((LCurrent>LCurrentMax)||(RCurrent>RCurrentMax))
+				{
+					CurrentMax++;
+					NoImpSecond=0;
+					RunStep=0x3;
+					SetStop();
+					RunMs=0;
+				}
+				else  if(RunMs>2500)
+				{
+					SetStop();
+					RunStep=0x1;
+					RunMs=0;
+					CurrentMax = 0;
+				}
+			}
+				break;	
+	#endif		
+	}	
+}
+/****************************************************************
+ * *
+ * * * Function Name:void wallMode(void)
+ *     Function: 
+ * 
+ * 
+*****************************************************************/
+void wallMode(void)
+{
+	switch(RunStep){
+		case 0:
+			break;
+		
+		case 1:   //init
+			InitMotorForwardLeft();
+			RunStep=2;				
+			RunMs = 0;
+		  WallDp[0] = 0;
+			WallDp[1] = 0;
+			WallDp[2] = 0;
+			WallDp[3] = 0;
+			break;
+
+		case 2:  // run normal 
+			if((WallDp[0]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin)){			
+				NoImpSecond=0;
+				RunStep=0x3;
+				InitMotorRetreat();
+				RunMs=10;
+				CurrentMax++;
+			}
+			else if(IMP>0){		
+				NoImpSecond=0;
+				RunStep=0x3;
+				InitMotorRetreat();
+				RunMs=0;
+				CurrentMax++;			
+				if(IMP == 1){
+					RunStep=10;
+				}
+			}
+			else	if((LCurrent>LCurrentMax)||(RCurrent>RCurrentMax)){			
+				CurrentMax++;
+				NoImpSecond=0;
+				RunStep=0x3;
+				SetStop();
+				RunMs=0;
+			}
+			else	if((WallDp[1]>WallModeMin)){  //right IR detection
+				NoImpSecond=0;
+				InitMoterAdjustLeft();
+				RunStep=0x8;
+				RunMs = 0;
+			}
+			else if(RunMs>1000){			//往右前方走，一直打圈检测不到，则向直走一段距离，重新检测
+				RunStep = 0x09;
+				RunMs = 0;
+				InitMotorForward();
+				CurrentMax = 0;			
+			}
+			break;
+		
+		case 3: 		//后退 retreat
+			if(RunMs>30){
+				InitMotorRetreat();
+				RunMs=0;
+				RunStep=4;
+			}			
+			break;
+
+			case 4:  		//停止 stop
+				if(RunMs>40){	
+					SetStop();
+					RunMs=0;
+					RunStep=5;
+				}
+				break;
+
+			case 5:  //转弯 turn
+				if(RunMs>20){			
+					InitMotorLeft();
+					RunMs=0;
+					RunStep=6;
+				}
+				break;
+
+			case 6:  //直走	
+				if(RunMs>80){
+					InitMotorForward();
+					RunMs=0;
+					RunStep=7;
+				}	
+				break;			
+					
+			case 7:  //直走一段小距离，然后换转向			
+				if(RunMs>100){  			
+					RunStep=1;				
+					RunMs=0;
+					LCurrent=0;
+					RCurrent=0;
+				}
+				else if((WallDp[0]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+				{
+					NoImpSecond=0;
+					RunStep=3;
+					InitMotorRetreat();
+					RunMs=10;
+				}
+				else if(IMP>0)
+				{
+					NoImpSecond=0;
+					RunStep=0x3;
+					InitMotorRetreat();
+					RunMs=0;
+					CurrentMax++;			
+					if(IMP == 1){
+						RunStep=10;
+					}
+				}	
+				else if(WallDp[1]>WallModeMin){
+					RunMs = 0;
+					RunStep = 8;
+				}				
+				break;
+						
+			case 8:   //right IR check 采样
+				if(RunMs>10){
+					RunMs = 0;
+					if(WallDp[1]<WallModeMin){
+						RunStep = 0x01;
+						RunMs = 0;
+					}
+					else if(WallDp[1]<WallModeNormal){ //全速直走
+						RunMs = 0;
+						InitMoterAdjustForward();
+					}					
+					else if(WallDp[1]<WallModeMax){  
+						InitMoterAdjustLeft();
+						RunMs = 0;
+					}
+					else{
+						InitMoterAdjustLeftMore();
+						RunMs = 0;
+					}
+						
+					if((WallDp[0]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+					{
+						NoImpSecond=0;
+						RunStep=3;
+						InitMotorRetreat();
+						RunMs=10;
+					}
+					else if(IMP>0)
+					{
+						NoImpSecond=0;
+						RunStep=0x3;
+						InitMotorRetreat();
+						RunMs=0;
+						CurrentMax++;			
+						if(IMP == 1){
+							RunStep=10;
+						}
+					}	
+				}
+				break;
+				
+			case 9:		//向前走一段长距离，重新寻找墙
+				if(RunMs>500){
+					RunMs = 0;
+					RunStep = 1;
+				}
+				break;
+
+			
+		case 10: 		//后退 retreat
+			if(RunMs>10){
+				InitMotorRetreat();
+				RunMs=0;
+				RunStep=11;
+			}			
+			break;
+
+			case 11:  		//停止 stop
+				if(RunMs>40){	
+					SetStop();
+					RunMs=0;
+					RunStep=12;
+				}
+				break;
+
+			case 12:  //转小弯 turn
+				if(RunMs>20){			
+					InitMotorLeft();
+					RunMs=0;
+					RunStep=13;
+				}
+				break;
+				
+			case 13:  //小曲线右转	
+				if(RunMs>40){
+					InitMotorRightLittle();
+					RunMs= 80;
+					RunStep=7;
+				}	
+				break;	
+				
+				
+		default:
+			break;	
+	}
+	return;
+}
+

@@ -226,14 +226,31 @@ void InitFanEdgeIO(void)
 	PWMEN |= 0x11;						//使能PWM0以及PWM01
 	ForwardFlag=2;
 }
-/***************************************************************
-	*
-	*Function Name:void InitMotorForwardRightSlow(void)
-	*Function :Line run slowly
-	*
-	*
-	*
-***************************************************************/
+
+
+ void InitMotorForwardLeft(void)
+{
+	P1_1=0;
+	P1_2=0;
+	P1_3=0;
+	P1_4=0;
+	PWM0_MAP = 0x13;					//PWM0通道映射P14口
+	PWM01_MAP = 0x12;					//PWM01通道映射P12口
+	PWM0C = 0x01;						//PWM0高有效，PWM01高有效，时钟8分频 
+	PWMM |= 0x10;						//PWM0工作于互补模式						
+
+	PWM0PH = 0x01;						//周期高4位设置为0x03
+	PWM0PL = 0x0;						//周期低8位设置为0xFF
+
+	PWM0DH = 0x00;						//PWM0高4位占空比0x01
+	PWM0DL = 0x90;						//PWM0低8位占空比0x55
+	PWM0DTH = 0x00;						//PWM01高4位占空比0x01
+	PWM0DTL = 0x90;						//PWM01低8位占空比0x55
+	PWMEN |= 0x11;						//使能PWM0以及PWM01
+	ForwardFlag=3;
+}
+
+
  void InitMotorForwardRightSlow(void)
 {
     P1_1=0;
@@ -366,7 +383,6 @@ void InitFanEdgeIO(void)
 ***************************************************************/
  void SetMotorForwardPWMUP()
 {
-	//PWM0DH = 0x00;
 	if(ForwardFlag==1)
 	{
 	  if(PWM0DL<0xd0)					 
@@ -377,17 +393,22 @@ void InitFanEdgeIO(void)
 	}
 	else if(ForwardFlag==2)
 	{
-	  if(PWM0DL<0xb0)					 
+	  if(PWM0DL<0xa0)					 
 	   PWM0DL += 3;				 
-	   //PWM0DTH = 0x00;
 	  if(PWM0DTL<0xe5)						 
+	   PWM0DTL += 3;
+	}
+	else if(ForwardFlag==3)
+	{
+	  if(PWM0DL<0xf5)					 
+	   PWM0DL += 3;				 
+	  if(PWM0DTL<0xa0)						 
 	   PWM0DTL += 3;
 	}
 	else if(ForwardFlag==4)
 	{
 	  if(PWM0DL<0xf5)					 
 	   PWM0DL += 2;				 
-	   //PWM0DTH = 0x00;
 	  if(PWM0DTL<0xf5)						 
 	   PWM0DTL += 2;
 	}
@@ -395,7 +416,6 @@ void InitFanEdgeIO(void)
 	{
 	  if(PWM0DL<0xb0)					 
 	   PWM0DL += 3;				 
-	   //PWM0DTH = 0x00;
 	  if(PWM0DTL<0x90)						 
 	   PWM0DTL += 3;
 	}
@@ -403,19 +423,106 @@ void InitFanEdgeIO(void)
 	{
 	  if(PWM0DL<0x90)					 
 	   PWM0DL += 3;				 
-	   //PWM0DTH = 0x00;
 	  if(PWM0DTL<0xb0)						 
 	   PWM0DTL += 3;
 	}
+	else if(ForwardFlag==7)
+	{
+	  if(PWM0DL>0xC0)					 
+	   PWM0DL -= 1;				 
+	  if(PWM0DTL>0x90)						 
+	   PWM0DTL -= 2;
+	}
+	else if(ForwardFlag==8)
+	{
+	  if(PWM0DL<0xd0)					 
+	   PWM0DL += 1;				 
+	  if(PWM0DTL<0xa0)						 
+	   PWM0DTL += 1;
+	}	
+	else if(ForwardFlag==9)
+	{
+	  if(PWM0DL<0xee)					 
+	   PWM0DL += 1;				 
+	  if(PWM0DTL<0xb0)						 
+	   PWM0DTL += 1;
+	}
+	else if(ForwardFlag==10)
+	{
+	  if(PWM0DL>0x90)					 
+	   PWM0DL -= 2;				 
+	  if(PWM0DTL>0xC0)						 
+	   PWM0DTL -= 1;
+	}
+	else if(ForwardFlag==11)
+	{
+	  if(PWM0DL<0xa0)					 
+	   PWM0DL += 1;				 
+	  if(PWM0DTL<0xD0)						 
+	   PWM0DTL += 1;
+	}
+	else if(ForwardFlag==12)
+	{
+	  if(PWM0DL<0xb0)					 
+	   PWM0DL += 1;				 
+	  if(PWM0DTL<0xee)						 
+	   PWM0DTL += 1;
+	}	
+	else if(ForwardFlag==13)
+	{
+	  if(PWM0DL<0xc0)					 
+	   PWM0DL += 1;				 
+	  if(PWM0DTL<0xc0)						 
+	   PWM0DTL += 1;
+	}	
+		else if(ForwardFlag == 14){   //左轮减速，微调角度
+		if(PWM0DL<0x90 && PWM0DTL==0xb0){
+			PWM0DL -= 1;	
+			if(PWM0DL<=0x90)
+				PWM0DTL= 0xb1;
+		}
+		else{		
+			if(PWM0DTL<0xc0)
+				PWM0DTL += 2;
+			PWM0DL += 2;
+			if(PWM0DL>=0xc0){
+				PWM0DL = 0xc0;
+				PWM0DTL = 0xc0;
+				ForwardFlag = 15;
+			}
+		}
+	}
+	else if(ForwardFlag == 15){   //由右转调节成直走
+	  if(PWM0DL>0xc0)					 
+	   PWM0DL -= 2;			
+		else
+			PWM0DL += 2;
+		
+	  if(PWM0DTL>0xc0)						 
+	   PWM0DTL -= 2;
+		else
+		PWM0DTL += 2;
+		
+	}
+	else if(ForwardFlag == 16){   //左轮减速，微调角度
+	  if(PWM0DL>0xb0)					 
+	   PWM0DL -= 1;				 
+	  if(PWM0DTL<0xd0)						 
+	   PWM0DTL += 1;
+	}
+	else if(ForwardFlag == 17){   //小曲线右转
+	  if(PWM0DL>0xC0)
+			PWM0DL -= 1;	
+	  else
+			PWM0DL += 1;	
+		
+	  if(PWM0DTL<0xB8)					
+	   PWM0DTL += 1;
+		else
+		PWM0DTL -= 1;
+	}
+	return;
 }
- /***************************************************************
-	*
-	*Function Name:void InitMotorRight(void)
-	*Function :CW turn round 
-    *Input Ref:NO
-    *Return Ref:NO
-	*
-***************************************************************/
 void InitMotorRight(void)
 {
     P1_1=0;
@@ -437,7 +544,7 @@ void InitMotorRight(void)
 	//			= 511.5us		   		约1.955kHz
 
 	PWM0PH = 0x01;						//周期高4位设置为0x03
-	PWM0PL = 0x10;						//周期低8位设置为0xFF
+	PWM0PL = 0x10;	// frequency ？？？？			//周期低8位设置为0xFF
 
 	//占空比计算= 0x0155 / (Fosc / PWM分频系数)		（Fosc见系统时钟配置的部分）
 	//			= 0x0155 / (16000000 / 8)			
@@ -664,4 +771,154 @@ void SetFan(INT8U status)
 void SetEdge(INT8U status)
 {
    PWM1DL = status;
+}
+
+
+
+
+
+ void InitMotorForwardRightUp1(void)
+{
+    P1_1=0;
+    P1_2=0;
+    P1_3=0;
+    P1_4=0;
+		PWM0_MAP = 0x13;					//PWM0通道映射P14口
+		PWM01_MAP = 0x12;					//PWM01通道映射P12口
+    PWM0C = 0x01;						//PWM0高有效，PWM01高有效，时钟8分频 
+    PWMM |= 0x10;						//PWM0工作于互补模式						
+
+	//独立模式下，PWM0和PWM01共用一个周期寄存器
+	//PWM0的占空比调节使用			PWM0组的占空比寄存器
+	//PWM01的占空比调节使用			PWM0组的死区寄存器
+
+	//周期计算 	= 0x03ff / (Fosc / PWM分频系数)		（Fosc见系统时钟配置的部分）
+	//			= 0x03ff / (16000000 / 8)			
+	// 			= 1023   /2000000
+	//			= 511.5us		   		约1.955kHz
+
+	PWM0PH = 0x01;						//周期高4位设置为0x03
+	PWM0PL = 0x0;						//周期低8位设置为0xFF
+
+	//占空比计算= 0x0155 / (Fosc / PWM分频系数)		（Fosc见系统时钟配置的部分）
+	//			= 0x0155 / (16000000 / 8)			
+	// 			= 341 	 / 2000000
+	//			= 170.5us		   占空比为 170.5/511.5 = 33.3%
+
+	PWM0DH = 0x00;						//PWM0高4位占空比0x01
+	PWM0DL = 0xb0;						//PWM0低8位占空比0x55
+	PWM0DTH = 0x00;						//PWM01高4位占空比0x01
+	PWM0DTL = 0xc0;						//PWM01低8位占空比0x55
+	PWMEN |= 0x11;						//使能PWM0以及PWM01
+	ForwardFlag=7;
+}
+
+ void InitMotorForwardRightUp2(void)
+{
+	ForwardFlag=8;
+}
+
+ void InitMotorForwardRightUp3(void)
+{
+	ForwardFlag=9;
+}
+
+
+ void InitMotorForwardLeftUp1(void)
+{
+	P1_1=0;
+	P1_2=0;
+	P1_3=0;
+	P1_4=0;
+	PWM0_MAP = 0x13;					//PWM0通道映射P14口
+	PWM01_MAP = 0x12;					//PWM01通道映射P12口
+	PWM0C = 0x01;						//PWM0高有效，PWM01高有效，时钟8分频 
+	PWMM |= 0x10;						//PWM0工作于互补模式						
+
+	PWM0PH = 0x01;						//周期高4位设置为0x03
+	PWM0PL = 0x0;						//周期低8位设置为0xFF
+
+
+	PWM0DH = 0x00;						//PWM0高4位占空比0x01
+	PWM0DL = 0xb0;						//PWM0低8位占空比0x55
+	PWM0DTH = 0x00;						//PWM01高4位占空比0x01
+	PWM0DTL = 0xc0;						//PWM01低8位占空比0x55
+	PWMEN |= 0x11;						//使能PWM0以及PWM01
+	ForwardFlag=10;
+}
+
+ void InitMotorForwardLeftUp2(void)
+{
+	ForwardFlag=11;
+}
+	 
+ void InitMotorForwardLeftUp3(void)
+{
+	ForwardFlag=12;
+}
+
+
+void InitMotorRightCircle(void)
+{
+	P1_1=0;
+	P1_2=0;
+	P1_3=0;
+	P1_4=0;
+	PWM0_MAP = 0x13;					//PWM0通道映射P14口
+	PWM01_MAP = 0x11;					//PWM01通道映射P11口
+	PWM0C = 0x01;						//PWM0高有效，PWM01高有效，时钟8分频 
+	PWMM |= 0x10;						//PWM0工作于互补模式						
+
+
+	PWM0PH = 0x01;						//周期高4位设置为0x03
+	PWM0PL = 0x0;						//周期低8位设置为0xFF
+
+	PWM0DH = 0x00;						//PWM0高4位占空比0x01
+	PWM0DL = 0x60;						//PWM0低8位占空比0x55
+	PWM0DTH = 0x00;						//PWM01高4位占空比0x01
+	PWM0DTL = 0x60;						//PWM01低8位占空比0x55
+	PWMEN |= 0x11;						//使能PWM0以及PWM01
+	ForwardFlag=13;
+}
+
+ void InitMotorLeftCircle(void)
+{
+	P1_1=0;
+	P1_2=0;
+	P1_3=0;
+	P1_4=0;
+	PWM0_MAP = 0x14;					//PWM0通道映射P13口
+	PWM01_MAP = 0x12;					//PWM01通道映射P12口
+  PWM0C = 0x01;						//PWM0高有效，PWM01高有效，时钟8分频 
+  PWMM |= 0x10;						//PWM0工作于互补模式						
+
+	PWM0PH = 0x01;						//周期高4位设置为0x03
+	PWM0PL = 0x0;						//周期低8位设置为0xFF
+
+	PWM0DH = 0x00;						//PWM0高4位占空比0x01
+	PWM0DL = 0x60;						//PWM0低8位占空比0x55
+	PWM0DTH = 0x00;						//PWM01高4位占空比0x01
+	PWM0DTL = 0x60;						//PWM01低8位占空比0x55
+	PWMEN |= 0x11;						//使能PWM0以及PWM01
+	ForwardFlag=13;
+}
+
+void InitMoterAdjustLeft(void)
+{
+	ForwardFlag = 14;
+}
+
+void InitMoterAdjustLeftMore(void)
+{
+	ForwardFlag = 16;
+}
+
+void InitMoterAdjustForward(void)
+{
+	ForwardFlag = 15;
+}
+
+void InitMotorRightLittle(void)
+{
+		ForwardFlag = 17;
 }

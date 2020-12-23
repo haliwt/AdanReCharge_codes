@@ -41,6 +41,7 @@ KAKA_Motor_EXT  void InitMotorLeftMax(void);
 KAKA_Motor_EXT  void InitMotorRightMax(void);
 
 KAKA_Motor_EXT  void InitMotorForwardRight(void);
+
 KAKA_Motor_EXT  void InitMotorForwardRightSlow(void);
 KAKA_Motor_EXT  void InitMotorForwardLeftSlow(void);
 KAKA_Motor_EXT  void InitMotorRetreatMax(void);
@@ -52,5 +53,24 @@ KAKA_Motor_EXT  void SetStop();
 KAKA_Motor_EXT  void InitFanEdgeIO(void);
 KAKA_Motor_EXT  void SetFan(INT8U status) ;
 KAKA_Motor_EXT  void SetEdge(INT8U status);
+
+
+//vic 2020.12.23 add
+KAKA_Motor_EXT  void InitMotorForwardLeft(void);
+KAKA_Motor_EXT void InitMotorRightCircle(void);
+KAKA_Motor_EXT void InitMotorLeftCircle(void);
+
+KAKA_Motor_EXT void InitMotorForwardRightUp1(void);
+KAKA_Motor_EXT void InitMotorForwardRightUp2(void);
+KAKA_Motor_EXT void InitMotorForwardRightUp3(void);
+
+KAKA_Motor_EXT void InitMotorForwardLeftUp1(void);
+KAKA_Motor_EXT void InitMotorForwardLeftUp2(void);
+KAKA_Motor_EXT void InitMotorForwardLeftUp3(void);
+
+KAKA_Motor_EXT void InitMoterAdjustLeft(void);
+KAKA_Motor_EXT void InitMoterAdjustLeftMore(void);
+KAKA_Motor_EXT void InitMoterAdjustForward(void);
+KAKA_Motor_EXT void InitMotorRightLittle(void);
 
 #endif
