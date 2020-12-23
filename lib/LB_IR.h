@@ -2,8 +2,8 @@
 
 ---------- file information -----------------------------------------------
 file name: 
-define   : <文件说明>
-version  : 见文件尾端
+define   : <锟侥硷拷说锟斤拷>
+version  : 锟斤拷锟侥硷拷尾锟斤拷
 ---------------------------------------------------------------------------
 */
 #ifndef  LB_IR_h
@@ -21,7 +21,7 @@ version  : 见文件尾端
 #endif
 
 
-//全局变量声明
+//全锟街憋拷锟斤拷锟斤拷锟斤拷
 #ifdef  KAKA_IR_GB
 #define KAKA_IR_EXT
 #else
@@ -56,7 +56,8 @@ version  : 见文件尾端
 	INT8U  irLeftValue;
 	INT8U  irRightValue;
 	
-	INT8U  CloseList[6];
+	INT8U  CloseList[3];
+	INT8U  OpenList[3];
 	INT16U  Number;
 } IRLocationByte;
 

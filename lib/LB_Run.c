@@ -108,544 +108,9 @@ void  CheckRun()
 
 	switch(RunMode)
 	{
-	case 1:
-	{
-		switch(RunStep)
-		{
-		case 0:
-		{
-
-		}
-		break;
-		case 1:
-		{
-
-			InitMotorForward();
-			RunStep=2;
-		}
-		break;
-		case 2:
-			if(WallDp[1]<WallMin)
-			{
-
-				NoImpSecond=0;
-				RunStep=0x3;
-				InitMotorRetreat();
-				RunMs=20;
-				CurrentMax++;
-			}
-			else if(WallDp[0]<WallMin)
-			{
-
-				NoImpSecond=0;
-				RunStep=0x3;
-				InitMotorLeftMax();
-				RunMs=0;
-				CurrentMax++;
-			}
-			else if(WallDp[2]<WallMin)
-			{
-
-				NoImpSecond=0;
-				RunStep=0x3;
-				InitMotorRightMax();
-				RunMs=0;
-				CurrentMax++;
-			}
-			else if((LCurrent>LCurrentMax)||(RCurrent>RCurrentMax))
-			{
-				CurrentMax++;
-
-				NoImpSecond=0;
-
-				RunStep=0x3;
-				SetStop();
-				RunMs=0;
-
-
-			}
-			else  if(RunMs>500)
-			{
-				CurrentMax=0;
-			}
-			break;
-		case 3:
-			if(RunMs>30)
-			{
-				InitMotorRetreat();
-				RunMs=0;
-				RunStep=4;
-			}
-			break;
-
-		case 4:
-			if(RunMs>30)
-			{
-				SetStop();
-				RunMs=0;
-				RunStep=5;
-			}
-			break;
-		case 5:
-			if(RunMs>20)
-			{
-				InitMotorLeft(); //CCW turn round
-				RunMs=0;
-				RunStep=6;
-			}
-			break;
-
-		case 6:
-			if(RunMs>readRunTime())
-			{
-				SetStop();
-				//InitMotorForward();
-				RunMs=0;
-				RunStep=7;
-				LCurrent=0;
-				RCurrent=0;
-			}
-			else if(WallDp[1]<WallMin)
-			{
-
-				NoImpSecond=0;
-				RunStep=3;
-				InitMotorRetreat();
-				RunMs=20;
-
-			}
-			else if(WallDp[0]<WallMin)
-			{
-
-				NoImpSecond=0;
-				RunStep=3;
-				InitMotorLeftMax();
-				RunMs=0;
-
-			}
-			else if(WallDp[2]<WallMin)
-			{
-
-				NoImpSecond=0;
-				RunStep=3;
-				InitMotorRightMax();
-				RunMs=0;
-
-			}
-
-
-			break;
-		case 7:
-		{
-			if(RunMs>40)
-			{
-				InitMotorForward();
-				RunMs=0;
-				RunStep=8;
-				LCurrent=0;
-				RCurrent=0;
-			}
-		}
-		break;
-		case 8:
-			if(RunMs>100)
-			{
-				SetStop();
-				RunMs=0;
-				RunStep=9;
-
-			}
-			else if(WallDp[1]<WallMin)
-			{
-
-				NoImpSecond=0;
-				RunStep=9;
-				InitMotorRetreat();
-				RunMs=0;
-				CurrentMax++;
-			}
-			else if(WallDp[0]<WallMin)
-			{
-
-				NoImpSecond=0;
-				RunStep=9;
-				InitMotorLeftMax();
-				RunMs=0;
-				CurrentMax++;
-			}
-			else if(WallDp[2]<WallMin)
-			{
-
-				NoImpSecond=0;
-				RunStep=9;
-				InitMotorRightMax();
-				RunMs=0;
-				CurrentMax++;
-			}
-			else if((LCurrent>LCurrentMax)||(RCurrent>RCurrentMax))
-			{
-
-				CurrentMax++;
-				InitMotorRetreat();
-				RunMs=0;
-				RunStep=9;
-			}
-			break;
-		case 9:
-			if(RunMs>20)
-			{
-				InitMotorLeft(); //CCW
-				RunMs=0;
-				RunStep=10;
-			}
-			break;
-
-		case 10:
-			if(RunMs>readRunTime())
-			{
-
-				{
-					//InitMotorForward();
-					SetStop();
-					RunMs=0;
-					RunStep=11;
-					LCurrent=0;
-					RCurrent=0;
-				}
-			}
-
-			else if(WallDp[1]<WallMin)
-			{
-
-				NoImpSecond=0;
-				RunStep=3;
-				InitMotorRetreat();
-				RunMs=20;
-
-			}
-			else if(WallDp[0]<WallMin)
-			{
-
-				NoImpSecond=0;
-				RunStep=3;
-				InitMotorLeftMax();
-				RunMs=0;
-
-			}
-			else if(WallDp[2]<WallMin)
-			{
-
-				NoImpSecond=0;
-				RunStep=3;
-				InitMotorRightMax();
-				RunMs=0;
-
-			}
-
-			break;
-		case 11:
-			if(RunMs>20)
-			{
-				InitMotorForward();
-				RunMs=0;
-				RunStep=0x12;
-				ImpSecond=0;
-				LCurrent=0;
-				RCurrent=0;
-			}
-			else if(WallDp[1]<WallMin)
-			{
-
-				NoImpSecond=0;
-				RunStep=9;
-				InitMotorRetreat();
-				RunMs=0;
-
-			}
-			else if(WallDp[0]<WallMin)
-			{
-
-				NoImpSecond=0;
-				RunStep=9;
-				InitMotorLeftMax();
-				RunMs=0;
-
-			}
-			else if(WallDp[2]<WallMin)
-			{
-
-				NoImpSecond=0;
-				RunStep=9;
-				InitMotorRightMax();
-				RunMs=0;
-
-			}
-			break;
-		case 0x12:
-		{
-			if(ImpSecond>30)
-			{
-				IMP=0;
-
-			}
-			if(WallDp[1]<WallMin)
-			{
-				CurrentMax++;
-				NoImpSecond=0;
-				RunStep=0x13;
-				InitMotorRetreat();
-				RunMs=20;
-
-			}
-			else if(WallDp[0]<WallMin)
-			{
-				CurrentMax++;
-				NoImpSecond=0;
-				RunStep=0x13;
-				InitMotorLeftMax();
-				RunMs=0;
-
-			}
-			else if(WallDp[2]<WallMin)
-			{
-				CurrentMax++;
-				NoImpSecond=0;
-				RunStep=0x13;
-				InitMotorRightMax();
-				RunMs=0;
-
-			}
-			else if((LCurrent>LCurrentMax)||(RCurrent>RCurrentMax))
-			{
-
-				CurrentMax++;
-				EdgeTime=0;
-				NoImpSecond=0;
-				RunStep=0x13;
-				SetStop();
-				RunMs=0;
-			}
-			else  if(RunMs>500)
-			{
-				CurrentMax=0;
-			}
-		}
-		break;
-		case 0x13:
-			if(RunMs>30)
-			{
-				InitMotorRetreat();
-				RunMs=0;
-				RunStep=0x14;
-			}
-			break;
-
-		case 0x14:
-			if(RunMs>30)
-			{
-				SetStop();
-				RunMs=0;
-				RunStep=0x15;
-			}
-			break;
-		case 0x15:
-			if(RunMs>10)
-			{
-				InitMotorRight();
-				RunMs=0;
-				RunStep=0x16;
-			}
-			break;
-
-		case 0x16:
-			if(RunMs>readRunTime())
-			{
-				SetStop();
-				//InitMotorForward();
-				RunMs=0;
-				RunStep=0x17;
-				LCurrent=0;
-				RCurrent=0;
-			}
-			else 	  if(WallDp[1]<WallMin)
-			{
-				CurrentMax++;
-				NoImpSecond=0;
-				RunStep=0x14;
-				InitMotorRetreat();
-				RunMs=0;
-
-			}
-			else if(WallDp[0]<WallMin)
-			{
-				CurrentMax++;
-				NoImpSecond=0;
-				RunStep=0x14;
-				InitMotorLeftMax();
-				RunMs=0;
-
-			}
-			else if(WallDp[2]<WallMin)
-			{
-				CurrentMax++;
-				NoImpSecond=0;
-				RunStep=0x14;
-				InitMotorRightMax();
-				RunMs=0;
-
-			}
-
-			break;
-		case 0x17:
-		{
-			if(RunMs>20)
-			{
-				InitMotorForward();
-				RunMs=0;
-				RunStep=0x18;
-				LCurrent=0;
-				RCurrent=0;
-			}
-		}
-		break;
-		case 0x18:
-			if(RunMs>100)
-			{
-				SetStop();
-				RunMs=0;
-				RunStep=0x19;
-
-			}
-			else if(WallDp[1]<WallMin)
-			{
-				CurrentMax++;
-				NoImpSecond=0;
-				RunStep=0x19;
-				InitMotorRetreat();
-				RunMs=0;
-
-			}
-			else if(WallDp[0]<WallMin)
-			{
-				CurrentMax++;
-				NoImpSecond=0;
-				RunStep=0x19;
-				InitMotorLeftMax();
-				RunMs=0;
-
-			}
-			else if(WallDp[2]<WallMin)
-			{
-				CurrentMax++;
-				NoImpSecond=0;
-				RunStep=0x19;
-				InitMotorRightMax();
-				RunMs=0;
-
-			}
-			else if((LCurrent>LCurrentMax)||(RCurrent>RCurrentMax))
-			{
-				CurrentMax++;
-				InitMotorRetreat();
-				RunMs=0;
-				RunStep=0x19;
-			}
-			break;
-		case 0x19:
-			if(RunMs>20)
-			{
-				InitMotorRight();
-				RunMs=0;
-				RunStep=0x1a;
-			}
-			break;
-
-		case 0x1a:
-			if(RunMs>readRunTime())
-			{
-				//InitMotorForward();
-				SetStop();
-				RunMs=0;
-				RunStep=0x1b;
-				LCurrent=0;
-				RCurrent=0;
-
-			}
-			else 	  if(WallDp[1]<WallMin)
-			{
-				CurrentMax++;
-				NoImpSecond=0;
-				RunStep=0x19;
-				InitMotorRetreat();
-				RunMs=0;
-
-			}
-			else if(WallDp[0]<WallMin)
-			{
-				CurrentMax++;
-				NoImpSecond=0;
-				RunStep=0x19;
-				InitMotorLeftMax();
-				RunMs=0;
-
-			}
-			else if(WallDp[2]<WallMin)
-			{
-				CurrentMax++;
-				NoImpSecond=0;
-				RunStep=0x19;
-				InitMotorRightMax();
-				RunMs=0;
-
-			}
-
-			break;
-		case 0x1b:
-			if(RunMs>20)
-			{
-				InitMotorForward();
-				RunMs=0;
-				RunStep=0x2;
-				ImpSecond=0;
-				LCurrent=0;
-				RCurrent=0;
-			}
-			else 	  if(WallDp[1]<WallMin)
-			{
-				CurrentMax++;
-				NoImpSecond=0;
-				RunStep=0x19;
-				InitMotorRetreat();
-				RunMs=0;
-
-			}
-			else if(WallDp[0]<WallMin)
-			{
-				CurrentMax++;
-				NoImpSecond=0;
-				RunStep=0x19;
-				InitMotorLeftMax();
-				RunMs=0;
-
-			}
-			else if(WallDp[2]<WallMin)
-			{
-				CurrentMax++;
-				NoImpSecond=0;
-				RunStep=0x19;
-				InitMotorRightMax();
-				RunMs=0;
-
-			}
-
-			break;
-
-		}
-	}
-	break;
-	/********************RunMode =1 END***********************************/
+		/********************Mode =1 END***********************************/
 	/******************************************************/
-	//RunMode =2 start recharge battery RunStep RunMode =2 RunStep
+	//Mode =2 start recharge battery
 	case 2:
 	{
 
@@ -666,8 +131,9 @@ void  CheckRun()
 		{
 		case 0:
 		{
-           if(RunMs > 20 && RunMs< 70)
+           if(RunMs < 70)
 			  InitMotorForward();
+			
 			RunStep=1;
 			ClearAllIR();
 			RunMs = 0;
@@ -766,38 +232,34 @@ void  CheckRun()
 				{
                     if(Mid_ReadIR.ReadIR[0] ==0x11|| Mid_ReadIR.ReadIR[0] ==0x86||Mid_ReadIR.ReadIR[0] ==0x84 \
 						  ||Mid_ReadIR.ReadIR[0] ==0x18  ||Mid_ReadIR.ReadIR[0] ==0xA8|| Mid_ReadIR.ReadIR[0]==0X44\
-							||Mid_ReadIR.ReadIR[0] ==0x8A)
+							||Mid_ReadIR.ReadIR[0] ==0x8A||Mid_ReadIR.ReadIR[0] ==0xAA)
 					        InitMotorForwardSlow();
 							RunNoIRsenorTime=0;
 							RunNoIRsenorLastStep=1;
 					        RunStep=0x50;
 				}
 		
-				else {//else if(IRLocation.FarPreRight>0 ||IRLocation.FarRight>0 )  
+				else if(IRLocation.FarPreRight>0 ||IRLocation.FarRight>0 )
 				{
-                   if(Mid_ReadIR.ReadIR[0] ==0xAA){
-				   	     InitMotorForwardSlow();
+                   if(Mid_ReadIR.ReadIR[0] ==0xAA || Mid_ReadIR.ReadIR[0]==0xA8 || Mid_ReadIR.ReadIR[0]==0x18){				   	     InitMotorForwardSlow();
 						 RunStep=0x50;
-				         
+				         InitMotorForwardSlow();
 						
                    	}
-				   #if 0
 				    else{
 					RunStep=0x50; //CCW
 					InitMotorForwardSlow();
 					RunNoIRsenorTime=0;
 					RunNoIRsenorLastStep=2;
 				   	}
-					#endif 
 				
-				
+				}
 				else if(IRLocation.FarLeft>0 ||IRLocation.FarPreLeft>0)
 				{
-					if(Mid_ReadIR.ReadIR[0] ==0xA1){
+					if(Mid_ReadIR.ReadIR[0] ==0xA1 || Mid_ReadIR.ReadIR[0]==0X86||Mid_ReadIR.ReadIR[0]==0X58){
 				     InitMotorForwardSlow();// InitMotorForwardRightSlow();
 					  RunStep=0x50;
 					}
-					#if 0
 					else{
 						  RunStep=0x50; //CW
 						  InitMotorForwardSlow();
@@ -805,10 +267,8 @@ void  CheckRun()
 						RunNoIRsenorLastStep=3;
 							
 					
-				     }
-					#endif 
-					
-			    }
+				}
+			  }
 				else if (Mid_ReadIR.ReadIR[0] !=0){
 					
 						 
@@ -821,7 +281,7 @@ void  CheckRun()
 
 						Mid_ReadIR.ReadIR[0]=0;
 		                w ++ ;
-				        if(w >= 1 && w< 4){
+				        if(w==1){
 							 RunStep=0x43; //CCW
 							RunMs = 0;
 				        }
@@ -833,7 +293,6 @@ void  CheckRun()
 				
 
 				}
-					}
 				ClearAllIR();
 			}
 		}
@@ -843,13 +302,6 @@ void  CheckRun()
 		
 
 		case 0x43 ://CCW
-
-		       if(IRLocation.CloseList[1]==1){
-
-				     RunStep = 0x47;//CW
-					RunMs = 0;
-			        IRLocation.irLeftValue =1 ;
-               }
                if(RunMs< 3){
 
 				InitMotorLeft();//CCW 
@@ -873,13 +325,16 @@ void  CheckRun()
 			 SetStop();
 			 Delay_ms(500);
 		  
-			
+			 if(j ==1)
 			   IRLocation.CloseList[0]=Mid_ReadIR.ReadIR[0];
-			
-			    
-			
+			 else {
+			     IRLocation.CloseList[1]=Mid_ReadIR.ReadIR[0];
+				 j=0;
+              }
 
-			 if(IRLocation.irRightValue==1)
+             
+
+			 if(IRLocation.irRightValue==1 && (IRLocation.CloseList[0]==0 && IRLocation.CloseList[1]==0))
 			 {
 				RunStep = 0x45; //line 
 				RunMs = 0;
@@ -887,40 +342,35 @@ void  CheckRun()
 
 			 }
 			 else {
-			 if(IRLocation.CloseList[0] >IRLocation.CloseList[4] && IRLocation.CloseList[4]!=0){
+			 if(IRLocation.CloseList[1] >IRLocation.CloseList[0]){
 
 			 			RunStep = 0x45;//line run 
 						RunMs = 0;
-			            IRLocation.CloseList[5]=0;//CW OPEN
-			          
+			           IRLocation.irLeftValue =1 ;
 			   }
-			 else if(IRLocation.CloseList[0] < IRLocation.CloseList[4] &&IRLocation.CloseList[0]!=0 ){
+			 else if(IRLocation.CloseList[1] < IRLocation.CloseList[0]){
 
 			 			RunStep = 0x47;//CW
 						RunMs = 0;
-			            IRLocation.irLeftValue =1 ;
              }
-			 else if(IRLocation.CloseList[2] > IRLocation.CloseList[0] && IRLocation.CloseList[0]!=0 ){
+			 else if(IRLocation.CloseList[1] ==IRLocation.CloseList[0] && IRLocation.CloseList[0]!=0 ){
 						RunStep = 0x45; //line 
 						RunMs = 0;
-			 			IRLocation.irLeftValue =1 ;
-						IRLocation.CloseList[5]=0;//CW OPEN
-
-			 }
-			 else if(IRLocation.CloseList[0]>0){
-
-                  RunStep = 0x45; //line 
-				  RunMs = 0;
 
 			 }
 			 
-			 else if(IRLocation.CloseList[0] ==0 ){
-					  RunMs =0 ;
-				      RunStep = 0x50;
-			         IRLocation.CloseList[0]=1;
+			 else if(IRLocation.CloseList[5] ==IRLocation.CloseList[1] && IRLocation.CloseList[1]!=0){
+						RunStep = 0x45; //line 
+						RunMs = 0;
 
 			 }
-			
+			 else{
+
+			     	  RunMs =0 ;
+				      RunStep = 0x01;
+
+				 }
+			 	}        
                   
 
 
@@ -944,22 +394,26 @@ void  CheckRun()
 		break;
 
 		case 0x46:
-			  i++;
+			 
 			 SetStop();
 			 Delay_ms(500);
-		     
-			 
+		      i++;
+			 if(i ==1)
 			   IRLocation.CloseList[2]=Mid_ReadIR.ReadIR[0];
-			
+			 else {
+			     IRLocation.CloseList[3]=Mid_ReadIR.ReadIR[0];
+				 i=0;
+              }
+
+                
 
 
 			 if(IRLocation.CloseList[3] >IRLocation.CloseList[2]){
 
-						IRLocation.NearMid++;
-						RunStep = 0x45;
+			 			RunStep = 0x45;
 						RunMs = 0;
 			 }
-			 else if(IRLocation.CloseList[2]  > 0 ||IRLocation.CloseList[3]  > 0){
+			 else if(IRLocation.CloseList[3] ==IRLocation.CloseList[2] && IRLocation.CloseList[2]!=0 ){
                     
                         IRLocation.NearMid++;
 					    RunStep = 0x45;
@@ -970,23 +424,13 @@ void  CheckRun()
 
 			
 			      RunMs =0 ;
-				  RunStep = 0x50;//WT.EDIT 
+				  RunStep = 0x01;//WT.EDIT 
 			 
 			}
 
 		break;
 		
-		case 0x47 : //cw--˳ʱ��
-
-		       if(IRLocation.CloseList[5]==1)  //
-		       	{
-                       RunStep = 0x43; //line 
-						RunMs = 0;
-					   IRLocation.irRightValue=1;
-
-
-			   }
-			   else {
+		case 0x47 : //cw
                if(RunMs< 3){
 
                 InitMotorRight();//CW 
@@ -1000,8 +444,6 @@ void  CheckRun()
 
                }
 
-			   }
-
 
 		break;
 
@@ -1012,11 +454,14 @@ void  CheckRun()
 			   z++ ;
 			 SetStop();
 			 Delay_ms(500);
-			
+			 if(z ==1)
 			   IRLocation.CloseList[4]=Mid_ReadIR.ReadIR[0];
-			
+			 else {
+			     IRLocation.CloseList[5]=Mid_ReadIR.ReadIR[0];
+				 z=0;
+              }
 			 
-			 if(IRLocation.irLeftValue ==1){
+			 if(IRLocation.irLeftValue ==1 && (IRLocation.CloseList[4]==0||IRLocation.CloseList[5]==0 )){
 
                         RunStep = 0x45; //line 
 						RunMs = 0;
@@ -1026,36 +471,33 @@ void  CheckRun()
 
 			 }
              else {
-			 if(IRLocation.CloseList[4] >IRLocation.CloseList[0]){
+			 if(IRLocation.CloseList[5] >IRLocation.CloseList[4]){
 
 			 			RunStep = 0x45; //line 
 						RunMs = 0;
-			            IRLocation.CloseList[1]=0;//CCW OPEN
 
              }
 			
-			 else if(IRLocation.CloseList[4] < IRLocation.CloseList[0]){
-						RunStep = 0x43; //line 
+			 else if(IRLocation.CloseList[5] ==IRLocation.CloseList[4] && IRLocation.CloseList[4]!=0 ){
+						RunStep = 0x45; //line 
 						RunMs = 0;
-						IRLocation.irRightValue=1;
+
 			 }
 		
-			 else if(IRLocation.CloseList[2] > IRLocation.CloseList[4]   ){
+			 else if(IRLocation.CloseList[5] <IRLocation.CloseList[4]){
 			 	        RunStep = 0x43; //CW
 						RunMs = 0;
 			 			IRLocation.irRightValue=1;
-						IRLocation.CloseList[1]=0;//CW OPEN
 
 			 }
-			 else if(IRLocation.CloseList[4]  > 0){
+			 else if(IRLocation.CloseList[5] ==IRLocation.CloseList[1] && IRLocation.CloseList[1]!=0){
 						RunStep = 0x45; //line 
 						RunMs = 0;
 
 			 }
               else {
 			            RunMs =0 ;
-				        RunStep = 0x50;
-			  			IRLocation.CloseList[5]=1;
+				        RunStep = 0x01;
              
                 }
              }
@@ -1065,6 +507,7 @@ void  CheckRun()
        case 0x50:
 		{
             i=0;
+
 			if(RunMs>30)
 			{
 				RunMs=0;
@@ -1186,14 +629,13 @@ void  CheckRun()
 		}
 		break;
 		}
-	}
-
-	}	
-	}
-	}
-}	
+		
 	
-
+	}
+	
+	
+}
+}
 /************************************************************************************
  * 	*
     *Function Name:void CheckMode(INT8U Key)
@@ -1245,7 +687,8 @@ void CheckMode(INT8U Key)
 			{
 				cleanWorks.iPowerFlag =1;
 				SetStop();
-				LedGreenON();
+				LedGreenOff();
+				LedRedON();
 				SetBuzzerTime(5);
 				Delay_ms(10);
 				SetBuzzerTime(0);
@@ -1265,11 +708,9 @@ void CheckMode(INT8U Key)
 	            SetBuzzerTime(4);
 			    Delay_ms(10);
 				BuzzerOff();
-               
-				Mode =0x66;
-			
-				LedGreenON();
-				LedRedON();
+                Mode =0x66;
+			    LedGreenON();
+				LedRedOff();
 				n=0;
 
 			
@@ -1281,6 +722,8 @@ void CheckMode(INT8U Key)
 				SetBuzzerTime(4);
 			    Delay_ms(10);
 				BuzzerOff();
+
+				LedGreenOff();
 				LedRedOff();
 
 				RunMode =2;
@@ -1297,7 +740,8 @@ void CheckMode(INT8U Key)
 			
 				SetBuzzerTime(4);
 			    Delay_ms(10);
-				BuzzerON();
+				BuzzerOff();
+               LedGreenOff();
 				LedRedON();
 				n=0;
 
