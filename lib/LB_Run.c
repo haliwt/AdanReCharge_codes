@@ -1216,9 +1216,8 @@ void CheckMode(INT8U Key)
 			Mode =0; 
 			cleanWorks.pressPowerKey++;
 			Step=cleanWorks.pressPowerKey;
-			
 			SBUF =  Step;
-			if(cleanWorks.pressPowerKey>4)cleanWorks.pressPowerKey=0;
+			if(cleanWorks.pressPowerKey>5)cleanWorks.pressPowerKey=0;
 		}
 
 	
@@ -1230,7 +1229,7 @@ void CheckMode(INT8U Key)
 		       cleanWorks.worksNumber++;
 			   Step=cleanWorks.worksNumber  ;
 			   SBUF =  Step;
-			   if(cleanWorks.worksNumber>4)cleanWorks.worksNumber=0;
+			   if(cleanWorks.worksNumber>5)cleanWorks.worksNumber=0;
 	}
     ////power on of initial: Mode=2;Step=0;RunMode=1;RunStep=0;
 	switch(Mode)
@@ -1244,15 +1243,15 @@ void CheckMode(INT8U Key)
 			//power On and power key press status 
 			case 1: //power on 
 			{
-				
+				cleanWorks.iPowerFlag =1;
 				SetStop();
 				LedGreenON();
 				SetBuzzerTime(5);
-				Delay_ms(20);
+				Delay_ms(10);
 				SetBuzzerTime(0);
-				Delay_ms(20);
+				Delay_ms(10);
 				SetBuzzerTime(5);
-				Delay_ms(20);
+				Delay_ms(10);
 				BuzzerOff();
 				Mode = 0x65;
 				Step = 0x64;
@@ -1266,7 +1265,7 @@ void CheckMode(INT8U Key)
 	            SetBuzzerTime(4);
 			    Delay_ms(10);
 				BuzzerOff();
-                cleanWorks.iPowerFlag =1;
+               
 				Mode =0x66;
 			
 				LedGreenON();
@@ -1353,20 +1352,20 @@ void CheckMode(INT8U Key)
 		break;
 		case 1://prepare clean mode 
 		{
-		        Mode =0x66;
-			
+		      
+			     Mode =0x66;
 				SetBuzzerTime(4);
-			    Delay_ms(50);
+			    Delay_ms(10);
 				BuzzerON();
 				LedRedON();
 		}
 		break;
 		case 2://randomMode
 		{
-              Mode =0x66;
-			
+             
+			    Mode =0x66;
 				SetBuzzerTime(4);
-			    Delay_ms(50);
+			    Delay_ms(10);
 				BuzzerOff();
 				LedRedOff();
 				
@@ -1375,31 +1374,32 @@ void CheckMode(INT8U Key)
 		//锟斤拷锟斤拷锟斤拷锟斤拷时锟斤拷锟狡癸拷锟斤拷频锟斤拷2Hz
 
 		case 3://zMode
+		        Mode =0x66;
 				SetBuzzerTime(4);
-				Delay_ms(50);
+				Delay_ms(10);
 				SetBuzzerTime(0);
-				Delay_ms(50);
+				Delay_ms(10);
 				SetBuzzerTime(4);
 				BuzzerOff();
-				 Mode =0x66;
+			
 			
 				LedGreenON();
 				LedRedON();
 		break;
 
 		case 4: //bowMode
-
+                Mode =0x66;   
 		        SetBuzzerTime(4);
-				Delay_ms(50);
+				Delay_ms(10);
 				SetBuzzerTime(0);
-				Delay_ms(50);
+				Delay_ms(10);
 				SetBuzzerTime(4);
-				Delay_ms(50);
+				Delay_ms(10);
 				SetBuzzerTime(0);
-				Delay_ms(50);
+				Delay_ms(10);
 				SetBuzzerTime(4);
 				BuzzerOff();
-				 Mode =0x66;
+		
 				
                 LedGreenOff();
 				LedRedOff();
@@ -1408,21 +1408,21 @@ void CheckMode(INT8U Key)
 	
 		break;
 		// 锟斤拷锟斤拷械乒锟狡碉拷锟�?0.5Hz
-		case 5:
-			 Mode =0x66;
+		case 5: //fixPoint Mode
 			
-				 SetBuzzerTime(4);
-				Delay_ms(50);
-				SetBuzzerTime(0);
-				Delay_ms(50);
+			    Mode =0x66;
 				SetBuzzerTime(4);
-				Delay_ms(50);
+				Delay_ms(10);
 				SetBuzzerTime(0);
-				Delay_ms(50);
+				Delay_ms(10);
 				SetBuzzerTime(4);
-				Delay_ms(50);
+				Delay_ms(10);
 				SetBuzzerTime(0);
-			     Delay_ms(50);
+				Delay_ms(10);
+				SetBuzzerTime(4);
+				Delay_ms(10);
+				SetBuzzerTime(0);
+			    Delay_ms(10);
 				SetBuzzerTime(4);
 				BuzzerOff();
 				LedGreenON();
