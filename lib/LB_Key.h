@@ -19,8 +19,8 @@
 
 typedef INT8U uint8_t ;
 
-#define Power_Key             P3_4
-#define Cleaning_Key          P3_5
+#define Power_Key            P3_5 //P3_4---Other board
+#define Cleaning_Key         P3_4// P3_5
 #define POWER_PRES             1
 #define CLEANING_PRES          2 
 #define GROUP_PRES            3   
@@ -39,6 +39,7 @@ struct _CleanMode{
     INT8U worksNumber; 
     INT8U CleanMode ;
     INT8U rechargeMode ;
+    INT8U pressPowerKey;
 
 
 };

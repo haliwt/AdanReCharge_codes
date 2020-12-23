@@ -1205,16 +1205,20 @@ void  CheckRun()
 *************************************************************************************/
 void CheckMode(INT8U Key)
 {
-	
+	static INT8U n;
   //  Mode=2;Step=0;RunMode=1;RunStep=0; ---default power on don't press key
 	if(Key==1)
 	{
 
-		if(Mode==0x64)
+		if(n!=1)
 		{
-			//default power on 
-			Step=0;
-			Mode =0;
+			n=1;
+			Mode =0; 
+			cleanWorks.pressPowerKey++;
+			Step=cleanWorks.pressPowerKey;
+			
+			SBUF =  Step;
+			if(cleanWorks.pressPowerKey>4)cleanWorks.pressPowerKey=0;
 		}
 
 	
@@ -1222,11 +1226,11 @@ void CheckMode(INT8U Key)
     else if(Key==2){ //works mode ----cleaning button
 
           
-               Mode =0;
-			   Step ++ ;
-			   
-			   cleanWorks.worksNumber++;
+               Mode =1;
+		       cleanWorks.worksNumber++;
+			   Step=cleanWorks.worksNumber  ;
 			   SBUF =  Step;
+			   if(cleanWorks.worksNumber>4)cleanWorks.worksNumber=0;
 	}
     ////power on of initial: Mode=2;Step=0;RunMode=1;RunStep=0;
 	switch(Mode)
@@ -1238,151 +1242,72 @@ void CheckMode(INT8U Key)
 		{
 	        
 			//power On and power key press status 
-			case 0:
+			case 1: //power on 
 			{
 				
 				SetStop();
 				LedGreenON();
-				SetBuzzerTime(10);
-				Delay_ms(200);
+				SetBuzzerTime(5);
+				Delay_ms(20);
 				SetBuzzerTime(0);
-				Delay_ms(200);
-				SetBuzzerTime(10);
+				Delay_ms(20);
+				SetBuzzerTime(5);
 				Delay_ms(20);
 				BuzzerOff();
 				Mode = 0x65;
 				Step = 0x64;
+				n=0;
 
 			}
 			break;
-         
-   
-		
-		//power on of initial:	Mode=2;Step=0;RunMode=1;RunStep=0;
-		case 1:  //clean Mode
+
+        
+		case 2:  //input standby mode
 	            SetBuzzerTime(4);
-			    Delay_ms(50);
+			    Delay_ms(10);
 				BuzzerOff();
                 cleanWorks.iPowerFlag =1;
 				Mode =0x66;
 			
 				LedGreenON();
 				LedRedON();
+				n=0;
 
 			
 			break;
-		case 2: //else if(cleanWorks.worksNumber ==2){
-                Mode =0x66;
-			
-				SetBuzzerTime(4);
-			    Delay_ms(50);
-				BuzzerOff();
-				LedRedOff();
-				
-
-			
-			break;
-			case  3:
-				SetBuzzerTime(4);
-				Delay_ms(50);
-				SetBuzzerTime(0);
-				Delay_ms(50);
-				SetBuzzerTime(4);
-				BuzzerOff();
-				 Mode =0x66;
-			
-				LedGreenON();
-				LedRedON();
-
-			
-			break;
-			case 4: //else if(cleanWorks.worksNumber ==4)
-				
-			   SetBuzzerTime(4);
-				Delay_ms(50);
-				SetBuzzerTime(0);
-				Delay_ms(50);
-				SetBuzzerTime(4);
-				Delay_ms(50);
-				SetBuzzerTime(0);
-				Delay_ms(50);
-				SetBuzzerTime(4);
-				BuzzerOff();
-				 Mode =0x66;
-				
-                LedGreenOff();
-				LedRedOff();
-
-			
-			break;
-			case 5  : //else if(cleanWorks.worksNumber ==5){
-					 Mode =0x66;
-			
-				 SetBuzzerTime(4);
-				Delay_ms(50);
-				SetBuzzerTime(0);
-				Delay_ms(50);
-				SetBuzzerTime(4);
-				Delay_ms(50);
-				SetBuzzerTime(0);
-				Delay_ms(50);
-				SetBuzzerTime(4);
-				Delay_ms(50);
-				SetBuzzerTime(0);
-			     Delay_ms(50);
-				SetBuzzerTime(4);
-				BuzzerOff();
-				LedGreenON();
-				LedRedON();
-              
-				
-             
-			 break;
-			  case 6: //else if(cleanWorks.worksNumber ==6)
-			   SetBuzzerTime(4);
-			    Delay_ms(50);
-				BuzzerOff();
+		case 3: //input recharge status 
+               
 				Mode =0x66;
-			
-				LedGreenOff();
-				LedRedOff();
-			 break;
-			 case 7: //else if(cleanWorks.worksNumber ==7){
+			   
 				SetBuzzerTime(4);
-			    Delay_ms(50);
+			    Delay_ms(10);
 				BuzzerOff();
-                cleanWorks.worksNumber =0;
-				Step =0;
-				Mode =0x66;
-			
-				RunMode =2;
-				RunStep=0;
-				LedRedON();
-			    LedGreenON();
-				Delay_ms(500);
-				LedGreenOff();
-				Delay_ms(500);
-				LedGreenON();
-				Delay_ms(500);
-				LedGreenOff();
-				Delay_ms(500);
+				LedRedOff();
+
 				RunMode =2;
 				RunStep=0;
 				RunMs = 0;
-		
+				n=0;
+				
+				
+
+			
+			break;
+			case  4: //power off 
+				 Mode =0x66;
+			
+				SetBuzzerTime(4);
+			    Delay_ms(10);
+				BuzzerON();
+				LedRedON();
+				n=0;
+
+
+			
 			break;
 		
-		    case 10:
 		
-			if(RunSecond>0)
-			{
-				Step=0;
-				RunSecond=0;
-
-			}
-		
-		
-		   break;
+		  
 
 		
 		case 0x19:
@@ -1423,170 +1348,85 @@ void CheckMode(INT8U Key)
 			//������ʾ��1����2��
 		case 0:
 		{
-			/*
-				ADCtl=1;
-				//5��û�а�������,��������
-				if(RunSecond>15)
-				{
-					Step=0;
-					Mode=0;
-					RunSecond=0;
-					LedRedOff();
-					ADCtl=0;
-				}
-				ADCtl=1;
-				if(ReadPowerAutoIn())
-				{
-					Step=0;
-					Mode=0;
-				}
-				if(ReadPowerDCIn())
-				{
-					Step=0;
-					Mode=0;
-				}
-				*/
-		}
-		break;
-		case 1:
-		{
-			if(RunSecond>0)
-			{
-				Step=2;
-				LedRedON();
-				ADCtl=1;
-				SetFan(250);
-				SetEdge(250);
-				RunMode=1;
-				RunStep=1;
-				ADCtl=1;
-				EdgeCurrentOverCount=0;
-				EdgeCurrentLessCount=0;
-				NoImpSecond=0;
-				SysSecond=0;
-				CurrentMax=0;
-			}
-		}
-		break;
-		case 2:
-		{
-
-			if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin))
-			{
-				WallSecond=0;
-			}
-		
-
-			else if(Voltage<650)
-			{
-
-				Mode=1;
-				Step=3;
-				RunMode=1;
-				RunStep=0;
-				RunSecond=0;
-				SetFan(0);
-				SetEdge(0);
-
-			}
 			
-
-
 		}
+		break;
+		case 1://prepare clean mode 
+		{
+		        Mode =0x66;
+			
+				SetBuzzerTime(4);
+			    Delay_ms(50);
+				BuzzerON();
+				LedRedON();
+		}
+		break;
+		case 2://randomMode
+		{
+              Mode =0x66;
+			
+				SetBuzzerTime(4);
+			    Delay_ms(50);
+				BuzzerOff();
+				LedRedOff();
+				
+		  }
 		break;
 		//��������ʱ���ƹ���Ƶ��2Hz
 
-		case 3:
-		{
-			if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin))
-			{
-				WallSecond=0;
-			}
-			if(RunSecond>0)
-			{
+		case 3://zMode
+				SetBuzzerTime(4);
+				Delay_ms(50);
+				SetBuzzerTime(0);
+				Delay_ms(50);
+				SetBuzzerTime(4);
+				BuzzerOff();
+				 Mode =0x66;
+			
+				LedGreenON();
 				LedRedON();
-
-				Step=4;
-				RunSecond=0;
-			}
-			if(WallDp[1]>9)
-			{
-				MidWallOffSecond=0;
-			}
-
-			if(ReadPowerAutoIn()||ReadPowerDCIn())
-			{
-				ADCtl=0;
-				RunStep=0;
-				SetStop();
-				SetEdge(0);
-
-				Step=0;
-				Mode=0;
-
-			}
-			else if(WallSecond>1)
-			{
-				ADCtl=0;
-				RunStep=0;
-				SetStop();
-				SetFan(0);
-				SetEdge(0);
-				Step=0;
-			}
-		}
 		break;
 
-		case 4:
-		{
-			if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin))
-			{
-				WallSecond=0;
-			}
-			if(RunSecond>0)
-			{
+		case 4: //bowMode
+
+		        SetBuzzerTime(4);
+				Delay_ms(50);
+				SetBuzzerTime(0);
+				Delay_ms(50);
+				SetBuzzerTime(4);
+				Delay_ms(50);
+				SetBuzzerTime(0);
+				Delay_ms(50);
+				SetBuzzerTime(4);
+				BuzzerOff();
+				 Mode =0x66;
+				
+                LedGreenOff();
 				LedRedOff();
 
-				Step=3;
-				RunSecond=0;
-			}
-			if(WallDp[1]>9)
-			{
-				MidWallOffSecond=0;
-			}
-			if(ReadPowerAutoIn()||ReadPowerDCIn())
-			{
-				ADCtl=0;
-				RunStep=0;
-				SetStop();
-				SetEdge(0);
-
-				Step=0;
-				Mode=0;
-
-			}
-			else if(WallSecond>1)
-			{
-				ADCtl=0;
-				RunStep=0;
-				SetStop();
-				SetFan(0);
-				SetEdge(0);
-				Step=0;
-			}
-		}
+				
+	
 		break;
 		// ����еƹ�Ƶ�ￄ1�7?0.5Hz
 		case 5:
-		{
-			if(RunSecond>9)
-			{
+			 Mode =0x66;
+			
+				 SetBuzzerTime(4);
+				Delay_ms(50);
+				SetBuzzerTime(0);
+				Delay_ms(50);
+				SetBuzzerTime(4);
+				Delay_ms(50);
+				SetBuzzerTime(0);
+				Delay_ms(50);
+				SetBuzzerTime(4);
+				Delay_ms(50);
+				SetBuzzerTime(0);
+			     Delay_ms(50);
+				SetBuzzerTime(4);
+				BuzzerOff();
+				LedGreenON();
 				LedRedON();
-				Step=6;
-				RunSecond=0;
-			}
-
-		}
 		break;
 
 		case 6:

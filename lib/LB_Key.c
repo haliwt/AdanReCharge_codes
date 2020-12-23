@@ -17,20 +17,14 @@ INT8U HDKey_Scan(INT8U mode)
 		static INT8U key_up=1;	 //°´¼üËÉ¿ª±êÖ¾
 		if(mode==1)key_up=1;	// 支持连续按键
     if(key_up&&(Power_Key==1||Cleaning_Key==1)){
-       
-       
        Delay_ms(20);
        key_up =0 ;
-       if((Power_Key== 1) && Cleaning_Key ==1)  return GROUP_PRES ;
-	    else if (Cleaning_Key ==1) return CLEANING_PRES;
-		else if(Power_Key== 1){
-           Delay_ms(400);
-           if(Power_Key== 1)  return POWER_PRES;
+       if((Power_Key== 0) && Cleaning_Key ==0)  return GROUP_PRES ;
+	    else if (Cleaning_Key ==0) return CLEANING_PRES;
+		
+        else if(Power_Key== 0)  return POWER_PRES;
 
        }
-	    
-           
-    }
      else if(Power_Key==0 && Cleaning_Key==0 )key_up=1;
 		return 0;	//没有按键按下
 }
