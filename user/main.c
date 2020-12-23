@@ -111,12 +111,12 @@ void main(void)
 	  
 	  }
       else{
-	        CheckRechargeIR();
+	         CheckWall();
+			CheckRechargeIR();
 			CheckRun();
 		    kk= HDKey_Scan(0);// kk=ReadKey();
 		    CheckMode(kk);
-			//CleanMode_Run();
-	       //CheckWall();
+	        CheckWall();
 		 
 		  
 	   

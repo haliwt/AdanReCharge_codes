@@ -40,6 +40,10 @@ struct _CleanMode{
     INT8U CleanMode ;
     INT8U rechargeMode ;
     INT8U pressPowerKey;
+    INT8U Clean_randomMode;
+    INT8U Clean_bowMode;
+    INT8U Clean_wallMode;
+    INT8U Clean_fixpointMode;
 
 
 };
@@ -49,9 +53,9 @@ KAKA_Key_EXT xdata struct _CleanMode cleanWorks;
 
 
 
-KAKA_Key_EXT void  RandomMode(void);
+
 KAKA_Key_EXT INT8U HDKey_Scan(INT8U mode);
-KAKA_Key_EXT void Decoder_KEY(INT8U value);
-KAKA_Key_EXT void CleanMode_Run(void);
+
+
 
 #endif 
