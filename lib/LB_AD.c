@@ -43,16 +43,16 @@ void InitADIO(void)
 	P0M3 = 0X80;
 
    ///*
-    P2M0 = 0xC2;                        //P20����Ϊ�������
-    P0M3 = 0xC2;                        //P03����Ϊ�������
+    P2M0 = 0xC2;                        //P20����Ϊ�������?
+    P0M3 = 0xC2;                        //P03����Ϊ�������?
 	PWM2_MAP = 0x03;					//PWM1ͨ��ӳ��P03��
 	PWM21_MAP = 0x20;					//PWM1ͨ��ӳ��P03��
     PWM2C = 0x00;						//PWM1����Ч��PWM11����Ч��ʱ��8��Ƶ 
     PWMM |= 0x40;						//PWM1������
 
 
-	PWM2PH = 0x0;						//���ڸ�4λ����Ϊ0x03
-	PWM2PL = 0x60;						//���ڵ�8λ����Ϊ0xFF
+	PWM2PH = 0x0;						//ÖÜÆÚ¸ß4Î»ÉèÖÃÎª0x03
+	PWM2PL = 0x10; //Yao Modify						//ÖÜÆÚµÍ8Î»ÉèÖÃÎª0xFF
 
 
 
@@ -69,7 +69,7 @@ void SeleADChanel(INT8U ADChanel)
 {
 	ADCC0 = 0x81;						//��ADCת����Դ
 	ADCC1 = (ADChanel&0X0F);			//ѡ���ⲿͨ��0
-	ADCC2 = 0x4f;						//ת�����12λ���ݣ������Ҷ��룬ADCʱ��16��Ƶ
+	ADCC2 = 0x4f;						//ת�����?2λ���ݣ������Ҷ��룬ADCʱ��16��Ƶ
 
 }
 
@@ -109,7 +109,7 @@ void ReadAD5ms()
 	 {
 	   if(ADCtl)
 	   { 
-		   if(ADFlag)  //����PMW ռ�ձ� ������IR����   �س� ���շ���ͽ��յ� ���ʵ㡣 
+		   if(ADFlag)  //����PMW ռ�ձ� ������IR����   �س� ���շ���ͽ��յ�?���ʵ㡣 
 		   {
 			 //P0_3 = 1;
 			 PWM2DL = 0x8; // 
@@ -268,7 +268,7 @@ void CheckFanCurrent()
 
 void CheckLCurrent()
 {
- //INT16U	LCurrentADAvg;
+ INT16U	LCurrentADAvg;
  LCurrent=(LCurrentAD[0]+LCurrentAD[2]+LCurrentAD[4]+LCurrentAD[6])/4;
  //SBUF= (INT8U)LCurrentADAvg;
  //LCurrent=(LCurrent*9+(LCurrentADAvg*9)/2)/10;
@@ -276,7 +276,7 @@ void CheckLCurrent()
 }
 void CheckRCurrent()
 {
-// INT16U	RCurrentADAvg;
+ INT16U	RCurrentADAvg;
  RCurrent=(RCurrentAD[0]+RCurrentAD[2]+RCurrentAD[4]+RCurrentAD[6])/4;
 
  //RCurrent=(RCurrent*9+(RCurrentADAvg*11)/2)/10;

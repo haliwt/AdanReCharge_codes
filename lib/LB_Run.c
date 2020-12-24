@@ -318,10 +318,7 @@ void Auto_ReChargeBattery(void)
 						RunMs = 0;
 			 }
 			            
-                  
-
-
-		break;
+        break;
 
 		case 45:  //line
 			
@@ -365,7 +362,7 @@ void Auto_ReChargeBattery(void)
 		     else if(IRLocation.CloseList[2] ==0){
 
 				  		
-						if(line>1000){
+						if(line>5){
 						  line=0;
 						  RunStep = 0x43 ; //CCW
 						  RunMs = 0;
@@ -530,7 +527,7 @@ void Auto_ReChargeBattery(void)
 					#if 1
 					
 					j++;
-					if(j<60){
+					if(j<80){ //
 						RunMs =0 ;
 						RunStep=1;
 					}
@@ -1212,23 +1209,32 @@ void  CheckRun()
    switch(RunMode) {
       
 	case 1 : // clean random Mode 
-         CleanMode_Random();
+        
+		
+	    // SBUF = 0xAA;
+		 CleanMode_Random(); //Zhou
 
 	break;
 
 	case 2: //clean zMode --edge line Mode
-		wallMode();
+	    
+		SBUF = 0xBB;
+		wallMode(); //Yao
 	break; 
 
 	case 3: //clean bow Mode
-		CleanMode_BOW();
+	     SBUF = 0xCC;
+		CleanMode_BOW(); //Zhou 
 	break;
 
 	case 4: //fixpoint clean Mode
-		circleMode();
+	   // SBUF = 0xDD;
+		circleMode(); //Yao
 	break;
 
 	case 5:
+	     LedGreenOff();
+		 LedRedOff();
 	     Auto_ReChargeBattery();
 
 	break;
@@ -1832,14 +1838,20 @@ if(Key==1)
    cleanWorks.pressPowerKey++;
    if(cleanWorks.pressPowerKey>4)cleanWorks.pressPowerKey=0;
    Step=cleanWorks.pressPowerKey;
-   SBUF =  Step;
+   //SBUF =  Step;
  }
   else if(Key==2){ //works mode ----cleaning button        
          Mode =1;
+	  
        cleanWorks.worksNumber++;
-     if(cleanWorks.worksNumber>4)cleanWorks.worksNumber=0;
+     
       Step=cleanWorks.worksNumber  ;
-      SBUF =  Step;
+      // SBUF =  Step;
+      if(cleanWorks.worksNumber>4){
+	  	 cleanWorks.worksNumber=1;
+		 Step=1;	
+      	}
+	  
  }
     ////power on of initial: Mode=2;Step=0;RunMode=1;RunStep=0;
 	switch(Mode)
@@ -1879,8 +1891,8 @@ if(Key==1)
                 Mode =0x66;
 			    LedGreenON();
 				LedRedOff();
-				
-				Step = 0x19 ;
+				cleanWorks.CleanMode = standbyMode;
+				Step = 6;
 
 			
 			break;
@@ -1893,8 +1905,8 @@ if(Key==1)
 				BuzzerOff();
 
 				LedGreenOff();
-				LedRedOff();
-
+				LedRedON();
+				ADCtl=1;  //WT.2020.12.24
 				RunMode =5;
 				RunStep=0;
 				RunMs = 0;
@@ -1914,7 +1926,7 @@ if(Key==1)
 				LedRedON();
 			
 
-				Step = 0x19 ;
+				Step = 0x6 ;
 
 			
 			break;
@@ -1923,9 +1935,19 @@ if(Key==1)
 		  
 
 		
-		case 0x19:
+		case 0x6:
 		//if(cleanWorks.CleanMode == standbyMode)  //  Mode=2;Step=0;RunMode=1;RunStep=0; ---default power on don't press key
 		{
+
+			if(cleanWorks.CleanMode == standbyMode){
+                 LedGreenOff();
+			     Delay_ms(500);
+			     LedGreenON();
+			     Delay_ms(500);
+
+			}
+			
+
 			if(Step==0)
 			{
 				//20
@@ -1933,7 +1955,7 @@ if(Key==1)
 				ADCtl=1;
 				RunSecond=0;
 			}
-			else if(Step<0x20)
+			else if(Step<20)
 			{
 				//LedBlueON();
 				Mode=1;
@@ -1946,6 +1968,8 @@ if(Key==1)
 				//SetBuzzerTime(2);
 			}
 		  }
+		   Step = 6;
+		   Mode =0; 
 		
 		}//Mode =0 END
 	}
@@ -1970,25 +1994,27 @@ if(Key==1)
 			    Mode =0x66;
 				SetBuzzerTime(4);
 			    Delay_ms(10);
-				BuzzerON();
-				LedRedON();
+				LedGreenON();
+				
 		}
 		break;
 		case 2://randomMode
 		{
-                RunMode =1; //
+				LedGreenON();
+				RunMode =1; //
 				RunStep =1;
 			    Mode =0x66;
 				SetBuzzerTime(4);
 			    Delay_ms(10);
 				BuzzerOff();
-				LedRedOff();
-				
+				//LedRedOff();
+				ADCtl=1;  //WT.2020.12.24
 		  }
 		break;
 		//锟斤拷锟斤拷锟斤拷锟斤拷时锟斤拷锟狡癸拷锟斤拷频锟斤拷2Hz
 
 		case 3://zMode ---wall edge mode 
+		        LedGreenON();
 		        RunMode =2;
 				RunStep=1;
 		        Mode =0x66;
@@ -2000,11 +2026,13 @@ if(Key==1)
 				BuzzerOff();
 			
 			
-				LedGreenON();
-				LedRedON();
+				//LedGreenON();
+				//LedRedON();
+				ADCtl=1;  //WT.2020.12.24
 		break;
 
 		case 4: //bowMode
+		         LedGreenON();
 		         RunMode =3;
 				 RunStep =1;
                 Mode =0x66;   
@@ -2020,14 +2048,16 @@ if(Key==1)
 				BuzzerOff();
 		
 				
-                LedGreenOff();
-				LedRedOff();
+                // LedGreenOff();
+				// LedRedOff();
+				ADCtl=1;  //WT.2020.12.24
 
 				
 	
 		break;
-		// 锟斤拷锟斤拷械乒锟狡碉拷锟�?0.5Hz
+		// 锟斤拷锟斤拷械乒锟狡碉拷锟???0.5Hz
 		case 5: //fixPoint Mode
+		        LedGreenON();
 			    RunMode =4;
 				RunStep =1;
 			    Mode =0x66;
@@ -2045,8 +2075,8 @@ if(Key==1)
 			    Delay_ms(10);
 				SetBuzzerTime(4);
 				BuzzerOff();
-				LedGreenON();
-				LedRedON();
+				
+				ADCtl=1;  //WT.2020.12.24
 		break;
 
 		case 6:
