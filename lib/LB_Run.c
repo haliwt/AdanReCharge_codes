@@ -113,7 +113,7 @@ void Auto_ReChargeBattery(void)
 
 		case 0:
 		{
-            if(RunMs< 60)
+            if(RunMs< 80)
 			  InitMotorForward();
 			
 			RunStep=1;
@@ -190,26 +190,7 @@ void Auto_ReChargeBattery(void)
 			if(RunMs>30)
 			{
 				RunMs=0;
-				#if 0
-				if(SendCount>=12)
-				{
-					Usart1Send[0]=12;
-					Usart1Send[1]=IRLocation.NearMid;
-					Usart1Send[2]=IRLocation.NearPreRight;
-					Usart1Send[3]=IRLocation.NearPreLeft;
-					Usart1Send[4]=IRLocation.NearRight;
-					Usart1Send[5]=IRLocation.NearLeft;
-					Usart1Send[6]=IRLocation.FarMid;
-					Usart1Send[7]=IRLocation.FarPreRight;
-					Usart1Send[8]=IRLocation.FarPreLeft;
-					Usart1Send[9]=IRLocation.FarRight;
-					Usart1Send[10]=IRLocation.FarLeft;
-					Usart1Send[11]=RunNoIRsenorLastStep;
-					Usart1Send[12]=RunStep;
-					SendCount=1;
-					SBUF=Usart1Send[SendCount];
-				}
-				#endif 
+			
 				if(IRLocation.FarMid>0 )
 				{
                     if(Mid_ReadIR.ReadIR[0] ==0x11|| Mid_ReadIR.ReadIR[0] ==0x86||Mid_ReadIR.ReadIR[0] ==0x84 \
@@ -1253,7 +1234,7 @@ void  CheckRun()
 *****************************************************************/
 void circleMode(void)
 {
- 		switch(cleanWorks.Clean_fixpointMode)
+ 		switch(RunMode)
 		{
 			case 0:
 			{
@@ -1618,7 +1599,7 @@ void circleMode(void)
 void wallMode(void)
 {
 	
-	switch(cleanWorks.Clean_wallMode){
+	switch(RunMode){
 		case 0:
 			break;
 		
@@ -1848,7 +1829,8 @@ if(Key==1)
       Step=cleanWorks.worksNumber  ;
       // SBUF =  Step;
       if(cleanWorks.worksNumber>4){
-	  	 cleanWorks.worksNumber=1;
+	  	 cleanWorks.worksNumber=1;
+
 		 Step=1;	
       	}
 	  
@@ -1906,7 +1888,7 @@ if(Key==1)
 
 				LedGreenOff();
 				LedRedON();
-				ADCtl=1;  //WT.2020.12.24
+				ADCtl=0;  //WT.2020.12.24
 				RunMode =5;
 				RunStep=0;
 				RunMs = 0;
@@ -1939,7 +1921,8 @@ if(Key==1)
 		//if(cleanWorks.CleanMode == standbyMode)  //  Mode=2;Step=0;RunMode=1;RunStep=0; ---default power on don't press key
 		{
 
-			if(cleanWorks.CleanMode == standbyMode){
+			if(cleanWorks.CleanMode == standbyMode){
+
                  LedGreenOff();
 			     Delay_ms(500);
 			     LedGreenON();

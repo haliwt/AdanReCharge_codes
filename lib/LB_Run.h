@@ -35,8 +35,10 @@ KAKA_Run_EXT  INT8U RunMode;
 KAKA_Run_EXT  INT8U RunStep;
 KAKA_Run_EXT  INT8U RunNoIRsenorTime;
 KAKA_Run_EXT  INT8U RunNoIRsenorLastStep;
+KAKA_Run_EXT  INT8U BatteryRechargeFlag;
 KAKA_Run_EXT  INT16U RunMs;
 KAKA_Run_EXT  INT8U  EdgeTime;
+KAKA_Run_EXT  INT16U twinkle;
 KAKA_Run_EXT  INT16U Imp2Time;
 
 KAKA_Run_EXT  INT16U ImpSecond;
