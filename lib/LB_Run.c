@@ -106,14 +106,14 @@ INT8U readRunTime()
 ************************************************************************/
 void Auto_ReChargeBattery(void)
 {
-	static INT8U j,z,left_Circular,i,w;
+	static INT8U j,z,left_Circular,i,w,il,ir;
 	static INT16U  line;
 	switch(RunStep)
 	{
 
 		case 0:
 		{
-            if(RunMs< 60)
+            if(RunMs< 30)
 			  InitMotorForward();
 			
 			RunStep=1;
@@ -262,19 +262,31 @@ void Auto_ReChargeBattery(void)
 				}
 				else if (Mid_ReadIR.ReadIR[0] ==0){
 
+						line ++;
+						if(line>5){
+							z=1;
+								 RunStep=0x45; //CCW
+							 RunMs=0;
+						RunNoIRsenorTime=0;
+						RunNoIRsenorLastStep=3;
+						RunMs = 0;
+						}
+						else{
 						Mid_ReadIR.ReadIR[0]=0;
 		   
 						 RunStep=0x43; //CCW
-						//RunNoIRsenorTime=0;
-						//RunNoIRsenorLastStep=3;
+						RunNoIRsenorTime=0;
+						RunNoIRsenorLastStep=3;
 						RunMs = 0;
+					}
+					}
 				
 
 				}
 				ClearAllIR();
 			}
-		}
-		break;
+		
+		
 		
 		break;
 		
@@ -301,7 +313,7 @@ void Auto_ReChargeBattery(void)
 			 SetStop();
 			 Delay_ms(500);
 		  
-			
+			il++;
 			   IRLocation.CloseList[0]=Mid_ReadIR.ReadIR[0];
 			
 			 
@@ -309,13 +321,20 @@ void Auto_ReChargeBattery(void)
 
 			 			RunStep = 0x45;//line run 
 						RunMs = 0;
-
+	                     il=0;
 
 			 }
 		     else if(IRLocation.CloseList[0] ==0){
+		     			if(il>10){
+                        RunStep = 0x45;
+						RunMs = 0;
+						il=0;
 
+		     			}
+						else {			    
 					    RunStep = 0x47;
 						RunMs = 0;
+					}
 			 }
 			            
                   
@@ -365,7 +384,7 @@ void Auto_ReChargeBattery(void)
 		     else if(IRLocation.CloseList[2] ==0){
 
 				  		
-						if(line>1000){
+						if(line>500){
 						  line=0;
 						  RunStep = 0x43 ; //CCW
 						  RunMs = 0;
@@ -411,26 +430,34 @@ void Auto_ReChargeBattery(void)
 			
 			 SetStop();
 			 Delay_ms(500);
-			
-			     IRLocation.CloseList[5]=Mid_ReadIR.ReadIR[0];
+			ir++;
+			     IRLocation.CloseList[1]=Mid_ReadIR.ReadIR[0];
 		
-		      if(z ==1){
+		      if(z ==1 && IRLocation.CloseList[1]==0){
 			        RunStep = 0x45; //line 
 						RunMs = 0;
-				 
+				       
 			  
 			  }
 			
-			 else if(IRLocation.CloseList[5] >0){
+			 else if(IRLocation.CloseList[1] >0){
 
 			 			RunStep = 0x45; //line 
 						RunMs = 0;
-
+						ir =0;
              }
-			 else if(IRLocation.CloseList[5] ==0){
+			 else if(IRLocation.CloseList[1] ==0){
 
+					    if(ir>10){
+                         RunStep = 0x45;
+						 RunMs = 0;
+						 ir=0;
+
+					    }
+					    else{
 					    RunStep = 0x43;
 						RunMs = 0;
+					}
 			 }
 			
 
@@ -530,7 +557,7 @@ void Auto_ReChargeBattery(void)
 					#if 1
 					
 					j++;
-					if(j<60){
+					if(j<80){//60
 						RunMs =0 ;
 						RunStep=1;
 					}
@@ -579,7 +606,12 @@ void Auto_ReChargeBattery(void)
 		}
 		break;
 		}
-}
+		
+	}
+		
+	
+    
+
 /***********************************************************************
  * ***
  *Function Name:void ReChargeBattery(void) 
@@ -1184,7 +1216,7 @@ void CleanMode_Random(void)
 				RunMs=10;
 
 			}
-            else if(IMP>0)
+      else if(IMP>0)
 			{
 				NoImpSecond=0;
 				RunStep=0x3;
@@ -1207,33 +1239,28 @@ void CleanMode_Random(void)
 ***********************************************************************/
 void  CheckRun()
 {
-   
-   
-   switch(RunMode) {
-      
-	case 1 : // clean random Mode 
-         CleanMode_Random();
+   switch(RunMode) {    
+			case 1 : // clean random Mode 
+				CleanMode_Random();
+				break;
 
-	break;
+			case 2: //clean zMode --edge line Mode
+				wallMode();
+				break; 
 
-	case 2: //clean zMode --edge line Mode
-		wallMode();
-	break; 
+			case 3: //clean bow Mode
+				CleanMode_BOW();
+				break;
 
-	case 3: //clean bow Mode
-		CleanMode_BOW();
-	break;
+			case 4: //fixpoint clean Mode
+				circleMode();
+				break;
 
-	case 4: //fixpoint clean Mode
-		circleMode();
-	break;
-
-	case 5:
-	     Auto_ReChargeBattery();
-
-	break;
-
-
+			case 5:
+				
+			
+				Auto_ReChargeBattery();
+				break;
    }
 }
 
@@ -1247,7 +1274,7 @@ void  CheckRun()
 *****************************************************************/
 void circleMode(void)
 {
- 		switch(cleanWorks.Clean_fixpointMode)
+ 		switch(RunStep)
 		{
 			case 0:
 			{
@@ -1335,7 +1362,7 @@ void circleMode(void)
 
 			case 6:  //Ö±×ß
 			{			
-				if(RunMs>80)
+				if(RunMs>150)
 				{
 					InitMotorForward();
 					RunMs=0;
@@ -1404,6 +1431,7 @@ void circleMode(void)
 				{
 					InitMotorForwardRightUp2();
 					RunStep = 0x11;
+					RunMs = 0;
 					CurrentMax = 0;
 				}
 			}
@@ -1435,7 +1463,7 @@ void circleMode(void)
 					SetStop();
 					RunMs=0;
 				}
-				else  if(RunMs>2200)
+				else  if(RunMs>1400)
 				{
 					InitMotorForwardRightUp3();
 					RunStep = 0x12;
@@ -1471,7 +1499,7 @@ void circleMode(void)
 					SetStop();
 					RunMs=0;
 				}
-				else  if(RunMs>1600)
+				else  if(RunMs>1100)
 				{
 					SetStop();
 					RunStep=0x06;
@@ -1612,7 +1640,7 @@ void circleMode(void)
 void wallMode(void)
 {
 	
-	switch(cleanWorks.Clean_wallMode){
+	switch(RunStep){
 		case 0:
 			break;
 		
@@ -1835,21 +1863,20 @@ if(Key==1)
    SBUF =  Step;
  }
   else if(Key==2){ //works mode ----cleaning button        
-         Mode =1;
-       cleanWorks.worksNumber++;
-     if(cleanWorks.worksNumber>4)cleanWorks.worksNumber=0;
-      Step=cleanWorks.worksNumber  ;
-      SBUF =  Step;
+		Mode =1;
+		cleanWorks.worksNumber++;
+		if(cleanWorks.worksNumber>5)cleanWorks.worksNumber=0;
+		Step=cleanWorks.worksNumber  ;
+		SBUF =  Step;
  }
     ////power on of initial: Mode=2;Step=0;RunMode=1;RunStep=0;
 	switch(Mode)
 	{
-	    case 0 :
+	  case 0 :
 		{
 		
 		switch(Step)
-		{
-	        
+		{	        
 			//power On and power key press status 
 			case 1: //power on 
 			{
@@ -1866,62 +1893,44 @@ if(Key==1)
 				BuzzerOff();
 				Mode = 0x65;
 				Step = 0x64;
-			
-
 			}
 			break;
 
         
 		case 2:  //input standby mode
-	            SetBuzzerTime(4);
-			    Delay_ms(10);
-				BuzzerOff();
-                Mode =0x66;
-			    LedGreenON();
-				LedRedOff();
-				
-				Step = 0x19 ;
-
-			
+			SetBuzzerTime(4);
+			Delay_ms(10);
+			BuzzerOff();
+			Mode =0x66;
+			LedGreenON();
+			LedRedOff();
+			Step = 0x19 ;	
 			break;
-		case 3: //input recharge status 
-               
+		
+		case 3: //input recharge status                
 				Mode =0x66;
-			   
 				SetBuzzerTime(4);
-			    Delay_ms(10);
+			  Delay_ms(10);
 				BuzzerOff();
 
 				LedGreenOff();
 				LedRedOff();
-
+		
 				RunMode =5;
 				RunStep=0;
 				RunMs = 0;
+				break;
 		
-				
-				
-
-			
-			break;
 			case  4: //power off 
-				 Mode =0x66;
+				Mode =0x66;
 				SetStop();
 				SetBuzzerTime(4);
-			    Delay_ms(10);
+				Delay_ms(10);
 				BuzzerOff();
-                LedGreenOff();
+				LedGreenOff();
 				LedRedON();
-			
-
-				Step = 0x19 ;
-
-			
-			break;
-		
-		
-		  
-
+				Step = 0x19 ;			
+				break;
 		
 		case 0x19:
 		//if(cleanWorks.CleanMode == standbyMode)  //  Mode=2;Step=0;RunMode=1;RunStep=0; ---default power on don't press key
@@ -1945,7 +1954,7 @@ if(Key==1)
 				RunStep=0;
 				//SetBuzzerTime(2);
 			}
-		  }
+		}
 		
 		}//Mode =0 END
 	}
@@ -1966,49 +1975,48 @@ if(Key==1)
 		break;
 		case 1://prepare clean mode 
 		{
-		      
-			    Mode =0x66;
+				Mode =0x66;
 				SetBuzzerTime(4);
-			    Delay_ms(10);
+				Delay_ms(10);
 				BuzzerON();
 				LedRedON();
 		}
 		break;
 		case 2://randomMode
 		{
-                RunMode =1; //
+        RunMode =1; //
 				RunStep =1;
-			    Mode =0x66;
+			  Mode =0x66;
 				SetBuzzerTime(4);
-			    Delay_ms(10);
+			  Delay_ms(10);
 				BuzzerOff();
 				LedRedOff();
-				
-		  }
+				ADCtl=1;   //vic 2020.12.24
+		 }
 		break;
 		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Æ¹ï¿½ï¿½ï¿½Æµï¿½ï¿½2Hz
 
 		case 3://zMode ---wall edge mode 
-		        RunMode =2;
+		    RunMode =2;
 				RunStep=1;
-		        Mode =0x66;
+		    Mode =0x66;
 				SetBuzzerTime(4);
 				Delay_ms(10);
 				SetBuzzerTime(0);
 				Delay_ms(10);
 				SetBuzzerTime(4);
 				BuzzerOff();
-			
+				ADCtl=1;   //vic 2020.12.24
 			
 				LedGreenON();
 				LedRedON();
 		break;
 
 		case 4: //bowMode
-		         RunMode =3;
-				 RunStep =1;
-                Mode =0x66;   
-		        SetBuzzerTime(4);
+		    RunMode =3;
+				RunStep =1;
+        Mode =0x66;   
+		    SetBuzzerTime(4);
 				Delay_ms(10);
 				SetBuzzerTime(0);
 				Delay_ms(10);
@@ -2022,7 +2030,7 @@ if(Key==1)
 				
                 LedGreenOff();
 				LedRedOff();
-
+				ADCtl=1;   //vic 2020.12.24
 				
 	
 		break;
@@ -2047,6 +2055,7 @@ if(Key==1)
 				BuzzerOff();
 				LedGreenON();
 				LedRedON();
+				ADCtl=1;   //vic 2020.12.24		
 		break;
 
 		case 6:
@@ -2122,6 +2131,8 @@ if(Key==1)
 	}
 	break;
 	/**********************Mode 1 END***********************************/
+	
+	
 	/*************Mode 2 start Battery recharge ***********************/
 	// Mode=2;Step=0;RunMode=1;RunStep=0; ---default power on don't press key
 	//power on of initial:	Mode=2;Step=0;RunMode=1;RunStep=0;
@@ -2152,17 +2163,15 @@ if(Key==1)
            
 			case 2:
 				if(P2_1 ==1|| P1_0 ==1){
-	                SetStop() ;// AllStop();
+	        SetStop() ;// AllStop();
 					LedGreenON();
 					Delay_ms(500);
 					LedGreenOff();
 					Delay_ms(500);
 					Step =2;
 					Mode =2;
-
 				}
-			break;
-		
+				break;
 		}
 
 	}
@@ -2173,4 +2182,302 @@ if(Key==1)
 
     }
 }
+
+
+void sysMode(INT8U val)
+{
+	static INT8U lastMode = 0;
+	static INT8U powerUp = 0;
 	
+	if(!val)
+		return;
+	
+	switch(val){
+		case 0x01:     //key1 short put on
+			if(!lastMode){
+				return;
+			}
+			if(lastMode == 5){
+				SetFan(0);
+			  SetEdge(0);	
+				lastMode = 6;
+			}
+			else{
+				lastMode = 5;
+        SetFan(0);
+				SetEdge(0);					
+				SysFlag = IDEL;
+			}
+			break;
+		
+		case 0x02:  //key1 put on over 500ms 
+			if(!powerUp){			
+				SetBuzzerTime(4);
+				Delay_ms(10);
+				BuzzerOff();
+				Delay_ms(150);
+				SetBuzzerTime(4);
+				Delay_ms(10);
+				BuzzerOff();
+				Delay_ms(150);
+				SetBuzzerTime(4);
+				Delay_ms(10);
+				BuzzerOff();	
+				
+				SetStop();
+				RunStep = 0;
+				RunMode = 1;
+				lastMode = 0;	
+				SetFan(0);
+			  SetEdge(0);	
+				SysFlag = OVER;
+			}
+			else{
+				powerUp = 0;
+			}
+			break;
+		
+		case 0x03:  //key1 put on  500ms
+			if(!lastMode){
+				SetBuzzerTime(4);
+				Delay_ms(10);
+				BuzzerOff();
+				lastMode = 0xff;
+				powerUp = 1;
+				LedRedOff();
+				LedGreenON();	
+        SetFan(0);
+			  SetEdge(0);					
+				SysFlag = CLEAN;
+			}
+			break;
+		
+		case 0x10:   //key2 short put on
+			if(lastMode == 0)
+				return;
+			
+			if(lastMode == 0xff){
+				lastMode = 5;
+			}
+			else{
+				if(lastMode++>=4)
+					lastMode = 1;					
+			}
+			SysFlag = CLEAN;
+			break;
+		
+		case 0x20:  //key2 put on over 500ms   
+			if(lastMode == 0)
+				return;			
+			break;
+		
+		case 0x30:   //key2 put on  500ms
+			if(lastMode == 0)
+				return;			
+			break;
+		
+		case 0x44:  //key1 and  key2 put on 200ms 
+			break;
+		
+		default:
+			return;
+	}
+	
+	if(lastMode == Mode)
+		return;
+	Mode = lastMode;
+	
+	switch(Mode){
+		case 0:
+//			SysFlag = IDEL;
+			break;
+		
+		case 1:   //sËæ»ú
+			RunMode =1; //
+			RunStep =1;
+			SetBuzzerTime(4);
+			Delay_ms(10);
+			BuzzerOff();
+			ADCtl=1;   //vic 2020.12.24			
+						SetFan(250);
+				SetEdge(250);
+			break;		
+		
+		case 2:
+			RunMode =2; //ÑØ±ß
+			RunStep =1;
+			SetBuzzerTime(4);
+			Delay_ms(10);
+			BuzzerOff();
+			Delay_ms(150);
+			SetBuzzerTime(4);
+			Delay_ms(10);
+			BuzzerOff();
+			ADCtl=1;   //vic 2020.12.24		
+				SetFan(250);
+				SetEdge(250);		
+			break;
+		
+		case 3:
+			RunMode =3; //¹­
+			RunStep =1;
+			SetBuzzerTime(4);
+			Delay_ms(10);
+			BuzzerOff();
+			Delay_ms(150);
+			SetBuzzerTime(4);
+			Delay_ms(10);
+			BuzzerOff();
+			Delay_ms(150);
+			SetBuzzerTime(4);
+			Delay_ms(10);
+			BuzzerOff();		
+			ADCtl=1;   //vic 2020.12.24			
+				SetFan(250);
+				SetEdge(250);		
+			break;
+		
+		case 4:
+			RunMode =4; //Ô²
+			RunStep =1;
+			SetBuzzerTime(4);
+			Delay_ms(10);
+			BuzzerOff();
+			Delay_ms(150);
+			SetBuzzerTime(4);
+			Delay_ms(10);
+			BuzzerOff();
+			Delay_ms(150);
+			SetBuzzerTime(4);
+			Delay_ms(10);
+			BuzzerOff();
+			Delay_ms(150);
+			SetBuzzerTime(4);
+			Delay_ms(10);
+			BuzzerOff();		
+			ADCtl=1;   //vic 2020.12.24		
+				SetFan(250);
+				SetEdge(250);		
+			break;
+			
+		case 5://´ý»úÄ£Ê½
+			RunMode =4; 
+			RunStep =1;
+			SetStop();
+			RunMode = 1;
+			RunStep = 0;
+			SetBuzzerTime(4);
+			Delay_ms(10);
+			BuzzerOff();
+      SetFan(0);  //WT.EDIT 
+			SetEdge(0);	 //WT.EDIT 	
+			SysFlag = IDEL;
+			break;
+		
+		
+		case 6: //»Ø³äÄ£Ê½
+			RunMode =5;
+			RunStep =1;
+			SetBuzzerTime(4);
+			Delay_ms(10);
+			BuzzerOff();	
+            SetFan(0);
+			SetEdge(0);		
+		  ADCtl = 0;
+			SysFlag = FIND;	
+            RunMs = 0;//WT.EDIT 		
+			break;
+		
+		default:
+			break;
+	}
+	
+	return;
+}
+	
+
+
+void LedTip(INT8U status)
+{
+	static INT8U count = 0;	
+	static INT8U on_off;
+			
+	switch(status){
+		case IDEL:
+			LedRedOff();
+			if(count++>=3){
+				count = 0;
+				if(on_off){
+					on_off = 0;
+					LED_G = 0;
+				}
+				else{
+					on_off = 1;
+					LED_G = 1;				
+				}
+			}
+			break;
+		
+		case CLEAN:
+			LedRedOff();
+			LedGreenON();			
+			break;
+		
+		case FIND:
+			LedRedON();
+			LedGreenOff();			
+			break;
+		
+		case BAT:
+			count++;
+			if(count>3){
+				count = 0;
+				if(on_off){
+					on_off = 0;
+					LED_R = 0;
+				}
+				else{
+					on_off = 1;
+					LED_R = 1;				
+				}
+			}		
+			LedGreenON();				
+			break;
+		
+		case BAT_FINISH:
+			LedRedON();
+			LedGreenON();					
+			break;
+		
+		case WALL:
+			if(count++ > 3){
+				count =0;
+				if(on_off){
+					on_off = 0;
+					LED_R = 0;
+					LED_G = 1;
+				}
+				else{
+					on_off = 1;
+					LED_R = 1;
+					LED_G = 0;			
+				}				
+			}
+			break;
+		
+		case OVER:
+			LedRedOff();
+			LedGreenOff();				
+			break;
+		
+		
+		default:
+			break;
+	}
+	
+	
+	return;
+}
+
+
+

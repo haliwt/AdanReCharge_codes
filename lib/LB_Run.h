@@ -37,8 +37,9 @@ KAKA_Run_EXT  INT8U RunNoIRsenorTime;
 KAKA_Run_EXT  INT8U RunNoIRsenorLastStep;
 KAKA_Run_EXT  INT16U RunMs;
 KAKA_Run_EXT  INT8U  EdgeTime;
+KAKA_Run_EXT  INT8U BatteryRechargeFlag;//WT.EDIT
 KAKA_Run_EXT  INT16U Imp2Time;
-
+KAKA_Run_EXT  INT16U twinkle;  //WT.EDIT 
 KAKA_Run_EXT  INT16U ImpSecond;
 KAKA_Run_EXT  INT16U Imp2Second;
 
@@ -64,4 +65,27 @@ KAKA_Run_EXT   void CleanMode_Random(void);
 #define  WallModeMax	150	
 KAKA_Run_EXT void circleMode(void);
 KAKA_Run_EXT void wallMode(void);
+
+KAKA_Run_EXT INT8U T1msFlag;
+
+//vic 2020.12.24
+#define KEY1			P3_5//P3_4  //WT.EDIT
+#define KEY2			P3_4//P3_5
+#define LED_R			P2_3
+#define LED_G			P3_3
+KAKA_Run_EXT INT8U SysFlag;
+
+enum{
+		IDEL = 0,
+		CLEAN,
+		FIND,
+		BAT,
+		BAT_FINISH,
+		WALL,
+		OVER
+};
+
+KAKA_Run_EXT void sysMode(INT8U val);
+KAKA_Run_EXT void LedTip(INT8U state);
+
 #endif

@@ -56,24 +56,24 @@ void InitLed(void)
 
 void LedRedON()
 {
-  P3_3=0;
+  P2_3=0;
 }
 
 
 void LedRedOff()
 {
-  P3_3=1;
+  P2_3=1;
 }
 
 void LedGreenON()
 {
-  P2_3=0;
+  P3_3=0;
 }
 
 
 void LedGreenOff()
 {
-  P2_3=1;
+  P3_3=1;
 }
 void InitKey(void)
 {
@@ -117,52 +117,57 @@ void ReadIMP(void)
 INT8U ReadKey(void)
 {
 
-  static INT8U  K1=0;
-  static INT8U  K2=0;
-  INT8U	 tmp;
-  if(P3_4==0)  //KEY2 --- recharge battery button
-  {
-    // LedBlueON();
-    if(K1<200)
-   	 K1++;
-  }
-  else	
-  {	  
-    //LedRedOff();
-   	K1=0;
-  }
-
-   if(P3_5==0)  //KEY1 --cleaning button
-  {
-    // LedBlueON();
-    if(K2<200)
-   	 K2++;
-  }
-  else	
-  {	  
-    //LedRedOff();
-   	K2=0;
-  }
-  tmp=0;
-  if(K1>190)
-  {
-    //
-    K1=201;
-	//LedBlueON();
-    tmp|=1;
-  
-
-  }
-  if(K2>190)
-  {
-    //
-    K2=201;
-	//LedBlueON();
-    tmp|=2;
-     
-
-  }
-  return (tmp);
+  static INT16U  K1=0;
+  static INT16U  K2=0;
+  INT8U	 value1 = 0;
+	INT8U  value2 = 0;
+	
+	if(!T1msFlag)
+		return value1;
+	T1msFlag = 0;
+	
+  if(KEY1==1 && KEY2==0)
+		K1++;	
+  else if(KEY2==1 && KEY1==0) 
+		K2++;
+	else if(KEY1==1 && KEY2==1) {
+		K1++;
+		K2++;
+	}
+	else if(KEY1==0 && KEY2==0){
+		if(K1>10 && K1 <500)
+			value1 = 0x01;	
+		else if(K1>500)
+			value1 = 0x02;
+		else 
+			value1 = 0;
+		
+		if(K2>10 && K2 <500)
+			value2 = 0x10;
+		else if(K2>500)
+			value2 = 0x20;
+		else 
+			value2 = 0;		
+		
+		K1 = 0;
+		K2 = 0;		
+		if((value1+value2)!=0)
+		SBUF = value1+value2;
+		return (value1+value2);
+	}
+	
+	if((K1==500) && (K2<50))
+		value1 = 0x03;
+	else 	if(K2==500 && K1<50)
+		value2 = 0x30;
+	else if(K1==100 && K2>100)
+		value1 = 0x44;
+	else if(K1>100 && K2==100)
+		value1 = 0x44;
+	
+	if((value1+value2)!=0)
+	SBUF = value1+value2;
+  return (value1+value2);
 }
 #endif 
 /***********************************************************
@@ -275,3 +280,5 @@ void CheckBuzzer()
 	 }
    }
 }
+
+

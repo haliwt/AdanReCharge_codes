@@ -56,7 +56,7 @@ version  : ���ļ�β��
 	INT8U  irLeftValue;
 	INT8U  irRightValue;
 	
-	INT8U  CloseList[3];
+	INT8U  CloseList[5];
 	INT8U  OpenList[3];
 	INT16U  Number;
 } IRLocationByte;

@@ -52,7 +52,7 @@ void InitADIO(void)
 
 
 	PWM2PH = 0x0;						//���ڸ�4λ����Ϊ0x03
-	PWM2PL = 0x60;						//���ڵ�8λ����Ϊ0xFF
+	PWM2PL = 0x10;						//���ڵ�8λ����Ϊ0xFF
 
 
 
@@ -268,7 +268,7 @@ void CheckFanCurrent()
 
 void CheckLCurrent()
 {
- //INT16U	LCurrentADAvg;
+ INT16U	LCurrentADAvg;
  LCurrent=(LCurrentAD[0]+LCurrentAD[2]+LCurrentAD[4]+LCurrentAD[6])/4;
  //SBUF= (INT8U)LCurrentADAvg;
  //LCurrent=(LCurrent*9+(LCurrentADAvg*9)/2)/10;
@@ -276,7 +276,7 @@ void CheckLCurrent()
 }
 void CheckRCurrent()
 {
-// INT16U	RCurrentADAvg;
+ INT16U	RCurrentADAvg;
  RCurrent=(RCurrentAD[0]+RCurrentAD[2]+RCurrentAD[4]+RCurrentAD[6])/4;
 
  //RCurrent=(RCurrent*9+(RCurrentADAvg*11)/2)/10;
