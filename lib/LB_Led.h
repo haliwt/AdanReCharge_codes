@@ -32,6 +32,7 @@ version  : ���ļ�β��
 #define DC_Recharge             P1_0
 #define CloseSwitch_L  			P1_5	
 #define CloseSwitch_R  			P3_2
+#define BatteryRechargStatus      P1_7
 
   
 

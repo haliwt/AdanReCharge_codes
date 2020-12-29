@@ -56,24 +56,28 @@ void InitLed(void)
 
 void LedRedON()
 {
-  P2_3=0;
+//	P2_3=0;
+  P3_3=0;
 }
 
 
 void LedRedOff()
 {
-  P2_3=1;
+ //P2_3=1;
+   P3_3=1; //red 
 }
 
 void LedGreenON()
 {
-  P3_3=0;
+//  P3_3=0;
+  P2_3=0;
 }
 
 
 void LedGreenOff()
 {
-  P3_3=1;
+//  P3_3=1;
+  P2_3=1; //green
 }
 void InitKey(void)
 {
@@ -119,6 +123,7 @@ INT8U ReadKey(void)
 
   static INT16U  K1=0;
   static INT16U  K2=0;
+	static INT8U cnt;
   INT8U	 value1 = 0;
 	INT8U  value2 = 0;
 	
@@ -126,23 +131,33 @@ INT8U ReadKey(void)
 		return value1;
 	T1msFlag = 0;
 	
-  if(KEY1==1 && KEY2==0)
+  if(KEY1==1 && KEY2==0){
+		cnt = 0;
 		K1++;	
-  else if(KEY2==1 && KEY1==0) 
+	}
+  else if(KEY2==1 && KEY1==0) {
+		cnt = 0;
 		K2++;
+	}
 	else if(KEY1==1 && KEY2==1) {
+		cnt = 0;
 		K1++;
 		K2++;
 	}
 	else if(KEY1==0 && KEY2==0){
-		if(K1>10 && K1 <500)
+		cnt++;
+		if(cnt<10)
+			return; 
+		
+		cnt = 0;
+		if(K1>20 && K1 <500)
 			value1 = 0x01;	
 		else if(K1>500)
 			value1 = 0x02;
 		else 
 			value1 = 0;
 		
-		if(K2>10 && K2 <500)
+		if(K2>20 && K2 <500)
 			value2 = 0x10;
 		else if(K2>500)
 			value2 = 0x20;
@@ -180,10 +195,12 @@ INT8U ReadKey(void)
 ***********************************************************/
 void InitPowerIn(void)
 {
-     P2M1 = 0X58 ; //ReCharge input SMT pull down
-     P1M0 = 0x58;  //DC INPUT pull down 
-     P2_1 =1; 
-	   P1_0 =1;
+     P2M1 = 0X50 ; //ReCharge input SMT pull down
+     P1M0 = 0x50;  //DC INPUT pull down 
+     P2_1 =0; 
+	 P1_0 =0;
+	 P1_7 = 0x50 ; //Battery RechRGE status 
+	 P1_7 =0;     
 }
 
 /***********************************************************

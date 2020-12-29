@@ -69,10 +69,10 @@ KAKA_Run_EXT void wallMode(void);
 KAKA_Run_EXT INT8U T1msFlag;
 
 //vic 2020.12.24
-#define KEY1			P3_5//P3_4  //WT.EDIT
-#define KEY2			P3_4//P3_5
-#define LED_R			P2_3
-#define LED_G			P3_3
+#define KEY1			P3_4//P3_5//P3_4  //WT.EDIT
+#define KEY2			P3_5//P3_4//P3_5
+#define LED_R			P3_3
+#define LED_G			P2_3
 KAKA_Run_EXT INT8U SysFlag;
 
 enum{
@@ -87,5 +87,10 @@ enum{
 
 KAKA_Run_EXT void sysMode(INT8U val);
 KAKA_Run_EXT void LedTip(INT8U state);
+//vic 2020.12.25
+KAKA_Run_EXT void rechargeBatMode(void);
+
+KAKA_Run_EXT INT8U findRechargeFlag;
+KAKA_Run_EXT INT8U wallRechargeModeFlag;   //特殊的沿墙模式，用来找充电座
 
 #endif

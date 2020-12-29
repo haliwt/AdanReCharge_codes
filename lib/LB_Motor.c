@@ -19,7 +19,7 @@ version  : 见文件尾端
 #include "LB_Motor.h"
 
 #endif
-  INT8U ForwardFlag;
+INT8U ForwardFlag;
 
 void InitMotorIO(void)
 {
@@ -521,6 +521,24 @@ void InitFanEdgeIO(void)
 		else
 		PWM0DTL -= 1;
 	}
+	else if(ForwardFlag==18)
+	{
+	  if(PWM0DL<0xa0)					 
+	   PWM0DL += 1;				 
+	  if(PWM0DTL<0xa0)						 
+	   PWM0DTL += 1;
+	}	
+	else if(ForwardFlag == 19){   //小曲线右转
+	  if(PWM0DL>0xf0)
+			PWM0DL -= 2;	
+	  else
+			PWM0DL += 2;	
+		
+	  if(PWM0DTL<0xb0)					
+	   PWM0DTL += 2;
+		else
+		PWM0DTL -= 2;
+	}	
 	return;
 }
 void InitMotorRight(void)
@@ -880,6 +898,30 @@ void InitMotorRightCircle(void)
 	PWMEN |= 0x11;						//使能PWM0以及PWM01
 	ForwardFlag=13;
 }
+
+void InitMotorRightCircleRecharge(void)
+{
+	P1_1=0;
+	P1_2=0;
+	P1_3=0;
+	P1_4=0;
+	PWM0_MAP = 0x13;					//PWM0通道映射P14口
+	PWM01_MAP = 0x11;					//PWM01通道映射P11口
+	PWM0C = 0x01;						//PWM0高有效，PWM01高有效，时钟8分频 
+	PWMM |= 0x10;						//PWM0工作于互补模式						
+
+
+	PWM0PH = 0x01;						//周期高4位设置为0x03
+	PWM0PL = 0x0;						//周期低8位设置为0xFF
+
+	PWM0DH = 0x00;						//PWM0高4位占空比0x01
+	PWM0DL = 0x60;						//PWM0低8位占空比0x55
+	PWM0DTH = 0x00;						//PWM01高4位占空比0x01
+	PWM0DTL = 0x60;						//PWM01低8位占空比0x55
+	PWMEN |= 0x11;						//使能PWM0以及PWM01
+	ForwardFlag=18;
+}
+
 
  void InitMotorLeftCircle(void)
 {

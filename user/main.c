@@ -88,8 +88,6 @@ void main(void)
 	LCurrent=0;
 	RCurrent=0;
 
-//	LedRedOff();
-//	LedGreenOff();
 	while(1)
 	{
 		

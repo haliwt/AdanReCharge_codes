@@ -18,6 +18,7 @@ version  : ¼ûÎÄ¼þÎ²¶Ë
 #include "..\include\PJ_TypeRedefine.h"
 #include "LB_IR.h"
 #include "LB_Usart.h"
+#include "LB_Run.h"
 #endif
 code INT8U IRcode[100]={
 
@@ -255,9 +256,9 @@ void CheckRechargeIR()
 	  for(i=0;i<30;i++)	
 	  {
 	    if((IRcode[i*3]==Mid_ReadIR.ReadIR[0])&&(IRcode[i*3+1]==Mid_ReadIR.ReadIR[1])&&(IRcode[i*3+2]==Mid_ReadIR.ReadIR[2]))
-		{
-		  break;
-		}
+			{
+				break;
+			}
 	  }
 
 	  switch(i)
@@ -324,8 +325,11 @@ void CheckRechargeIR()
 	  SendCount=1;
 	  SBUF=Usart1Send[SendCount];
 	  #endif 
-
-
+		
+		if(wallRechargeModeFlag){
+			if(i<=20)
+				findRechargeFlag = 1;	
+		}
 
 //  		  Mid_ReadIR.ReadIR[0]=0;
 //		    Mid_ReadIR.ReadIR[1]=0;
@@ -333,11 +337,7 @@ void CheckRechargeIR()
 			Mid_ReadIR.ReadIRFlag=0;
 
 	}
-
-
-
-	
-	
+	return;
 }
 
 
