@@ -199,7 +199,7 @@ void InitPowerIn(void)
      P1M0 = 0x50;  //DC INPUT pull down 
      P2_1 =0; 
 	 P1_0 =0;
-	 P1_7 = 0x50 ; //Battery RechRGE status 
+	 P1M7 = 0x50 ; //Battery RechRGE status 
 	 P1_7 =0;     
 }
 
