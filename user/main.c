@@ -78,26 +78,33 @@ void main(void)
 	InitBuzzer();
 	InitIMP();
 	
-	ADCtl=0;   //ǿ���ź� IR �����־ 0--�رգ� 1 --��
-	Mode = 0x64 ;//Mode=2;
+	ADCtl=1;   //ǿ���ź� IR �����־ 0--�رգ� 1 --��
+	Mode = 0 ;//Mode=2;
 	Step= 0x0 ;  //0;
-	RunMode=0x64;
-	RunStep=0x64;
+	RunMode=0;
+	RunStep=0;
 	RCurrentMax=150;
 	LCurrentMax=150;
 	LCurrent=0;
 	RCurrent=0;
+	CheckTime = 0;
+	battDetect1sFlag = 0;
+	lastMode = 0;
+	SysFlag = 0XFF;
 
 	while(1)
 	{
 		
 		if(AutoDC_ReChargeStatus()!=1){
+		
+			
 			CheckWall();
 			CheckRechargeIR();
 
 			kk=ReadKey();
 			sysMode(kk);
 			CheckRun();
+			battVoltDetect();
 		}
 		
 	}
@@ -115,8 +122,10 @@ void TIMER1_Rpt(void) interrupt TIMER1_VECTOR
   t_10ms++;  //0.1ms 
 	
   ReadAD5ms();
+ // BatteryLowVoltage_Detection();//WT.EDIT 1s detection
   MidIR_Count();
-
+  CheckVoltage();
+	
 	if(t_1ms++>10){
 		t_1ms = 0;
 		T1msFlag = 1;
@@ -138,59 +147,68 @@ void TIMER1_Rpt(void) interrupt TIMER1_VECTOR
 			ImpSecond++;
 			Imp2Second++;
 			NoImpSecond++;
-			SysSecond++;
 			WallSecond++;
+			
 			ReadIMP();
 			CheckLCurrent();
 			CheckRCurrent();
 			CheckEdgeCurrent();
-			CheckFanCurrent();
-			
+			CheckFanCurrent();			
 			LedTip(SysFlag);
 		}
-		CheckVoltage();
+		
+		
 		if(t_1s>99)
 		{
 			t_1s=0;
 			twinkle++;
 			MidWallOffSecond++;
-				#if 0
-			if(SendCount>=12)
-			{
-	//	  Usart1Send[0]=12;
-	//	  Usart1Send[1]=IRLocation.NearMid;
-	//	  Usart1Send[2]=IRLocation.NearPreRight;
-	//	  Usart1Send[3]=IRLocation.NearPreLeft;
-	//	  Usart1Send[4]=IRLocation.NearRight;
-	//	  Usart1Send[5]=IRLocation.NearLeft;
-	//	  Usart1Send[6]=IRLocation.FarMid;
-	//	  Usart1Send[7]=IRLocation.FarPreRight;
-	//	  Usart1Send[8]=IRLocation.FarPreLeft;
-	//	  Usart1Send[9]=IRLocation.FarRight;
-	//	  Usart1Send[10]=IRLocation.FarLeft;
-	//	  Usart1Send[11]=IMP;
-	//	  Usart1Send[12]=RunStep;
-			SendCount=1;
-			SBUF=Usart1Send[SendCount];
-			}
-			#endif 
-			/*
-			Usart1Send[0]=12;
+			CheckTime++;
+			battDetect1sFlag = 1;
+			
+			Usart1Send[0]=3;
 			Usart1Send[1]=Voltage/100;
 			Usart1Send[2]=Voltage%100;
-			Usart1Send[3]=WallDp[0];
-			Usart1Send[4]=WallDp[1];
-			Usart1Send[5]=WallDp[2];
-			Usart1Send[6]=WallDp[3];
-			Usart1Send[7]=LCurrent;
-			Usart1Send[8]=RCurrent;
-			Usart1Send[9]=EdgeCurrent;
-			Usart1Send[10]=FanCurrent;
-			Usart1Send[11]=IMP;
-			Usart1Send[12]=RunStep;
+			Usart1Send[3] =0xAB;
 			SendCount=1;
 			SBUF=Usart1Send[SendCount];
-			*/
+			Battery_HigVoltage = Voltage/100;
+			Battery_LowVoltage = Voltage%100;
+			#if 0
+			if(SendCount>=12)
+			{
+				Usart1Send[0]=12;
+				Usart1Send[1]=Voltage/100;
+				Usart1Send[2]=Voltage%100;
+				Usart1Send[3]=WallDp[0];
+				Usart1Send[4]=WallDp[1];
+				Usart1Send[5]=WallDp[2];
+				Usart1Send[6]=WallDp[3];
+				Usart1Send[7]=LCurrent;
+				Usart1Send[8]=RCurrent;
+				Usart1Send[9]=EdgeCurrent;
+				Usart1Send[10]=FanCurrent;
+				Usart1Send[11]=IMP;
+				Usart1Send[12]=RunStep;
+				SendCount=1;
+				SBUF=Usart1Send[SendCount];				
+//			Usart1Send[0]=12;
+//			Usart1Send[1]=IRLocation.NearMid;
+//			Usart1Send[2]=IRLocation.NearPreRight;
+//			Usart1Send[3]=IRLocation.NearPreLeft;
+//			Usart1Send[4]=IRLocation.NearRight;
+//			Usart1Send[5]=IRLocation.NearLeft;
+//			Usart1Send[6]=IRLocation.FarMid;
+//			Usart1Send[7]=IRLocation.FarPreRight;
+//			Usart1Send[8]=IRLocation.FarPreLeft;
+//			Usart1Send[9]=IRLocation.FarRight;
+//			Usart1Send[10]=IRLocation.FarLeft;
+//			Usart1Send[11]=IMP;
+//			Usart1Send[12]=RunStep;
+//			SendCount=1;
+//			SBUF=Usart1Send[SendCount];
+			}
+			#endif 
 			/*
 			Usart1Send[0]=13;
 			Usart1Send[1]=LeftIR.Left;

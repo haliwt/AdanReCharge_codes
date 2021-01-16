@@ -17,7 +17,8 @@ version  : ���ļ�β��
 #include "..\include\PJ_TypeRedefine.h"
 #include "..\lib\LB_Led.h"
 #include "LB_AD.h"
-
+#include "LB_Run.h"
+#include "LB_Motor.h"
 #endif
 /**
   * @˵��  	��ʱ����
@@ -78,6 +79,8 @@ void StartAD()
 	ADCC0&=0XDF;
 	ADCC0 |= 0x40;					//����ADCת��
 }
+
+
 void SetADINT(void)
 {
     EADC = 1;                                   //ʹ��ADC�ж�
@@ -85,9 +88,10 @@ void SetADINT(void)
 }
 
 
+
 void  SetAD(INT8U ADChanel)
 {
-  code INT8U ADCC[9]={2,1,0,4,5,6,7,12,13};
+  code INT8U ADCC[9]={12,1,0,4,5,6,7,2,13};//WT.EDIT 
   SeleADChanel(ADCC[ADChanel]);
   SetADINT();
   StartAD();
@@ -105,7 +109,7 @@ void ReadAD5ms()
 	 AD5ms[chanel]=ADtemp[2]; //(ADtemp[1]+ADtemp[2])/2;
 	 //AD5ms[5]=0xaa;
 	 chanel++;
-	 if(chanel>8)
+	 if(chanel>8)  //
 	 {
 	   if(ADCtl)
 	   { 
@@ -140,6 +144,8 @@ void ReadAD5ms()
   else
   {
   	 SetAD(chanel);
+
+
   }
 }
 /*
@@ -176,7 +182,7 @@ void CheckWall()
  {
    if(ADFlag)
    {
-   	   WallAD[0][0]=(AD5ms[4]>>4);
+   	    WallAD[0][0]=(AD5ms[4]>>4);
 	   WallAD[1][0]=(AD5ms[3]>>4);
 	   WallAD[2][0]=(AD5ms[1]>>4);
  	   WallAD[3][0]=(AD5ms[2]>>4);
@@ -216,8 +222,10 @@ void CheckWall()
 	RCurrentAD[ADTime]=AD5ms[6];
 	FanCurrentAD[ADTime]=AD5ms[7];
 	EdgeCurrentAD[ADTime]=AD5ms[8];
+	
+	
 	 ADTime++;
-   if(ADTime>7)
+    if(ADTime>7)
    {
    	  ADTime=0;
 	  WallDp[0]=(WallAD100Ms[0][0]+WallAD100Ms[0][2]+WallAD100Ms[0][4]+WallAD100Ms[0][6])/4;
@@ -244,31 +252,64 @@ void CheckWall()
 }
 void CheckEdgeCurrent()
 {
-
  //EdgeCurrent=(EdgeCurrent*9+((AD5ms[8])/2))/10;
-  EdgeCurrent=(EdgeCurrentAD[0]+EdgeCurrentAD[2]+EdgeCurrentAD[4]+EdgeCurrentAD[6])/4;
- //EdgeCurrent=0xaabb;
- if(EdgeCurrent>0x80)
- EdgeCurrentCount++;
- else 
- {
-   if(EdgeCurrentCount>1)
-     EdgeCurrentCount--;
- }
+	if(CheckTime>5){
+		 EdgeCurrent=(EdgeCurrentAD[0]+EdgeCurrentAD[2]+EdgeCurrentAD[4]+EdgeCurrentAD[6])/4;
+		
+		 if(RunMode==6)
+			 return;
+		 
+		 if(EdgeCurrent>0xd0){
+			 EdgeCurrentCount++;
+			 if(EdgeCurrentCount>3){
+					EdgeCurrentCount = 0;
+					RunMode = 0;
+					RunStep = 0;
+					SetFan(0);
+					SetEdge(0);		
+					SetStop();
+					SysFlag = 0XFF;		 
+			 }
+			 else {
+					oldMode = RunMode ;
+					RunMode = 6;
+					RunStep = 1;
+				 	SetEdge(0);		
+					SetStop();
+				}
+		 }
+		 else 
+		 {
+			 EdgeCurrentCount = 0;
+		//   if(EdgeCurrentCount>1)
+		//     EdgeCurrentCount--;
+		 }		
+		
+	}
 }
 
 void CheckFanCurrent()
 {
-
- FanCurrent=(FanCurrentAD[0]+FanCurrentAD[1]+FanCurrentAD[2]+FanCurrentAD[3]+FanCurrentAD[4]+FanCurrentAD[5]+FanCurrentAD[6]+FanCurrentAD[7])/64;
- //FanCurrent=0xaabb;
-// FanCurrentCount++;
+	if(CheckTime>5){
+		CheckTime = 6;
+		FanCurrent=(FanCurrentAD[0]+FanCurrentAD[1]+FanCurrentAD[2]+FanCurrentAD[3]+FanCurrentAD[4]+FanCurrentAD[5]+FanCurrentAD[6]+FanCurrentAD[7])/64;
+		if(FanCurrent > 0x40){
+			RunMode = 0;
+			RunStep = 0;
+			SetFan(0);
+			SetEdge(0);		
+			SetStop();
+			SysFlag = 0XFF;
+		}		
+	}
+	else
+		CheckTime++;
 
 }
 
 void CheckLCurrent()
 {
- INT16U	LCurrentADAvg;
+// INT16U	LCurrentADAvg;
  LCurrent=(LCurrentAD[0]+LCurrentAD[2]+LCurrentAD[4]+LCurrentAD[6])/4;
  //SBUF= (INT8U)LCurrentADAvg;
  //LCurrent=(LCurrent*9+(LCurrentADAvg*9)/2)/10;
@@ -276,7 +317,7 @@ void CheckLCurrent()
 }
 void CheckRCurrent()
 {
- INT16U	RCurrentADAvg;
+// INT16U	RCurrentADAvg;
  RCurrent=(RCurrentAD[0]+RCurrentAD[2]+RCurrentAD[4]+RCurrentAD[6])/4;
 
  //RCurrent=(RCurrent*9+(RCurrentADAvg*11)/2)/10;
@@ -291,7 +332,21 @@ void CheckVoltage()
    Voltage=(Voltage*9+(AD5ms[0]/4))/10;
    //4000*3/40960
 }
+/**********************************************************************
+	*
+	*Function Name:void BatteryLowVoltage_Detection(void)
+	*Function :battery low voltage detection 
+	*
+	*
+	*
+	*
+**********************************************************************/
+void BatteryLowVoltage_Detection(void)
+{
 
+    Battery_Voltage=(Voltage*9+(AD5ms[0]/4))/10;
+
+}
 /***************************************************************************************
   * @˵��  	ADC�жϷ�����
   *	@����	��

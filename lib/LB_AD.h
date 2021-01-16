@@ -41,9 +41,12 @@ KAKA_AD_EXT INT16U outdata LCurrentAD[8];
 KAKA_AD_EXT INT16U outdata RCurrentAD[8];
 KAKA_AD_EXT INT16U outdata FanCurrentAD[8];
 KAKA_AD_EXT INT16U outdata EdgeCurrentAD[8];
+KAKA_AD_EXT INT16U outdata BatteryAD[9];
 KAKA_AD_EXT INT8U WallDp[4];
 KAKA_AD_EXT INT8U  outdata  LCurrent;
 KAKA_AD_EXT INT8U  outdata  RCurrent;
+KAKA_AD_EXT INT8U  Battery_LowVoltage;
+KAKA_AD_EXT INT8U  Battery_HigVoltage;
 KAKA_AD_EXT INT16U  LCurrentMax;
 KAKA_AD_EXT INT16U  RCurrentMax;
 KAKA_AD_EXT INT16U  FanCurrent;
@@ -51,6 +54,7 @@ KAKA_AD_EXT INT16U  EdgeCurrent;
 KAKA_AD_EXT INT16U  EdgeCurrentCount;
 KAKA_AD_EXT INT16U  Voltage;
 KAKA_AD_EXT INT16U  EdgeCurrentLessCount;
+KAKA_AD_EXT INT16U  Battery_Voltage;
 
 KAKA_AD_EXT INT16U  EdgeCurrentOverCount;
 KAKA_AD_EXT	void InitADIO(void);
@@ -63,4 +67,5 @@ KAKA_AD_EXT	void CheckVoltage();
 KAKA_AD_EXT	void CheckWall();
 KAKA_AD_EXT  void CheckEdgeCurrent()	;
 KAKA_AD_EXT  void CheckFanCurrent();
+KAKA_AD_EXT  void BatteryLowVoltage_Detection(void);//WT.EDIT 2021.01.10
 #endif

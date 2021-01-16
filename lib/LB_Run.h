@@ -27,9 +27,9 @@ version  : ���ļ�β��
 #else
 #define  KAKA_Run_EXT extern
 #endif
-#define  WallMin 50
+#define  WallMin 	30		//50
 
-KAKA_Run_EXT   INT8U Mode;
+KAKA_Run_EXT  INT8U Mode;
 KAKA_Run_EXT  INT8U Step;
 KAKA_Run_EXT  INT8U RunMode;
 KAKA_Run_EXT  INT8U RunStep;
@@ -46,7 +46,7 @@ KAKA_Run_EXT  INT16U Imp2Second;
 KAKA_Run_EXT  INT8U  CurrentMax;
 KAKA_Run_EXT  INT16U WallSecond;
 KAKA_Run_EXT  INT16U NoImpSecond;
-KAKA_Run_EXT  INT16U SysSecond;
+KAKA_Run_EXT  INT16U battDetect1sFlag;
 KAKA_Run_EXT  INT8U Run100MSecond;
 KAKA_Run_EXT  INT8U MidWallOffSecond;
 KAKA_Run_EXT  idata INT16U RunSecond;
@@ -61,8 +61,8 @@ KAKA_Run_EXT   void CleanMode_Random(void);
 
 //vic 2020.12.23 add
 #define  WallModeMin 10
-#define  WallModeNormal 80
-#define  WallModeMax	150	
+#define  WallModeNormal 30
+#define  WallModeMax	50	
 KAKA_Run_EXT void circleMode(void);
 KAKA_Run_EXT void wallMode(void);
 
@@ -71,8 +71,8 @@ KAKA_Run_EXT INT8U T1msFlag;
 //vic 2020.12.24
 #define KEY1			P3_4//P3_5//P3_4  //WT.EDIT
 #define KEY2			P3_5//P3_4//P3_5
-#define LED_R			P3_3
-#define LED_G			P2_3
+#define LED_R			P2_3
+#define LED_G			P3_3
 KAKA_Run_EXT INT8U SysFlag;
 
 enum{
@@ -93,4 +93,9 @@ KAKA_Run_EXT void rechargeBatMode(void);
 KAKA_Run_EXT INT8U findRechargeFlag;
 KAKA_Run_EXT INT8U wallRechargeModeFlag;   //特殊的沿墙模式，用来找充电座
 
+KAKA_Run_EXT  INT8U  CheckTime;
+KAKA_Run_EXT  INT8U  oldMode;
+KAKA_Run_EXT 	INT8U lastMode;
+KAKA_Run_EXT void getOutMode(void);
+KAKA_Run_EXT void battVoltDetect(void);
 #endif

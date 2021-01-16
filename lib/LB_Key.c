@@ -56,26 +56,25 @@ INT8U AutoDC_ReChargeStatus(void)
 		     SetFan(0);
 			SetEdge(0);	
 		    	     
-            if(BatteryRechargStatus ==1){
+       if(BatteryRechargStatus ==1){
 			   LedRedOff();
 			   LedGreenON();
 	  
 	          return 1;
-					}
+			 }
 			else if(twinkle < 1 ){
 					 LedRedOff();
-				      LedGreenOff();
-				}
-				  else{
+				   LedGreenOff();
+			}
+		  else{
 				 if(twinkle > 2)twinkle =0;
-					 LedGreenOff();
-					  LedRedON();
-					 
-				  }
-				  return 1;
-			  }
-			else 
-			  return 0;
+				 LedGreenOff();
+				 LedRedON();
+			}			
+			return 1;
+	}
+	else 
+		return 0;
 }
 
 

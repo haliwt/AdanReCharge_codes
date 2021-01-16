@@ -57,27 +57,27 @@ void InitLed(void)
 void LedRedON()
 {
 //	P2_3=0;
-  P3_3=0;
+  LED_R=0;
 }
 
 
 void LedRedOff()
 {
  //P2_3=1;
-   P3_3=1; //red 
+   LED_R=1; //red 
 }
 
 void LedGreenON()
 {
 //  P3_3=0;
-  P2_3=0;
+  LED_G=0;
 }
 
 
 void LedGreenOff()
 {
 //  P3_3=1;
-  P2_3=1; //green
+  LED_G=1; //green
 }
 void InitKey(void)
 {
@@ -146,8 +146,8 @@ INT8U ReadKey(void)
 	}
 	else if(KEY1==0 && KEY2==0){
 		cnt++;
-		if(cnt<10)
-			return; 
+		if(cnt<30)
+			return 0; 
 		
 		cnt = 0;
 		if(K1>20 && K1 <500)
@@ -166,8 +166,8 @@ INT8U ReadKey(void)
 		
 		K1 = 0;
 		K2 = 0;		
-		if((value1+value2)!=0)
-		SBUF = value1+value2;
+//		if((value1+value2)!=0)
+//		SBUF = value1+value2;
 		return (value1+value2);
 	}
 	
@@ -180,8 +180,8 @@ INT8U ReadKey(void)
 	else if(K1>100 && K2==100)
 		value1 = 0x44;
 	
-	if((value1+value2)!=0)
-	SBUF = value1+value2;
+//	if((value1+value2)!=0)
+//	SBUF = value1+value2;
   return (value1+value2);
 }
 #endif 
@@ -199,7 +199,7 @@ void InitPowerIn(void)
      P1M0 = 0x50;  //DC INPUT pull down 
      P2_1 =0; 
 	 P1_0 =0;
-	 P1_7 = 0x50 ; //Battery RechRGE status 
+	 P1M7 = 0x50 ; //Battery RechRGE status 
 	 P1_7 =0;     
 }
 

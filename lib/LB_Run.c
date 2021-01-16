@@ -1026,7 +1026,7 @@ void CleanMode_BOW(void)
 			break;
 		case 0x19:
 		{
-			if(RunMs>20)
+			if(RunMs>90)
 			{
 				InitMotorRight();
 				RunMs=0;
@@ -1186,7 +1186,7 @@ void CleanMode_Random(void)
         }
 		case 4:
 		{
-			if(RunMs>150)
+			if(RunMs>70)
 			{
 				SetStop();
 				RunMs=0;
@@ -1271,6 +1271,10 @@ void  CheckRun()
 			case 5:
 			//	Auto_ReChargeBattery();
 				rechargeBatMode();
+				break;
+			
+			case 6:
+				getOutMode();
 				break;
 			
 			default:
@@ -1654,6 +1658,7 @@ void circleMode(void)
 void wallMode(void)
 {
 	static INT8U findIR;
+	static INT8U firstTime = 0;
 	
 	switch(RunStep){
 		case 0:
@@ -1670,6 +1675,7 @@ void wallMode(void)
 			WallDp[3] = 0;
 			findRechargeFlag = 0;
 			findIR = 0;
+			firstTime = 1;
 			if(wallRechargeModeFlag){
 				SetFan(0);
 				SetEdge(0);
@@ -1714,16 +1720,16 @@ void wallMode(void)
 				SetStop();
 				findIR = 1;
 			}					
-			else {		//if(RunMs>800)	//往右前方走，一直打圈检测不到，则向直走一段距离，重新检测
-//				RunStep = 0x09;
-//				RunMs = 0;
-//				InitMotorForward();
-//				CurrentMax = 0;			
+			else if(firstTime==0 && RunMs>1200)	{//往右前方走，一直打圈检测不到，则向直走一段距离，重新检测
+//			RunStep = 0x09;
+				RunMs = 0;
+				InitMotorForward();
 			}
 			break;
 		
 		case 3: 		//后退 retreat
 			if(RunMs>30){
+				firstTime = 0;
 				InitMotorRetreat();
 				RunMs=0;
 				RunStep=4;
@@ -1801,6 +1807,7 @@ void wallMode(void)
 			case 8:   //right IR check 采样
 				if(RunMs>10){
 					RunMs = 0;
+					firstTime = 0;
 					
 					if(findRechargeFlag){
 						findRechargeFlag = 0;
@@ -2955,13 +2962,255 @@ if(Key==1)
 
     }
 }
+void sysMode(INT8U val)
+{
+	static INT8U powerUp = 0;
+	
+	if(!val)
+		return;
+	
+	switch(val){
+		case 0x01:     //key1 short put on
+	
+			if(!lastMode){
+				return;
+			}
+			
+			if(lastMode == 5){
+				lastMode = 6;
+			}
+			else{
+				lastMode = 5;				
+			}
+			break;
+		
+		case 0x02:  //key1 put on over 500ms 
+		
+			if(!powerUp){			
+				SetBuzzerTime(4);
+				Delay_ms(10);
+				BuzzerOff();
+				Delay_ms(150);
+				SetBuzzerTime(4);
+				Delay_ms(10);
+				BuzzerOff();
+				Delay_ms(150);
+				SetBuzzerTime(4);
+				Delay_ms(10);
+				BuzzerOff();	
+				
+				SetStop();
+				RunStep = 0;
+				RunMode = 1;
+				lastMode = 0;	
+				SetFan(0);
+			  SetEdge(0);	
+				SysFlag = OVER;
+			}
+			else{
+				powerUp = 0;
+			}
+			break;
+		
+		case 0x03:  //key1 put on  500ms
+		
+			if(!lastMode){
+				SetBuzzerTime(4);
+				Delay_ms(10);
+				BuzzerOff();
+				lastMode = 0xaa;
+				powerUp = 1;
+				LedRedOff();
+				LedGreenON();	
+               SetFan(0);
+			  SetEdge(0);					
+				SysFlag = CLEAN;
+			}
+			break;
+		
+		case 0x10:   //key2 short put on
+		 
+			if(lastMode == 0)
+				return;
+			
+			if(lastMode == 0xaa){
+				lastMode = 5;
+			}
+			else{
+				if(lastMode++>=4)
+					lastMode = 1;					
+			}
+			SysFlag = CLEAN;
+			break;
+		
+		case 0x20:  //key2 put on over 500ms  
+		   
+			
+			if(lastMode == 0)
+				return;			
+			break;
+		
+		case 0x30:   //key2 put on  500ms
+		
+			if(lastMode == 0)
+				return;			
+			break;
+		
+		case 0x44:  //key1 and  key2 put on 200ms 
+		
+			break;
+		
+		default:
+			return;
+	}
+	
+	if(lastMode == Mode)
+		return;
+	Mode = lastMode;
+	
+	switch(Mode){
 
+		case 0:
+		
+//			SysFlag = IDEL;
+			break;
+		
+		case 1:   //s甩禄煤
+		   
+			RunMode =1; //
+			RunStep =1;
+			SetBuzzerTime(4);
+			Delay_ms(10);
+			BuzzerOff();
+			ADCtl=1;   //vic 2020.12.24			
+			SetFan(250);
+			SetEdge(250);
+			CheckTime = 0;
+			break;		
+		
+		case 2:
+			RunMode =2; //褬卤邖
+			RunStep =1;
+			SetBuzzerTime(4);
+			Delay_ms(10);
+			BuzzerOff();
+			Delay_ms(150);
+			SetBuzzerTime(4);
+			Delay_ms(10);
+			BuzzerOff();
+			ADCtl=1;   //vic 2020.12.24		
+			SetFan(250);
+			SetEdge(250);		
+			wallRechargeModeFlag = 0;
+			CheckTime = 0;
+			break;
+		
+		case 3:
+			RunMode =3; //鹿颅
+			RunStep =1;
+			SetBuzzerTime(4);
+			Delay_ms(10);
+			BuzzerOff();
+			Delay_ms(150);
+			SetBuzzerTime(4);
+			Delay_ms(10);
+			BuzzerOff();
+			Delay_ms(150);
+			SetBuzzerTime(4);
+			Delay_ms(10);
+			BuzzerOff();		
+			ADCtl=1;   //vic 2020.12.24			
+			SetFan(250);
+			SetEdge(250);		
+			CheckTime = 0;
+			break;
+		
+		case 4:
+			RunMode =4; //圆
+			RunStep =1;
+			SetBuzzerTime(4);
+			Delay_ms(10);
+			BuzzerOff();
+			Delay_ms(150);
+			SetBuzzerTime(4);
+			Delay_ms(10);
+			BuzzerOff();
+			Delay_ms(150);
+			SetBuzzerTime(4);
+			Delay_ms(10);
+			BuzzerOff();
+			Delay_ms(150);
+			SetBuzzerTime(4);
+			Delay_ms(10);
+			BuzzerOff();		
+			ADCtl=1;   //vic 2020.12.24		
+			SetFan(250);
+			SetEdge(250);	
+			CheckTime = 0;		
+			break;
+			
+		case 5://麓媒禄煤模式
+			SetStop();
+			RunMode = 0;
+			RunStep = 0;
+			SetBuzzerTime(4);
+			Delay_ms(10);
+			BuzzerOff();
+      SetFan(0);  //WT.EDIT 
+			SetEdge(0);	 //WT.EDIT 	
+//			ADCtl=1;
+			SysFlag = IDEL;
+			break;
+		
+		
+		case 6: // 鍥炲厖
+			RunMode =5;
+			RunStep =0;
+			SetBuzzerTime(4);
+			Delay_ms(10);
+			BuzzerOff();	
+      SetFan(0);
+			SetEdge(0);		
+		  ADCtl = 0;
+			SysFlag = FIND;	
+//      RunMs = 0;//WT.EDIT 		
+			break;
+		
+		default:
+			break;
+	}
+	
+	return;
+}
+	
 
+/********************************************************
 void sysMode(INT8U val)
 {
 	static INT8U lastMode = 0;
 	static INT8U powerUp = 0;
 	
+	if(lastMode == Mode)
+	    return;
+	Mode = lastMode;
+	
+	
+	if((Battery_HigVoltage <= 0x09)||(Battery_HigVoltage==0x0A && Battery_LowVoltage > 0x14)){
+			RunMode =5;
+			RunStep =0;
+			//SetBuzzerTime(4);
+			//Delay_ms(10);
+			 BuzzerOff();	
+            SetFan(0);
+			SetEdge(0);		
+		     ADCtl = 0;
+			SysFlag = FIND;	
+           RunMs = 0;//WT.EDIT 		
+         
+
+	}
+	else {
+
 	if(!val)
 		return;
 	
@@ -2970,16 +3219,12 @@ void sysMode(INT8U val)
 			if(!lastMode){
 				return;
 			}
+			
 			if(lastMode == 5){
-				SetFan(0);
-			  SetEdge(0);	
 				lastMode = 6;
 			}
 			else{
-				lastMode = 5;
-        SetFan(0);
-				SetEdge(0);					
-				SysFlag = IDEL;
+				lastMode = 5;				
 			}
 			break;
 		
@@ -3015,7 +3260,7 @@ void sysMode(INT8U val)
 				SetBuzzerTime(4);
 				Delay_ms(10);
 				BuzzerOff();
-				lastMode = 0xff;
+				lastMode = 0xaa;
 				powerUp = 1;
 				LedRedOff();
 				LedGreenON();	
@@ -3029,7 +3274,7 @@ void sysMode(INT8U val)
 			if(lastMode == 0)
 				return;
 			
-			if(lastMode == 0xff){
+			if(lastMode == 0xaa){
 				lastMode = 5;
 			}
 			else{
@@ -3056,9 +3301,9 @@ void sysMode(INT8U val)
 			return;
 	}
 	
-	if(lastMode == Mode)
-		return;
-	Mode = lastMode;
+	
+		
+
 	
 	switch(Mode){
 		case 0:
@@ -3074,6 +3319,7 @@ void sysMode(INT8U val)
 			ADCtl=1;   //vic 2020.12.24			
 			SetFan(250);
 			SetEdge(250);
+			CheckTime = 0;
 			break;		
 		
 		case 2:
@@ -3090,6 +3336,7 @@ void sysMode(INT8U val)
 			SetFan(250);
 			SetEdge(250);		
 			wallRechargeModeFlag = 0;
+			CheckTime = 0;
 			break;
 		
 		case 3:
@@ -3107,8 +3354,9 @@ void sysMode(INT8U val)
 			Delay_ms(10);
 			BuzzerOff();		
 			ADCtl=1;   //vic 2020.12.24			
-				SetFan(250);
-				SetEdge(250);		
+			SetFan(250);
+			SetEdge(250);		
+			CheckTime = 0;
 			break;
 		
 		case 4:
@@ -3130,21 +3378,21 @@ void sysMode(INT8U val)
 			Delay_ms(10);
 			BuzzerOff();		
 			ADCtl=1;   //vic 2020.12.24		
-				SetFan(250);
-				SetEdge(250);		
+			SetFan(250);
+			SetEdge(250);	
+			CheckTime = 0;		
 			break;
 			
 		case 5://待机模式
-//			RunMode =4; 
-//			RunStep =1;
 			SetStop();
-			RunMode = 1;
+			RunMode = 0;
 			RunStep = 0;
 			SetBuzzerTime(4);
 			Delay_ms(10);
 			BuzzerOff();
       SetFan(0);  //WT.EDIT 
 			SetEdge(0);	 //WT.EDIT 	
+//			ADCtl=1;
 			SysFlag = IDEL;
 			break;
 		
@@ -3159,17 +3407,19 @@ void sysMode(INT8U val)
 			SetEdge(0);		
 		  ADCtl = 0;
 			SysFlag = FIND;	
-      RunMs = 0;//WT.EDIT 		
+//      RunMs = 0;//WT.EDIT 		
 			break;
 		
 		default:
 			break;
 	}
-	
+   
 	return;
+  }
+   
 }
 	
-
+*/
 
 void LedTip(INT8U status)
 {
@@ -3253,5 +3503,191 @@ void LedTip(INT8U status)
 	return;
 }
 
+
+void getOutMode(void)
+{
+ 		switch(RunStep)
+		{
+			case 0:
+			{
+
+			}
+			break;
+
+			case 1:  //初始原地右转圈
+			{								
+				SetStop();
+				RunStep=2;
+				RunMs=0;
+			}
+				break;
+
+			case 2:  //normal run
+			{
+				if(RunMs>30)
+				{
+					InitMotorRetreat();
+					RunStep = 4;
+					RunMs = 0;
+				}
+			}
+			break;
+			
+//			case 3:   //后退
+//			{
+//				if(RunMs>30)
+//				{
+//					InitMotorRetreat();
+//					RunMs=0;
+//					RunStep=4;
+//				}
+//			}
+//				break;
+			
+			case 4:  //停止
+			{
+				if(RunMs>80)
+				{
+					SetStop();
+					RunMs=0;
+					RunStep=5;
+				}
+			}
+				break;
+
+			case 5:  
+			{
+				if(RunMs>20)
+				{
+					InitMotorLeftCircle();
+					RunMs=0;
+					RunStep=6;
+				}
+			}
+				break;
+
+			case 6:  
+			{			
+				if(RunMs>150)
+				{
+					SetStop();
+					RunMs=0;
+					RunStep=7;
+				}	
+			}
+			break;
+			
+			case 7:  
+			{			
+				if(RunMs>30)
+				{
+					InitMotorRightCircle();
+					RunMs=0;
+					RunStep=8;
+				}	
+			}
+			break;		
+
+			case 8:  
+			{			
+				if(RunMs>250)
+				{
+					SetStop();
+					RunMs=0;
+					RunStep=9;
+				}	
+			}
+			break;		
+
+			case 9:  
+			{			
+				if(RunMs>30)
+				{
+					InitMotorLeftCircle();
+					RunMs=0;
+					RunStep=10;
+				}	
+			}
+			break;		
+
+			case 10:  
+			{			
+				if(RunMs>150)
+				{
+					SetStop();
+					RunMs=0;
+					RunStep=11;
+				}	
+			}
+			break;			
+
+			case 11:  
+			{			
+				if(RunMs>30)
+				{
+					RunMode = oldMode;
+					RunStep = 1;
+					SetEdge(250);		
+				}	
+			}
+			break;				
+		}	
+	return;
+}
+
+void battVoltDetect(void)
+{
+	static INT8U cnt = 0 ;
+	
+	if(!battDetect1sFlag)
+		return;
+	battDetect1sFlag = 0;
+	
+	if(lastMode == 0) //关机状态
+		return;
+	
+	if(Voltage < 0x3F6 && Voltage > 0x3a0 ){  //0x3f6对应7V电压  ，0x3a0对应6.1V电压 ,0X3d0 对应3.85V电压（运行时的低电压）
+		if(RunMode == 5)
+			return;
+		
+		if(RunMode==1 || RunMode==2 || RunMode==3 || RunMode==4 ){
+			if(Voltage < 0x3D0){
+				cnt++;
+			}
+			else
+				cnt = 0;
+		}
+		else 
+			cnt++;
+		
+		if(cnt>30){
+			cnt = 0;
+			RunMode =5;
+			RunStep =0;	
+      SetFan(0);
+			SetEdge(0);		
+		  ADCtl = 0;
+			SysFlag = FIND;							
+		}
+		
+	}
+	else if(Voltage < 0x3a0){
+		if(cnt>10){
+			cnt = 0;
+			SetStop();
+			RunStep = 0;
+			RunMode = 1;
+			SetFan(0);
+			SetEdge(0);	
+			lastMode = 0; 
+			SysFlag = OVER;
+		}
+		cnt++;
+	}
+	else {
+		cnt = 0;
+	}
+	return;
+}
 
 
