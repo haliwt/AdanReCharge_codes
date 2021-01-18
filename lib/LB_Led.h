@@ -28,10 +28,10 @@ version  : ���ļ�β��
 #define  KAKA_Led_EXT extern
 #endif
 
-#define Auto_DCCharge    		P2_1 
-#define DC_Recharge         P1_0
-#define CloseSwitch_L  			P1_5	
-#define CloseSwitch_R  			P3_2
+#define Auto_DCCharge    		  P2_1 
+#define DC_Recharge               P1_0
+#define CloseSwitch_L  			  P1_5	
+#define CloseSwitch_R  			  P3_2
 #define BatteryRechargStatus      P1_7
 
   

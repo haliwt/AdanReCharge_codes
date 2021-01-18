@@ -111,55 +111,56 @@ void ReadIMP(void)
 
 /***********************************************************
  *  *
-    *Function Name: INT8U ReadPowerAutoIn(void)
+    *Function Name: INT8U ReadKey(void)
     *Function: ReCharge battery be detected
     *Input Ref: NO
     *Return Ref: 1 -battery recharge   0-no recharge
     * 
 ***********************************************************/
-#if 1
 INT8U ReadKey(void)
 {
 
   static INT16U  K1=0;
   static INT16U  K2=0;
-	static INT8U cnt;
+  static INT16U  K3=0; //WT.EDIT 2021.01.16
+  static INT8U cnt;
   INT8U	 value1 = 0;
-	INT8U  value2 = 0;
-	
+  INT8U  value2 = 0;
+  INT8U  value3 = 0;  //itselst check keyvalue.
 	if(!T1msFlag)
 		return value1;
 	T1msFlag = 0;
 	
-  if(KEY1==1 && KEY2==0){
+  if(KEY1==1 && KEY2==0){ //KEY1 =POWER_KEY ,KEY2 = MODES
 		cnt = 0;
-		K1++;	
-	}
+		K1++;	 //power_key press 
+  }
   else if(KEY2==1 && KEY1==0) {
 		cnt = 0;
-		K2++;
-	}
-	else if(KEY1==1 && KEY2==1) {
+		K2++;   //modes_key press
+  }
+  else if(KEY1==1 && KEY2==1) { //combination key press
 		cnt = 0;
 		K1++;
 		K2++;
-	}
-	else if(KEY1==0 && KEY2==0){
+		K3 ++; //itself checking key
+  }
+  else if(KEY1==0 && KEY2==0){ //oneself key 
 		cnt++;
 		if(cnt<30)
 			return 0; 
 		
 		cnt = 0;
 		if(K1>20 && K1 <500)
-			value1 = 0x01;	
+			value1 = 0x01;	//short time power press ---power on 
 		else if(K1>500)
-			value1 = 0x02;
+			value1 = 0x02;  //long time power press
 		else 
 			value1 = 0;
 		
-		if(K2>20 && K2 <500)
+		if(K2>20 && K2 <500) //short time modes press 
 			value2 = 0x10;
-		else if(K2>500)
+		else if(K2>500)   //long time modes press 
 			value2 = 0x20;
 		else 
 			value2 = 0;		
@@ -171,7 +172,7 @@ INT8U ReadKey(void)
 		return (value1+value2);
 	}
 	
-	if((K1==500) && (K2<50))
+	if((K1==500) && (K2<50)) //combination key 
 		value1 = 0x03;
 	else 	if(K2==500 && K1<50)
 		value2 = 0x30;
@@ -179,12 +180,14 @@ INT8U ReadKey(void)
 		value1 = 0x44;
 	else if(K1>100 && K2==100)
 		value1 = 0x44;
-	
+	else if(K3>1000){  //WT.EDIT 2021.01.16
+		value3 =0x50;
+		return value3 ;
+	}
 //	if((value1+value2)!=0)
 //	SBUF = value1+value2;
   return (value1+value2);
 }
-#endif 
 /***********************************************************
  *  *
     *Function Name: INT8U ReadPowerAutoIn(void)

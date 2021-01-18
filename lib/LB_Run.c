@@ -625,9 +625,8 @@ void Auto_ReChargeBattery(void)
  * ***
  *Function Name:void ReChargeBattery(void) 
  *Function :void CleanMode_BOW(void)
- * 
- * 
- * 
+ *Input Ref:NO
+ *Return Ref:NO
  * 
 ************************************************************************/
 void CleanMode_BOW(void)
@@ -1274,8 +1273,11 @@ void  CheckRun()
 				break;
 			
 			case 6:
-				getOutMode();
+				getOutMode(); //脱困模式
 				break;
+			case 7: //itself checking for mass production
+                ItselfChecking();  
+			   break;
 			
 			default:
 				break;
@@ -2690,7 +2692,7 @@ if(Key==1)
 		case 3: //input recharge status                
 				Mode =0x66;
 				SetBuzzerTime(4);
-			  Delay_ms(10);
+			    Delay_ms(10);
 				BuzzerOff();
 
 				LedGreenOff();
@@ -2962,6 +2964,14 @@ if(Key==1)
 
     }
 }
+/***************************************************************
+	*
+	*Function Name:void sysMode(INT8U val)
+	*Function : robot run modes
+    *Input Ref:No
+    *Return Ref:NO
+	*
+***************************************************************/
 void sysMode(INT8U val)
 {
 	static INT8U powerUp = 0;
@@ -2970,21 +2980,22 @@ void sysMode(INT8U val)
 		return;
 	
 	switch(val){
-		case 0x01:     //key1 short put on
+		case 0x01:     //PowerKey short put on
 	
 			if(!lastMode){
 				return;
 			}
 			
-			if(lastMode == 5){
-				lastMode = 6;
+			if(lastMode == 5){ //standby Modes
+				lastMode = 6; //auto recharge Modes
 			}
 			else{
-				lastMode = 5;				
+				lastMode = 5;	//standby Mode			
 			}
+			ModeStopTime =0;
 			break;
 		
-		case 0x02:  //key1 put on over 500ms 
+		case 0x02:  //PowerKey press long time  is PowerOn 
 		
 			if(!powerUp){			
 				SetBuzzerTime(4);
@@ -3004,53 +3015,54 @@ void sysMode(INT8U val)
 				RunMode = 1;
 				lastMode = 0;	
 				SetFan(0);
-			  SetEdge(0);	
+			  	SetEdge(0);	
 				SysFlag = OVER;
 			}
 			else{
 				powerUp = 0;
 			}
+			ModeStopTime =0;
 			break;
 		
-		case 0x03:  //key1 put on  500ms
+		case 0x03:  //PowerKey long + short time press 
 		
 			if(!lastMode){
 				SetBuzzerTime(4);
 				Delay_ms(10);
 				BuzzerOff();
-				lastMode = 0xaa;
+				lastMode = 0xaa; //Power On flag 
 				powerUp = 1;
 				LedRedOff();
 				LedGreenON();	
-               SetFan(0);
-			  SetEdge(0);					
+                SetFan(0);
+			    SetEdge(0);					
 				SysFlag = CLEAN;
 			}
+			ModeStopTime =0;
 			break;
 		
-		case 0x10:   //key2 short put on
+		case 0x10:   //Modes short Press input : clean Mode
 		 
 			if(lastMode == 0)
 				return;
 			
-			if(lastMode == 0xaa){
-				lastMode = 5;
+			if(lastMode == 0xaa){ //power on flag 
+				lastMode = 5; // input ready clean modes
 			}
 			else{
 				if(lastMode++>=4)
 					lastMode = 1;					
 			}
 			SysFlag = CLEAN;
+			ModeStopTime =0;
 			break;
 		
-		case 0x20:  //key2 put on over 500ms  
-		   
-			
-			if(lastMode == 0)
+		case 0x20:  //Modes long time  500ms  
+		    if(lastMode == 0)
 				return;			
 			break;
 		
-		case 0x30:   //key2 put on  500ms
+		case 0x30:   //Mode long time + short  press  
 		
 			if(lastMode == 0)
 				return;			
@@ -3059,6 +3071,12 @@ void sysMode(INT8U val)
 		case 0x44:  //key1 and  key2 put on 200ms 
 		
 			break;
+
+		case 0x50: //itself checking 
+			Mode = 7;
+			
+
+		   break;
 		
 		default:
 			return;
@@ -3075,7 +3093,13 @@ void sysMode(INT8U val)
 //			SysFlag = IDEL;
 			break;
 		
-		case 1:   //s˦»ú
+		case 1:   // random Modes
+		    if(ModeStopTime < 3){ //200ms
+			    SetStop();
+				SetFan(0);
+				SetEdge(0);
+		     }
+			
 		   
 			RunMode =1; //
 			RunStep =1;
@@ -3086,9 +3110,17 @@ void sysMode(INT8U val)
 			SetFan(250);
 			SetEdge(250);
 			CheckTime = 0;
+			
 			break;		
 		
-		case 2:
+		case 2: //along wall Modes
+             if(ModeStopTime < 3){
+			SetStop();
+			SetFan(0);
+			SetEdge(0);
+             }
+			
+		
 			RunMode =2; //ј±ߍ
 			RunStep =1;
 			SetBuzzerTime(4);
@@ -3103,9 +3135,15 @@ void sysMode(INT8U val)
 			SetEdge(250);		
 			wallRechargeModeFlag = 0;
 			CheckTime = 0;
+			
 			break;
 		
-		case 3:
+		case 3: // bow Mode 
+		   if(ModeStopTime < 3){
+				SetStop();
+				SetFan(0);
+				SetEdge(0);
+		   	}
 			RunMode =3; //¹­
 			RunStep =1;
 			SetBuzzerTime(4);
@@ -3123,9 +3161,16 @@ void sysMode(INT8U val)
 			SetFan(250);
 			SetEdge(250);		
 			CheckTime = 0;
+			
 			break;
 		
-		case 4:
+		case 4: //fixpoint Modes 
+           if(ModeStopTime < 3){
+				SetStop();
+				SetFan(0);
+				SetEdge(0);
+           	}
+			
 			RunMode =4; //Բ
 			RunStep =1;
 			SetBuzzerTime(4);
@@ -3146,17 +3191,19 @@ void sysMode(INT8U val)
 			ADCtl=1;   //vic 2020.12.24		
 			SetFan(250);
 			SetEdge(250);	
-			CheckTime = 0;		
+			CheckTime = 0;	
+		
 			break;
 			
-		case 5://´ý»úģʽ
+		case 5:// 待机状态 standby mode
+			
 			SetStop();
 			RunMode = 0;
 			RunStep = 0;
 			SetBuzzerTime(4);
 			Delay_ms(10);
 			BuzzerOff();
-      SetFan(0);  //WT.EDIT 
+            SetFan(0);  //WT.EDIT 
 			SetEdge(0);	 //WT.EDIT 	
 //			ADCtl=1;
 			SysFlag = IDEL;
@@ -3164,262 +3211,39 @@ void sysMode(INT8U val)
 		
 		
 		case 6: // 回充
-			RunMode =5;
-			RunStep =0;
-			SetBuzzerTime(4);
-			Delay_ms(10);
-			BuzzerOff();	
-      SetFan(0);
-			SetEdge(0);		
-		  ADCtl = 0;
-			SysFlag = FIND;	
-//      RunMs = 0;//WT.EDIT 		
-			break;
-		
-		default:
-			break;
-	}
-	
-	return;
-}
-	
-
-/********************************************************
-void sysMode(INT8U val)
-{
-	static INT8U lastMode = 0;
-	static INT8U powerUp = 0;
-	
-	if(lastMode == Mode)
-	    return;
-	Mode = lastMode;
-	
-	
-	if((Battery_HigVoltage <= 0x09)||(Battery_HigVoltage==0x0A && Battery_LowVoltage > 0x14)){
-			RunMode =5;
-			RunStep =0;
-			//SetBuzzerTime(4);
-			//Delay_ms(10);
-			 BuzzerOff();	
-            SetFan(0);
-			SetEdge(0);		
-		     ADCtl = 0;
-			SysFlag = FIND;	
-           RunMs = 0;//WT.EDIT 		
-         
-
-	}
-	else {
-
-	if(!val)
-		return;
-	
-	switch(val){
-		case 0x01:     //key1 short put on
-			if(!lastMode){
-				return;
-			}
-			
-			if(lastMode == 5){
-				lastMode = 6;
-			}
-			else{
-				lastMode = 5;				
-			}
-			break;
-		
-		case 0x02:  //key1 put on over 500ms 
-			if(!powerUp){			
-				SetBuzzerTime(4);
-				Delay_ms(10);
-				BuzzerOff();
-				Delay_ms(150);
-				SetBuzzerTime(4);
-				Delay_ms(10);
-				BuzzerOff();
-				Delay_ms(150);
-				SetBuzzerTime(4);
-				Delay_ms(10);
-				BuzzerOff();	
-				
-				SetStop();
-				RunStep = 0;
-				RunMode = 1;
-				lastMode = 0;	
+		    if(ModeStopTime < 3){
+			    SetStop();
 				SetFan(0);
-			  SetEdge(0);	
-				SysFlag = OVER;
-			}
-			else{
-				powerUp = 0;
-			}
-			break;
+				SetEdge(0);
+		    }
 		
-		case 0x03:  //key1 put on  500ms
-			if(!lastMode){
-				SetBuzzerTime(4);
-				Delay_ms(10);
-				BuzzerOff();
-				lastMode = 0xaa;
-				powerUp = 1;
-				LedRedOff();
-				LedGreenON();	
-        SetFan(0);
-			  SetEdge(0);					
-				SysFlag = CLEAN;
-			}
-			break;
-		
-		case 0x10:   //key2 short put on
-			if(lastMode == 0)
-				return;
-			
-			if(lastMode == 0xaa){
-				lastMode = 5;
-			}
-			else{
-				if(lastMode++>=4)
-					lastMode = 1;					
-			}
-			SysFlag = CLEAN;
-			break;
-		
-		case 0x20:  //key2 put on over 500ms   
-			if(lastMode == 0)
-				return;			
-			break;
-		
-		case 0x30:   //key2 put on  500ms
-			if(lastMode == 0)
-				return;			
-			break;
-		
-		case 0x44:  //key1 and  key2 put on 200ms 
-			break;
-		
-		default:
-			return;
-	}
-	
-	
-		
-
-	
-	switch(Mode){
-		case 0:
-//			SysFlag = IDEL;
-			break;
-		
-		case 1:   //s���
-			RunMode =1; //
-			RunStep =1;
-			SetBuzzerTime(4);
-			Delay_ms(10);
-			BuzzerOff();
-			ADCtl=1;   //vic 2020.12.24			
-			SetFan(250);
-			SetEdge(250);
-			CheckTime = 0;
-			break;		
-		
-		case 2:
-			RunMode =2; //�ر�
-			RunStep =1;
-			SetBuzzerTime(4);
-			Delay_ms(10);
-			BuzzerOff();
-			Delay_ms(150);
-			SetBuzzerTime(4);
-			Delay_ms(10);
-			BuzzerOff();
-			ADCtl=1;   //vic 2020.12.24		
-			SetFan(250);
-			SetEdge(250);		
-			wallRechargeModeFlag = 0;
-			CheckTime = 0;
-			break;
-		
-		case 3:
-			RunMode =3; //��
-			RunStep =1;
-			SetBuzzerTime(4);
-			Delay_ms(10);
-			BuzzerOff();
-			Delay_ms(150);
-			SetBuzzerTime(4);
-			Delay_ms(10);
-			BuzzerOff();
-			Delay_ms(150);
-			SetBuzzerTime(4);
-			Delay_ms(10);
-			BuzzerOff();		
-			ADCtl=1;   //vic 2020.12.24			
-			SetFan(250);
-			SetEdge(250);		
-			CheckTime = 0;
-			break;
-		
-		case 4:
-			RunMode =4; //Բ
-			RunStep =1;
-			SetBuzzerTime(4);
-			Delay_ms(10);
-			BuzzerOff();
-			Delay_ms(150);
-			SetBuzzerTime(4);
-			Delay_ms(10);
-			BuzzerOff();
-			Delay_ms(150);
-			SetBuzzerTime(4);
-			Delay_ms(10);
-			BuzzerOff();
-			Delay_ms(150);
-			SetBuzzerTime(4);
-			Delay_ms(10);
-			BuzzerOff();		
-			ADCtl=1;   //vic 2020.12.24		
-			SetFan(250);
-			SetEdge(250);	
-			CheckTime = 0;		
-			break;
-			
-		case 5://����ģʽ
-			SetStop();
-			RunMode = 0;
-			RunStep = 0;
-			SetBuzzerTime(4);
-			Delay_ms(10);
-			BuzzerOff();
-      SetFan(0);  //WT.EDIT 
-			SetEdge(0);	 //WT.EDIT 	
-//			ADCtl=1;
-			SysFlag = IDEL;
-			break;
-		
-		
-		case 6: //�س�ģʽ
 			RunMode =5;
 			RunStep =0;
 			SetBuzzerTime(4);
 			Delay_ms(10);
 			BuzzerOff();	
-      SetFan(0);
-			SetEdge(0);		
-		  ADCtl = 0;
+            SetFan(0); 
+			SetEdge(250);		//WT.EDIT 2021.01.18
+		    ADCtl = 0;
 			SysFlag = FIND;	
+		
 //      RunMs = 0;//WT.EDIT 		
 			break;
+        case 7: //itself checking WT.EDIT 2021.01.16
+            // ItselfChecking(void);  
+            RunMode = 7;
+			LedGreenON();
+		    LedRedON();
+			
+		break;
 		
 		default:
 			break;
 	}
-   
+	
 	return;
-  }
-   
 }
 	
-*/
 
 void LedTip(INT8U status)
 {
@@ -3503,7 +3327,7 @@ void LedTip(INT8U status)
 	return;
 }
 
-
+/********************************************************************/
 void getOutMode(void)
 {
  		switch(RunStep)
