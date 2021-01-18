@@ -2976,13 +2976,16 @@ void sysMode(INT8U val)
 {
 	static INT8U powerUp = 0;
 	
-	if(!val)
+	if(!val){
+		ModeStopTime =0;
 		return;
+	}
 	
 	switch(val){
 		case 0x01:     //PowerKey short put on
 	
 			if(!lastMode){
+				ModeStopTime =0;
 				return;
 			}
 			
@@ -3050,20 +3053,29 @@ void sysMode(INT8U val)
 				lastMode = 5; // input ready clean modes
 			}
 			else{
-				if(lastMode++>=4)
-					lastMode = 1;					
+				 if(ModeStopTime < 10){
+					SetStop();
+					SetFan(0);
+					SetEdge(0);
+			   	}
+				lastMode++ ;
+				if(lastMode >4)//if(lastMode++>=4)
+					lastMode = 1;		
+				 ModeStopTime =0;
 			}
-			SysFlag = CLEAN;
 			ModeStopTime =0;
+			SysFlag = CLEAN;
+			
 			break;
 		
 		case 0x20:  //Modes long time  500ms  
+		    ModeStopTime=0;
 		    if(lastMode == 0)
 				return;			
 			break;
 		
 		case 0x30:   //Mode long time + short  press  
-		
+		    ModeStopTime=0;
 			if(lastMode == 0)
 				return;			
 			break;
@@ -3094,18 +3106,20 @@ void sysMode(INT8U val)
 			break;
 		
 		case 1:   // random Modes
-		    if(ModeStopTime < 3){ //200ms
+		    if(ModeStopTime < 10){ //200ms
 			    SetStop();
 				SetFan(0);
 				SetEdge(0);
 		     }
 			
 		   
-			RunMode =1; //
-			RunStep =1;
+			
 			SetBuzzerTime(4);
 			Delay_ms(10);
 			BuzzerOff();
+			Delay_ms(1000);
+			RunMode =1; //
+			RunStep =1;
 			ADCtl=1;   //vic 2020.12.24			
 			SetFan(250);
 			SetEdge(250);
@@ -3114,7 +3128,7 @@ void sysMode(INT8U val)
 			break;		
 		
 		case 2: //along wall Modes
-             if(ModeStopTime < 3){
+             if(ModeStopTime < 10){
 			SetStop();
 			SetFan(0);
 			SetEdge(0);
@@ -3130,6 +3144,7 @@ void sysMode(INT8U val)
 			SetBuzzerTime(4);
 			Delay_ms(10);
 			BuzzerOff();
+			Delay_ms(1000);//1s
 			ADCtl=1;   //vic 2020.12.24		
 			SetFan(250);
 			SetEdge(250);		
@@ -3139,7 +3154,7 @@ void sysMode(INT8U val)
 			break;
 		
 		case 3: // bow Mode 
-		   if(ModeStopTime < 3){
+		   if(ModeStopTime < 10){
 				SetStop();
 				SetFan(0);
 				SetEdge(0);
@@ -3156,7 +3171,8 @@ void sysMode(INT8U val)
 			Delay_ms(150);
 			SetBuzzerTime(4);
 			Delay_ms(10);
-			BuzzerOff();		
+			BuzzerOff();	
+			Delay_ms(1000);
 			ADCtl=1;   //vic 2020.12.24			
 			SetFan(250);
 			SetEdge(250);		
@@ -3187,12 +3203,13 @@ void sysMode(INT8U val)
 			Delay_ms(150);
 			SetBuzzerTime(4);
 			Delay_ms(10);
-			BuzzerOff();		
+			BuzzerOff();	
+			Delay_ms(1000);
 			ADCtl=1;   //vic 2020.12.24		
 			SetFan(250);
 			SetEdge(250);	
 			CheckTime = 0;	
-		
+		    ModeStopTime=0;
 			break;
 			
 		case 5:// 待机状态 standby mode
@@ -3207,6 +3224,8 @@ void sysMode(INT8U val)
 			SetEdge(0);	 //WT.EDIT 	
 //			ADCtl=1;
 			SysFlag = IDEL;
+			ModeStopTime=0;
+
 			break;
 		
 		
@@ -3226,7 +3245,7 @@ void sysMode(INT8U val)
 			SetEdge(250);		//WT.EDIT 2021.01.18
 		    ADCtl = 0;
 			SysFlag = FIND;	
-		
+		  
 //      RunMs = 0;//WT.EDIT 		
 			break;
         case 7: //itself checking WT.EDIT 2021.01.16
