@@ -2285,7 +2285,7 @@ void rechargeBatMode(void)
 					RunMs=0;
 					CurrentMax++;			
 			}
-            else if(RunMs>30)
+            else if(RunMs>30 && RunMs < 50)//else if(RunMs>30)
 			{
 				RunMs=0;
 //				if(SendCount>=12)
@@ -2416,7 +2416,7 @@ void rechargeBatMode(void)
 					RunMs=0;
 					CurrentMax++;			
 			}
-			else if(RunMs>30)
+			else if(RunMs>30 && RunMs < 50 )//else if(RunMs>30)
 			{
 				RunMs=0;
 //				if(SendCount>=12)
@@ -2549,7 +2549,7 @@ void rechargeBatMode(void)
 					RunMs=0;
 					CurrentMax++;			
 			}
-			else if(RunMs>30)
+			else if(RunMs>30 && RunMs <50)
 			{
 				RunMs=0;
 				#if 0
