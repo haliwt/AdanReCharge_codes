@@ -29,12 +29,12 @@ INT8U AutoDC_ReChargeStatus(void)
        if(BatteryRechargStatus ==1){
 			   LedRedOff();
 			   LedGreenON();
-               if(full ==0){  //WT.EDIT 2021.01.16
-				  full ++ ;
-                  InitMotorRetreat();
-				  Delay_ms(500);
-	           }
-			   if(full==1){
+	           Delay_ms(1000);
+               full ++ ;
+			   if(full > 250)full =11;
+               if(full==10){
+			   	    InitMotorRetreat();
+				    Delay_ms(500);
 					SetStop();
 					RunMode = 0;
 					RunStep = 0;
@@ -59,6 +59,7 @@ INT8U AutoDC_ReChargeStatus(void)
 				 if(twinkle > 2)twinkle =0;
 				 LedGreenOff();
 				 LedRedON();
+				 ful=0;
 		}			
 		return 1;
 	}

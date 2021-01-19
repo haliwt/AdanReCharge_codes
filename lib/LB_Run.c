@@ -1507,7 +1507,7 @@ void circleMode(void)
 					RunMs=10;
 					CurrentMax++;
 				}
-				else if(IMP>0)
+				else if(IMP>0)//impact occur 
 				{
 					NoImpSecond=0;
 					RunStep=0x3;
@@ -1933,8 +1933,14 @@ void wallMode(void)
 }
 
 
-
-
+/************************************************************************************
+ * 	*
+    *Function Name:void rechargeBatMode(void)
+	*Function : Auto search for charge pile         
+	*Input Ref:NO
+	*Return Ref:NO
+	*
+*************************************************************************************/
 void rechargeBatMode(void)
 {
 	static INT8U distance = 0;
@@ -2043,7 +2049,7 @@ void rechargeBatMode(void)
 		}
 			break;
 		
-		case 0x02:
+		case 0x02: //
 			if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
 			{
 				NoImpSecond=0;
@@ -2077,7 +2083,7 @@ void rechargeBatMode(void)
 			break;
 			
 		
-			case 3:   //ºóÍË
+			case 3:   //impact occur after run step
 			{
 				if(RunMs>20)
 				{
