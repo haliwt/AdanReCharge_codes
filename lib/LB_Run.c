@@ -1972,7 +1972,7 @@ void rechargeBatMode(void)
 		{
 
 
-			if(RunMs>30)
+			if(RunMs>30 && RunMs < 50) //WT.EDIT 
 			{
 				RunMs=0;
 				connect++;
@@ -2038,8 +2038,7 @@ void rechargeBatMode(void)
 						RunMode = 2;
 						RunStep = 1;
 						ADCtl = 1;
-//						SetFan(250);
-//						SetEdge(250);				
+			
 						wallRechargeModeFlag = 1;
 						findRechargeFlag = 0;
 					}
@@ -2148,7 +2147,7 @@ void rechargeBatMode(void)
 					RunMs=0;
 					CurrentMax++;			
 				}
-                else if(RunMs < 20)//else if(RunMs>250) //WT.EIDT
+                else if(RunMs > 250  && RunMs < 260)//else if(RunMs>250) //WT.EIDT
 				{
 					InitMotorForward();
 					RunMs=0;
@@ -2158,7 +2157,7 @@ void rechargeBatMode(void)
 				
 		case 0x40:   //far away
 		{
-			if(RunMs>20)
+			if(RunMs>20 && RunMs < 80) //WT.EDIT 
 			{
 				RunMs=0;
 				distance = 0;
