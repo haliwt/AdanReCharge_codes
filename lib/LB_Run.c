@@ -2407,7 +2407,7 @@ void rechargeBatMode(void)
 		case 0x42:   //leftt side 
 		{
 
-			if(IMP>0) //WT.EDIT 2021.01.19
+			if(IMP>0 ||(WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin)) //WT.EDIT 2021.01.19
 			 {
 					NoImpSecond=0;
 					RunStep=0x3;
@@ -2415,7 +2415,7 @@ void rechargeBatMode(void)
 					RunMs=0;
 					CurrentMax++;			
 			}
-			else if(RunMs>30 && RunMs < 50 )//else if(RunMs>30)
+			else if(RunMs>30 && RunMs < 40 )//else if(RunMs>30)
 			{
 				RunMs=0;
 //				if(SendCount>=12)
@@ -2539,8 +2539,7 @@ void rechargeBatMode(void)
 		case 0x50:   //near 
 		{
             
-
-            if(IMP>0) //WT.EDIT 2021.01.19
+             if(IMP>0) //WT.EDIT 2021.01.19
 			 {
 					NoImpSecond=0;
 					RunStep=0x3;
@@ -2548,7 +2547,7 @@ void rechargeBatMode(void)
 					RunMs=0;
 					CurrentMax++;			
 			}
-			else if(RunMs>30 && RunMs <50)
+			else if(RunMs>30 && RunMs <60)
 			{
 				RunMs=0;
 				#if 0
@@ -2573,7 +2572,7 @@ void rechargeBatMode(void)
 				#endif 
 				if(IRLocation.NearMid>0)
 				{
-					InitMotorForwardSlow();
+					InitMotorForwardSlow_Target();
 					RunNoIRsenorTime=0;
 					RunNoIRsenorLastStep=1;					
 				}
@@ -2604,7 +2603,7 @@ void rechargeBatMode(void)
 				else if(IRLocation.FarMid>0)
 				{
 					//RunStep=0x50;
-					InitMotorForwardSlow();
+					InitMotorForwardSlow_Target();
 					RunNoIRsenorTime=0;
 					RunNoIRsenorLastStep=1;					
 				}
