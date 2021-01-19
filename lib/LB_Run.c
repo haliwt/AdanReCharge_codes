@@ -1247,7 +1247,11 @@ void CleanMode_Random(void)
 ***********************************************************************/
 void  CheckRun()
 {
-   switch(RunMode) {    
+   switch(RunMode) { 
+   	        case 0:
+				
+
+            break;
 			case 1 : // clean random Mode
            			
 				CleanMode_Random();
@@ -3001,15 +3005,15 @@ void sysMode(INT8U val)
 		case 0x02:  //PowerKey press long time  is PowerOn 
 		
 			if(!powerUp){			
-				SetBuzzerTime(4);
+				SetBuzzerTime(100);
 				Delay_ms(10);
 				BuzzerOff();
 				Delay_ms(150);
-				SetBuzzerTime(4);
+				SetBuzzerTime(100);
 				Delay_ms(10);
 				BuzzerOff();
 				Delay_ms(150);
-				SetBuzzerTime(4);
+				SetBuzzerTime(100);
 				Delay_ms(10);
 				BuzzerOff();	
 				
@@ -3030,7 +3034,7 @@ void sysMode(INT8U val)
 		case 0x03:  //PowerKey long + short time press 
 		
 			if(!lastMode){
-				SetBuzzerTime(4);
+				SetBuzzerTime(100);
 				Delay_ms(10);
 				BuzzerOff();
 				lastMode = 0xaa; //Power On flag 
@@ -3053,12 +3057,7 @@ void sysMode(INT8U val)
 				lastMode = 5; // input ready clean modes
 			}
 			else{
-				 if(ModeStopTime < 10){
-					SetStop();
-					SetFan(0);
-					SetEdge(0);
-			   	}
-				lastMode++ ;
+				 lastMode++ ;
 				if(lastMode >4)//if(lastMode++>=4)
 					lastMode = 1;		
 				 ModeStopTime =0;
@@ -3114,7 +3113,7 @@ void sysMode(INT8U val)
 			
 		   
 			
-			SetBuzzerTime(4);
+			SetBuzzerTime(100);
 			Delay_ms(10);
 			BuzzerOff();
 			Delay_ms(1000);
@@ -3137,11 +3136,11 @@ void sysMode(INT8U val)
 		
 			RunMode =2; //ј±ߍ
 			RunStep =1;
-			SetBuzzerTime(4);
+			SetBuzzerTime(100);
 			Delay_ms(10);
 			BuzzerOff();
 			Delay_ms(150);
-			SetBuzzerTime(4);
+			SetBuzzerTime(100);
 			Delay_ms(10);
 			BuzzerOff();
 			Delay_ms(1000);//1s
@@ -3154,22 +3153,22 @@ void sysMode(INT8U val)
 			break;
 		
 		case 3: // bow Mode 
-		   if(ModeStopTime < 10){
+		   if(ModeStopTime < 2){
 				SetStop();
 				SetFan(0);
 				SetEdge(0);
 		   	}
 			RunMode =3; //¹­
 			RunStep =1;
-			SetBuzzerTime(4);
+			SetBuzzerTime(100);
 			Delay_ms(10);
 			BuzzerOff();
 			Delay_ms(150);
-			SetBuzzerTime(4);
+			SetBuzzerTime(100);
 			Delay_ms(10);
 			BuzzerOff();
 			Delay_ms(150);
-			SetBuzzerTime(4);
+			SetBuzzerTime(100);
 			Delay_ms(10);
 			BuzzerOff();	
 			Delay_ms(1000);
@@ -3181,7 +3180,7 @@ void sysMode(INT8U val)
 			break;
 		
 		case 4: //fixpoint Modes 
-           if(ModeStopTime < 3){
+           if(ModeStopTime < 2){
 				SetStop();
 				SetFan(0);
 				SetEdge(0);
@@ -3189,19 +3188,19 @@ void sysMode(INT8U val)
 			
 			RunMode =4; //Բ
 			RunStep =1;
-			SetBuzzerTime(4);
+			SetBuzzerTime(100);
 			Delay_ms(10);
 			BuzzerOff();
 			Delay_ms(150);
-			SetBuzzerTime(4);
+			SetBuzzerTime(100);
 			Delay_ms(10);
 			BuzzerOff();
 			Delay_ms(150);
-			SetBuzzerTime(4);
+			SetBuzzerTime(100);
 			Delay_ms(10);
 			BuzzerOff();
 			Delay_ms(150);
-			SetBuzzerTime(4);
+			SetBuzzerTime(100);
 			Delay_ms(10);
 			BuzzerOff();	
 			Delay_ms(1000);
@@ -3217,7 +3216,7 @@ void sysMode(INT8U val)
 			SetStop();
 			RunMode = 0;
 			RunStep = 0;
-			SetBuzzerTime(4);
+			SetBuzzerTime(100);
 			Delay_ms(10);
 			BuzzerOff();
             SetFan(0);  //WT.EDIT 
@@ -3230,7 +3229,7 @@ void sysMode(INT8U val)
 		
 		
 		case 6: // 回充
-		    if(ModeStopTime < 3){
+		    if(ModeStopTime < 10){
 			    SetStop();
 				SetFan(0);
 				SetEdge(0);
@@ -3238,7 +3237,7 @@ void sysMode(INT8U val)
 		
 			RunMode =5;
 			RunStep =0;
-			SetBuzzerTime(4);
+			SetBuzzerTime(100);
 			Delay_ms(10);
 			BuzzerOff();	
             SetFan(0); 
