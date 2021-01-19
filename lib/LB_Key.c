@@ -16,23 +16,18 @@ xdata struct _CleanMode cleanWorks;
 *****************************************************/
 INT8U AutoDC_ReChargeStatus(void)
 {
-    static INT8U full=0;
+    static INT8U full=0,chargeflag=0;
 	if(Auto_DCCharge ==1 || DC_Recharge  ==1 ){//�س�͵�Դ������DC�����⣬û������??
 	     
-		 	SysFlag = 0xff;	
-            SetStop();
-			RunMode = 1;
-			RunStep = 0;
-		    SetFan(0);
-			SetEdge(0);	
-		    	     
-       if(BatteryRechargStatus ==1){
+            chargeflag ++ ;
+
+            if(BatteryRechargStatus ==1){
 			   LedRedOff();
 			   LedGreenON();
 	           Delay_ms(1000);
                full ++ ;
-			   if(full > 250)full =21;
-               if(full==20){
+			   if(full > 250)full =10;
+               if(full > 10){
 			   	    InitMotorRetreat();
 				    Delay_ms(500);
 					SetStop();
@@ -45,23 +40,37 @@ INT8U AutoDC_ReChargeStatus(void)
 					SetEdge(0);	 //WT.EDIT 	
 					ADCtl=0;
 					SysFlag = IDEL;
-					
-                }
+					 return 1;
+               }
 			   
-	          return 1;
-		}
-		else if(twinkle < 1 ){
-				 LedRedOff();
-				 LedGreenOff();
-				 full=0;
-		}
-		else{
-				 if(twinkle > 2)twinkle =0;
-				 LedGreenOff();
-				 LedRedON();
-				 full=0;
-		}			
-		return 1;
+	        
+		   }
+	        if(chargeflag >250)chargeflag =3;
+	        if(chargeflag > 2){
+
+				SysFlag = 0xff;	
+	            SetStop();
+				RunMode = 0;
+				RunStep = 0;
+			    SetFan(0);
+				SetEdge(0);	
+				
+				if(twinkle < 1 ){
+					 LedRedOff();
+					 LedGreenOff();
+					 full=0;
+				}
+				else{
+						 if(twinkle > 2)twinkle =0;
+						 LedGreenOff();
+						 LedRedON();
+						 full=0;
+				}			
+				return 1;
+	        }
+		    else 
+				return 0;	     
+          
 	}
 	else 
 		return 0;

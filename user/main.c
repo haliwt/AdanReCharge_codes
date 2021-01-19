@@ -97,8 +97,7 @@ void main(void)
 		
 		if(AutoDC_ReChargeStatus()!=1){
 		
-			
-			CheckWall();
+		    CheckWall();
 			CheckRechargeIR();
 
 			kk=ReadKey();

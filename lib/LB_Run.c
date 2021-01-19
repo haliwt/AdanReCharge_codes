@@ -2542,7 +2542,7 @@ void rechargeBatMode(void)
              if(IMP>0) //WT.EDIT 2021.01.19
 			 {
 					NoImpSecond=0;
-					RunStep=0x3;
+					RunStep=0x51;
 					SetStop();
 					RunMs=0;
 					CurrentMax++;			
@@ -2664,129 +2664,19 @@ void rechargeBatMode(void)
 				}
 				ClearAllIR();
 			}
-			#if 0
-			else if(RunMs < 30)//else if(RunMs>20) //WT.EDIT 2021.01.19
-			{
-				RunMs=0;
-				distance = 1;
-				lostCnt = 0;
-				rightLostFlag = 0;
-				leftLostFlag = 0;
-//				if(SendCount>=12)
-//				{
-//					Usart1Send[0]=12;
-//					Usart1Send[1]=IRLocation.NearMid;
-//					Usart1Send[2]=IRLocation.NearPreRight;
-//					Usart1Send[3]=IRLocation.NearPreLeft;
-//					Usart1Send[4]=IRLocation.NearRight;
-//					Usart1Send[5]=IRLocation.NearLeft;
-//					Usart1Send[6]=IRLocation.FarMid;
-//					Usart1Send[7]=IRLocation.FarPreRight;
-//					Usart1Send[8]=IRLocation.FarPreLeft;
-//					Usart1Send[9]=IRLocation.FarRight;
-//					Usart1Send[10]=IRLocation.FarLeft;
-//					Usart1Send[11]=IMP;
-//					Usart1Send[12]=RunStep;
-//					SendCount=1;
-//					SBUF=Usart1Send[SendCount];
-//				}
-				if(IRLocation.NearMid>0)
-				{
-					InitMotorForwardSlow();
-					RunNoIRsenorTime=0;
-					RunNoIRsenorLastStep=1;					
-				}
-				else if(IRLocation.NearPreRight>0)
-				{
-					InitMotorForwardLeftSlow();
-					RunNoIRsenorTime=0;
-					RunNoIRsenorLastStep=2;					
-				}
-				else if(IRLocation.NearPreLeft>0)
-				{
-					InitMotorForwardRightSlow();
-					RunNoIRsenorTime=0;
-					RunNoIRsenorLastStep=3;					
-				}
-				else if(IRLocation.NearRight>0)
-				{
-					InitMotorForwardLeftSlow();
-					RunNoIRsenorTime=0;
-					RunNoIRsenorLastStep=2;					
-				}
-				else if(IRLocation.NearLeft>0)
-				{
-					InitMotorForwardRightSlow();
-					RunNoIRsenorTime=0;
-					RunNoIRsenorLastStep=3;					
-				}
-				else if(IRLocation.FarMid>0)
-				{
-					//RunStep=0x50;
-					InitMotorForwardSlow();
-					RunNoIRsenorTime=0;
-					RunNoIRsenorLastStep=1;					
-				}
-				else if(IRLocation.FarPreRight>0)
-				{
-					//RunStep=0x53;
-					InitMotorForwardLeftSlow();
-					RunNoIRsenorTime=0;
-					RunNoIRsenorLastStep=2;					
-				}
-				else if(IRLocation.FarPreLeft>0)
-				{
-					//RunStep=0x56;
-					InitMotorForwardRightSlow();
-					RunNoIRsenorTime=0;
-					RunNoIRsenorLastStep=3;					
-				}
-				else if(IRLocation.FarRight>0)
-				{
-					//RunStep=0x59;
-					InitMotorForwardLeftSlow();
-					RunNoIRsenorTime=0;
-					RunNoIRsenorLastStep=2;					
-				}
-				else if(IRLocation.FarLeft>0)
-				{
-					//RunStep=0x5c;
-					InitMotorForwardRightSlow();
-					RunNoIRsenorTime=0;
-					RunNoIRsenorLastStep=2;					
-				}
-				else
-				{
-					RunNoIRsenorTime++;
-					if(RunNoIRsenorTime>5)
-					{
-
-						RunNoIRsenorTime=0;
-						if(RunNoIRsenorLastStep==1)
-						{
-
-						}
-						else	if(RunNoIRsenorLastStep==2)
-						{
-							InitMotorForwardRightSlow();
-							RunNoIRsenorTime=0;
-							RunStep=0x41;
-						}
-						else	if(RunNoIRsenorLastStep==3)
-						{
-							InitMotorForwardLeftSlow();
-							RunNoIRsenorTime=0;
-							RunStep=0x42;
-						}
-
-
-					}
-				}
-				ClearAllIR();
-			}
-			#endif 
+			
 		}
 			break;
+		case 0x51:   //impact occur after run step
+			{
+				if(RunMs>20)
+				{
+					InitMotorRetreat();
+					RunMs=0;
+					RunStep=0x50;
+				}
+			}
+				break;
 		default:
 			break;
 	}	
