@@ -1249,7 +1249,9 @@ void  CheckRun()
 {
    switch(RunMode) { 
    	        case 0:
-				
+				SetStop();
+				SetFan(0);
+				SetEdge(0);
 
             break;
 			case 1 : // clean random Mode
@@ -2146,7 +2148,7 @@ void rechargeBatMode(void)
 					RunMs=0;
 					CurrentMax++;			
 				}
-                else if(RunMs>250)
+                else if(RunMs < 20)//else if(RunMs>250) //WT.EIDT
 				{
 					InitMotorForward();
 					RunMs=0;
@@ -2273,7 +2275,9 @@ void rechargeBatMode(void)
 			break;
 		case 0x41:  //right side
 		{
-            if(IMP>0) //WT.EDIT 2021.01.19
+
+       
+			if(IMP>0) //WT.EDIT 2021.01.19
 			 {
 					NoImpSecond=0;
 					RunStep=0x3;
@@ -2281,8 +2285,7 @@ void rechargeBatMode(void)
 					RunMs=0;
 					CurrentMax++;			
 			}
-
-			else if(RunMs>30)
+            else if(RunMs>30)
 			{
 				RunMs=0;
 //				if(SendCount>=12)
@@ -2404,7 +2407,8 @@ void rechargeBatMode(void)
 			break;
 		case 0x42:   //leftt side 
 		{
-			if(RunMs>30)
+
+            if(RunMs>30)
 			{
 				RunMs=0;
 //				if(SendCount>=12)
@@ -2527,6 +2531,7 @@ void rechargeBatMode(void)
 			break;
 		case 0x50:   //near 
 		{
+            
 
             if(IMP>0) //WT.EDIT 2021.01.19
 			 {
@@ -2536,7 +2541,7 @@ void rechargeBatMode(void)
 					RunMs=0;
 					CurrentMax++;			
 			}
-			else if(RunMs>20)
+			else if(RunMs < 30)//else if(RunMs>20) //WT.EDIT 2021.01.19
 			{
 				RunMs=0;
 				distance = 1;
@@ -3139,10 +3144,16 @@ void sysMode(INT8U val)
 			break;
 		
 		case 1:   // random Modes
-		    if(ModeStopTime < 10){ //200ms
-			    SetStop();
+		      RunMode =0;
+			  RunStep =0;
+
+			if(ModeStopTime < 10){ //200ms
+		        
+              
+				SetStop();
 				SetFan(0);
 				SetEdge(0);
+				
 		     }
 			
 		   
@@ -3150,7 +3161,7 @@ void sysMode(INT8U val)
 			SetBuzzerTime(100);
 			Delay_ms(10);
 			BuzzerOff();
-			Delay_ms(1000);
+			//Delay_ms(1000);
 			RunMode =1; //
 			RunStep =1;
 			ADCtl=1;   //vic 2020.12.24			
@@ -3161,10 +3172,12 @@ void sysMode(INT8U val)
 			break;		
 		
 		case 2: //along wall Modes
+		       RunMode =0;
+			    RunStep =0;
              if(ModeStopTime < 10){
-			SetStop();
-			SetFan(0);
-			SetEdge(0);
+				SetStop();
+				SetFan(0);
+				SetEdge(0);
              }
 			
 		
@@ -3177,7 +3190,7 @@ void sysMode(INT8U val)
 			SetBuzzerTime(100);
 			Delay_ms(10);
 			BuzzerOff();
-			Delay_ms(1000);//1s
+			//Delay_ms(1000);//1s
 			ADCtl=1;   //vic 2020.12.24		
 			SetFan(250);
 			SetEdge(250);		
@@ -3187,7 +3200,11 @@ void sysMode(INT8U val)
 			break;
 		
 		case 3: // bow Mode 
-		   if(ModeStopTime < 2){
+		     RunMode =0;
+			 RunStep =0;
+		   if(ModeStopTime < 10){
+		   	    RunMode =0;
+			    RunStep =0;
 				SetStop();
 				SetFan(0);
 				SetEdge(0);
@@ -3205,7 +3222,7 @@ void sysMode(INT8U val)
 			SetBuzzerTime(100);
 			Delay_ms(10);
 			BuzzerOff();	
-			Delay_ms(1000);
+			//Delay_ms(1000);
 			ADCtl=1;   //vic 2020.12.24			
 			SetFan(250);
 			SetEdge(250);		
@@ -3214,7 +3231,11 @@ void sysMode(INT8U val)
 			break;
 		
 		case 4: //fixpoint Modes 
-           if(ModeStopTime < 2){
+		      RunMode =0;
+			  RunStep =0;
+           if(ModeStopTime < 10){
+		   	    RunMode =0;
+			    RunStep =0;
 				SetStop();
 				SetFan(0);
 				SetEdge(0);
@@ -3237,7 +3258,7 @@ void sysMode(INT8U val)
 			SetBuzzerTime(100);
 			Delay_ms(10);
 			BuzzerOff();	
-			Delay_ms(1000);
+			//Delay_ms(1000);
 			ADCtl=1;   //vic 2020.12.24		
 			SetFan(250);
 			SetEdge(250);	
