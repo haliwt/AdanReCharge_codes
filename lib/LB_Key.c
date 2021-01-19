@@ -31,8 +31,8 @@ INT8U AutoDC_ReChargeStatus(void)
 			   LedGreenON();
 	           Delay_ms(1000);
                full ++ ;
-			   if(full > 250)full =11;
-               if(full==10){
+			   if(full > 250)full =21;
+               if(full==20){
 			   	    InitMotorRetreat();
 				    Delay_ms(500);
 					SetStop();
@@ -45,7 +45,7 @@ INT8U AutoDC_ReChargeStatus(void)
 					SetEdge(0);	 //WT.EDIT 	
 					ADCtl=0;
 					SysFlag = IDEL;
-
+					
                 }
 			   
 	          return 1;
@@ -59,7 +59,7 @@ INT8U AutoDC_ReChargeStatus(void)
 				 if(twinkle > 2)twinkle =0;
 				 LedGreenOff();
 				 LedRedON();
-				 ful=0;
+				 full=0;
 		}			
 		return 1;
 	}

@@ -1968,6 +1968,8 @@ void rechargeBatMode(void)
 				
 		case 1:
 		{
+
+
 			if(RunMs>30)
 			{
 				RunMs=0;
@@ -2136,7 +2138,15 @@ void rechargeBatMode(void)
 				break;						
 		
 		case 7:
-				if(RunMs>250)
+               if(IMP>0) //WT.EDIT 2021.01.19
+			   {
+					NoImpSecond=0;
+					RunStep=0x3;
+					SetStop();
+					RunMs=0;
+					CurrentMax++;			
+				}
+                else if(RunMs>250)
 				{
 					InitMotorForward();
 					RunMs=0;
@@ -2263,7 +2273,16 @@ void rechargeBatMode(void)
 			break;
 		case 0x41:  //right side
 		{
-			if(RunMs>30)
+            if(IMP>0) //WT.EDIT 2021.01.19
+			 {
+					NoImpSecond=0;
+					RunStep=0x3;
+					SetStop();
+					RunMs=0;
+					CurrentMax++;			
+			}
+
+			else if(RunMs>30)
 			{
 				RunMs=0;
 //				if(SendCount>=12)
@@ -2508,7 +2527,16 @@ void rechargeBatMode(void)
 			break;
 		case 0x50:   //near 
 		{
-			if(RunMs>20)
+
+            if(IMP>0) //WT.EDIT 2021.01.19
+			 {
+					NoImpSecond=0;
+					RunStep=0x3;
+					SetStop();
+					RunMs=0;
+					CurrentMax++;			
+			}
+			else if(RunMs>20)
 			{
 				RunMs=0;
 				distance = 1;
