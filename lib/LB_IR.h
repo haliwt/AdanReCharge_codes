@@ -73,4 +73,5 @@ KAKA_IR_EXT void MidIR_Count(void);
 KAKA_IR_EXT void CheckHandsetIR();
 KAKA_IR_EXT void CheckRechargeIR();
 KAKA_IR_EXT void ClearAllIR();
+KAKA_IR_EXT void Iint_T5(void);
 #endif

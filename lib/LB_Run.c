@@ -2046,11 +2046,11 @@ void rechargeBatMode(void)
 					SBUF=Usart1Send[SendCount];
 				}
 				#endif 
-				if(IRLocation.TopIrLeft >0){ //WT.EDIT 2021.01.20
+			if(TOP_IR>0 && TOP_IR < 0x0A){ //WT.EDIT 2021.01.20
 					RunStep = 0x60; //TopIr PROC
 					RunMs = 0;
-                }
-				else if(IRLocation.NearMid>0)
+              }
+			  else if(IRLocation.NearMid>0)
 				{
 					InitMotorForwardSlow_Target();
 					RunNoIRsenorTime=0;
@@ -2165,6 +2165,7 @@ void rechargeBatMode(void)
 
 		/***************TOP IR PROC**********************/
 		case 0x60: //旋转
+		    TOP_IR =0;
 			if(RunMs < 200){
 				InitMotorLeft();
 			    RunStep=0x61;//

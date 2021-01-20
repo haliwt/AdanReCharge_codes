@@ -64,8 +64,10 @@ void main(void)
 {
 	
 	INT8U kk,flag;
+
 	
 	InitSysclk(1);
+	Iint_T5();
 	InitT1();
 	InitADIO();
     InitMotorIO();
@@ -140,6 +142,7 @@ void TIMER1_Rpt(void) interrupt TIMER1_VECTOR
 		t_100ms++;
 		t_1s++;
 		RunMs++;
+		InterruptTime++;
 		CheckBuzzer();
 		SetMotorForwardPWMUP();
 		if(t_100ms>9) //100ms
@@ -241,6 +244,42 @@ void TIMER1_Rpt(void) interrupt TIMER1_VECTOR
 		}
   }
 }
+/***************************************************************************************
+  * @?¦Ì?¡Â  	T5?D??¡¤t??o¡¥¨ºy
+  *	@2?¨ºy	?T
+  * @¡¤¦Ì???¦Ì ?T
+  * @¡Á¡é		?T
+***************************************************************************************/
+void TIMER5_Rpt(void) interrupt T5_VECTOR
+{     
+    INT8U gui_T5Value;
+	if(T5CON&0x40)                      //¨º?¡¤??a¨ªa2?¨º??t
+    {
+		
+		gui_T5Value =RCAP5;			//?¨¢¨¨???¨¨?¦Ì?¨ºy?Y
+
+		TOP_IR ++ ;
+		
+    }
+    if(InterruptTime >10){  //>6
+		              #if 1
+					  Usart1Send[0]=2;
+					  Usart1Send[1]=gui_T5Value ;//Remote1_ReadIR.ReadIRData[Remote1_ReadIR.ReadIRBit];
+                      Usart1Send[2]=TOP_IR ;//0xff;
+					  SendCount=1;
+					  SBUF=Usart1Send[SendCount];
+					  InterruptTime =0;
+		              #endif 
+                      TOP_IR =0;
+					  InterruptTime =0;
+					  gui_T5Value=0;
+					
+					
+		    }
+	T5CON &=~ 0x40;						//??3y¨°y??¨ªa2?¨º?¨¨?¨º??t¡¤¡é¨¦¨²¡À¨º????        
+	T5CON &=~ 0x80;						//??3yT5?D??¡À¨º????      
+}
+
 void WDT_Rpt() interrupt WDT_VECTOR
 {
 	WDTC &=~ 0x20;						//ï¿½ï¿½ï¿½WDTï¿½Ð¶Ï±ï¿½Ö¾Î»
