@@ -1275,6 +1275,7 @@ void  CheckRun()
 
 			case 5:
 			//	Auto_ReChargeBattery();
+			    SetEdge(180);		//WT.EDIT 2021.01.18
 				rechargeBatMode();
 				break;
 			
@@ -2547,7 +2548,7 @@ void rechargeBatMode(void)
 					RunMs=0;
 					CurrentMax++;			
 			}
-			else if(RunMs>30 && RunMs <60)
+			else if(RunMs>30 && RunMs <40)
 			{
 				RunMs=0;
 				#if 0
@@ -2669,14 +2670,19 @@ void rechargeBatMode(void)
 			break;
 		case 0x51:   //impact occur after run step
 			{
-				if(RunMs>20)
+				if(RunMs < 20)
 				{
 					InitMotorRetreat();
-					RunMs=0;
-					RunStep=0x50;
+					RunStep=0x52;
 				}
 			}
-				break;
+		break;
+
+		case 0x52:
+			  SetStop();
+			 RunStep=0x50;
+			 RunMs=0;
+        break;
 		default:
 			break;
 	}	
@@ -2697,7 +2703,7 @@ void sysMode(INT8U val)
 	static INT8U powerUp = 0;
 	
 	if(!val){
-		ModeStopTime =0;
+		
 		return;
 	}
 	
@@ -2705,7 +2711,7 @@ void sysMode(INT8U val)
 		case 0x01:     //PowerKey short put on
 	
 			if(!lastMode){
-				ModeStopTime =0;
+
 				return;
 			}
 			
@@ -2716,6 +2722,7 @@ void sysMode(INT8U val)
 				lastMode = 5;	//standby Mode			
 			}
 			ModeStopTime =0;
+		
 			break;
 		
 		case 0x02:  //PowerKey press long time  is PowerOn 
@@ -2745,6 +2752,7 @@ void sysMode(INT8U val)
 				powerUp = 0;
 			}
 			ModeStopTime =0;
+			
 			break;
 		
 		case 0x03:  //PowerKey long + short time press 
@@ -2760,8 +2768,10 @@ void sysMode(INT8U val)
                 SetFan(0);
 			    SetEdge(0);					
 				SysFlag = CLEAN;
+				
 			}
 			ModeStopTime =0;
+			
 			break;
 		
 		case 0x10:   //Modes short Press input : clean Mode
@@ -2771,26 +2781,29 @@ void sysMode(INT8U val)
 			
 			if(lastMode == 0xaa){ //power on flag 
 				lastMode = 5; // input ready clean modes
+
 			}
 			else{
-				 lastMode++ ;
+				lastMode++ ;
 				if(lastMode >4)//if(lastMode++>=4)
 					lastMode = 1;		
 				 ModeStopTime =0;
+				
 			}
 			ModeStopTime =0;
 			SysFlag = CLEAN;
 			
+			
 			break;
 		
 		case 0x20:  //Modes long time  500ms  
-		    ModeStopTime=0;
+		   
 		    if(lastMode == 0)
 				return;			
 			break;
 		
 		case 0x30:   //Mode long time + short  press  
-		    ModeStopTime=0;
+		 
 			if(lastMode == 0)
 				return;			
 			break;
@@ -2811,8 +2824,9 @@ void sysMode(INT8U val)
 	
 	if(lastMode == Mode)
 		return;
-	Mode = lastMode;
 	
+	Mode = lastMode;
+
 	switch(Mode){
 
 		case 0:
@@ -2821,41 +2835,41 @@ void sysMode(INT8U val)
 			break;
 		
 		case 1:   // random Modes
-		      RunMode =0;
-			  RunStep =0;
-
-			if(ModeStopTime < 100){ //200ms
+		    
+			if(ModeStopTime< 2){ //200ms
 		        
-              
+                RunMode =0;
+			    RunStep =0;
 				SetStop();
 				SetFan(0);
 				SetEdge(0);
 				
 		     }
-			
-		    SetBuzzerTime(100);
-			Delay_ms(10);
-			BuzzerOff();
-			//Delay_ms(1000);
-			RunMode =1; //
-			RunStep =1;
-			ADCtl=1;   //vic 2020.12.24			
-			SetFan(250);
-			SetEdge(250);
-			CheckTime = 0;
+			    SetBuzzerTime(100);
+				Delay_ms(10);
+				BuzzerOff();
+				Delay_ms(1000);
+				RunMode =1; //
+				RunStep =1;
+				ADCtl=1;   //vic 2020.12.24			
+				SetFan(250);
+				SetEdge(250);
+				CheckTime = 0;
+				
 			
 			break;		
 		
 		case 2: //along wall Modes
-		       RunMode =0;
+		    
+             if(ModeStopTime < 2){
+			 	 RunMode =0;
 			    RunStep =0;
-             if(ModeStopTime < 100){
 				SetStop();
 				SetFan(0);
 				SetEdge(0);
              }
 			
-		
+		    
 			RunMode =2; //ј±ߍ
 			RunStep =1;
 			SetBuzzerTime(100);
@@ -2865,25 +2879,27 @@ void sysMode(INT8U val)
 			SetBuzzerTime(100);
 			Delay_ms(10);
 			BuzzerOff();
-			//Delay_ms(1000);//1s
+			Delay_ms(1000);//1s
 			ADCtl=1;   //vic 2020.12.24		
 			SetFan(250);
 			SetEdge(250);		
 			wallRechargeModeFlag = 0;
 			CheckTime = 0;
 			
+			
+			
 			break;
 		
 		case 3: // bow Mode 
-		     RunMode =0;
-			 RunStep =0;
-		   if(ModeStopTime < 100){
+		       
+		   if(ModeStopTime < 2){
 		   	    RunMode =0;
 			    RunStep =0;
 				SetStop();
 				SetFan(0);
 				SetEdge(0);
 		   	}
+		   
 			RunMode =3; //¹­
 			RunStep =1;
 			SetBuzzerTime(100);
@@ -2897,18 +2913,18 @@ void sysMode(INT8U val)
 			SetBuzzerTime(100);
 			Delay_ms(10);
 			BuzzerOff();	
-			//Delay_ms(1000);
+			Delay_ms(1000);
 			ADCtl=1;   //vic 2020.12.24			
 			SetFan(250);
 			SetEdge(250);		
 			CheckTime = 0;
 			
+		 
 			break;
 		
 		case 4: //fixpoint Modes 
-		      RunMode =0;
-			  RunStep =0;
-           if(ModeStopTime < 100){
+		     
+           if(ModeStopTime< 2){
 		   	    RunMode =0;
 			    RunStep =0;
 				SetStop();
@@ -2933,11 +2949,13 @@ void sysMode(INT8U val)
 			SetBuzzerTime(100);
 			Delay_ms(10);
 			BuzzerOff();	
-			//Delay_ms(1000);
+			Delay_ms(1000);
 			ADCtl=1;   //vic 2020.12.24		
 			SetFan(250);
 			SetEdge(250);	
-			CheckTime = 0;	
+			CheckTime = 0;
+		
+			
 			break;
 			
 		case 5:// 待机状态 standby mode
@@ -2958,7 +2976,7 @@ void sysMode(INT8U val)
 		
 		
 		case 6: // 回充
-		    if(ModeStopTime < 10){
+		    if(ModeStopTime < 2){
 			    SetStop();
 				SetFan(0);
 				SetEdge(0);

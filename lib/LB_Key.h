@@ -23,7 +23,9 @@ typedef INT8U uint8_t ;
 #define Cleaning_Key         P3_5    //
 #define POWER_PRES             1
 #define CLEANING_PRES          2 
-#define GROUP_PRES            3   
+#define GROUP_PRES            3  
+
+
 
 enum  woksmode{
    runWoksStatus =1 ,

@@ -63,12 +63,12 @@ void InitSysclk(INT8U SYS)
 void main(void)
 {
 	
-	INT8U kk;
+	INT8U kk,flag;
 	
 	InitSysclk(1);
 	InitT1();
 	InitADIO();
-  InitMotorIO();
+    InitMotorIO();
 	Init_Usart1();
 	InitFanEdgeIO();
 	InitLed();
@@ -94,16 +94,18 @@ void main(void)
 
 	while(1)
 	{
+		flag = AutoDC_ReChargeStatus();
+		if(flag==0){
 		
-		if(AutoDC_ReChargeStatus()!=1){
-		
-		    CheckWall();
+			chargeflag =0;
+			CheckWall();
 			CheckRechargeIR();
 
 			kk=ReadKey();
 			sysMode(kk);
 			CheckRun();
 			battVoltDetect();
+			
 		}
 		
 	}
