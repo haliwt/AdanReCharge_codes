@@ -60,5 +60,5 @@ KAKA_Key_EXT INT8U HDKey_Scan(INT8U mode);
 
 KAKA_Key_EXT INT8U AutoDC_ReChargeStatus(void);
 KAKA_Key_EXT void ItselfChecking(void);  
-KAKA_Key_EXT  void TOP_IR(void);
+
 #endif 

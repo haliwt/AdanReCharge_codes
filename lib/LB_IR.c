@@ -249,9 +249,6 @@ void CheckRechargeIR()
 0xaa,0x86,0x00,	  //远右		19
 0xAA,0X00,0X00,   //近右      20  //WT.EDIT --在回充座的右边。
 
-0xAA,0xA8,0X00,   //头顶-左右    21
-//0x00,0xA2,0X10,   //头定-右 22
-
 */
 	
 	if(Mid_ReadIR.ReadIRFlag==3)
@@ -317,15 +314,9 @@ void CheckRechargeIR()
  		case 20:  //WT.EDIT 
            IRLocation.FarPreRight++;
 		break;
-		case 21 : //Top IR left //WT.EDIT 2021.01.20
-		   IRLocation.TopIrLeft++;
-		break;
-//		case 22 :
-//             IRLocation.TopIrRight++;
-//		break;
 	  }
 
-	  #if 1
+	  #if 0
 	  Usart1Send[0]=4; 
 	  Usart1Send[1]=Mid_ReadIR.ReadIR[0];
 	  Usart1Send[2]=Mid_ReadIR.ReadIR[1];

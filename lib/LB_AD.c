@@ -88,14 +88,7 @@ void SetADINT(void)
 }
 
 
-/********************************************************************
-	*
-	*Function Name:void  SetAD(INT8U ADChanel)
-	*Function : ML-ADC[1] = AN01  MR-ADC[2] = AN00 
-	*
-	*
-	*
-********************************************************************/
+
 void  SetAD(INT8U ADChanel)
 {
   code INT8U ADCC[9]={12,1,0,4,5,6,7,2,13};//WT.EDIT 
