@@ -129,7 +129,117 @@ void ItselfChecking(void)
 
 		break;
 
+ }
 }
-		}
+void TOP_IR(void)
+{
+
+   
+	switch(RunStep){
+	case 0:
+		   
+				
+		  if(RunMs <  20){
+               InitMotorForwardSlow();//InitMotorLeft();
+		   }
+		   else {
+		      RunMs =0;
+			  RunStep =1;
+		   
+		   }
+	break;
+
+	case 1:
+			 
+				
+		   
+		   if(RunMs< 30){
+			   SetStop();
+
+		   }
+		   else{
+		   
+		    RunStep = 2;
+				 RunMs =0;
+		   
+		   }
+	break;
+
+	 /***************TOP IR PROC**********************/
+	case 2: //旋转  //Fast turn run  InitMotorLeft(void);
+			
+				
+			  
+
+			
+			if(RunMs < 100){
+				InitMotorLeft();//InitMotorForwardSlow();
+				
+
+			}
+			else{
+			
+			  RunStep=3;//
+				RunMs = 0;
+			}
+
+		break;
+		case 3:
+			
+	            
+				
+		   
+		  if(RunMs< 30){
+
+             SetStop();
+			 
+
+			}
+		   else{
+		     RunStep = 4;
+			RunMs =0;
+		   
+		   }
+		break;
+		case 4: //直线 
+            
+
+                
+                
+		    
+			if(RunMs< 30){
+				
+				 InitMotorForwardSlow();
+			}
+			else{
+			 RunStep = 5 ;
+			     RunMs = 0;
+			
+			}
+
+		break;
+		case 5:
+			
+				
+				
+			 
+			 if(RunMs<20){
+					 SetStop();
+				
+			 }
+			 else{
+			 
+			  RunStep = 0;
+				 RunMs =0; //转圈--look for
+			 }
+			
+		break;
+
+		
+
+	}
+
+
+}
 
 

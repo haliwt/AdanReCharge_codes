@@ -248,6 +248,7 @@ void CheckRechargeIR()
 0x61,0x80,0x00,   //远右		18
 0xaa,0x86,0x00,	  //远右		19
 0xAA,0X00,0X00,   //近右      20  //WT.EDIT --在回充座的右边。
+0xAA,0xA8,0X00,   //TOP IR  21  //WT.EDIT 
 
 */
 	
@@ -313,6 +314,9 @@ void CheckRechargeIR()
 		break; //WT.EDIT 
  		case 20:  //WT.EDIT 
            IRLocation.FarPreRight++;
+		break;
+		case 21 :
+			IRLocation.TopIR++;
 		break;
 	  }
 

@@ -52,6 +52,7 @@ version  : ���ļ�β��
 	INT8U  FarRight;
 	INT8U  FarPreLeft;
 	INT8U  FarPreRight;
+	INT8U  TopIR;
 
 	INT8U  irLeftValue;
 	INT8U  irRightValue;

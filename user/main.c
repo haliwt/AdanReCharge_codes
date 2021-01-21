@@ -82,7 +82,7 @@ void main(void)
 	Mode = 0 ;//Mode=2;
 	Step= 0x0 ;  //0;
 	RunMode=0;
-	RunStep=0;
+	RunStep=0xFF;
 	RCurrentMax=150;
 	LCurrentMax=150;
 	LCurrent=0;
@@ -94,6 +94,10 @@ void main(void)
 
 	while(1)
 	{
+       
+		//TOP_IR();
+
+		#if 1
 		flag = AutoDC_ReChargeStatus();
 		if(flag==0){
 		
@@ -107,6 +111,7 @@ void main(void)
 			battVoltDetect();
 			
 		}
+	#endif
 		
 	}
 }
