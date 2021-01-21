@@ -132,4 +132,96 @@ void ItselfChecking(void)
 }
 		}
 
+void TOP_IR(void)
+{
 
+    switch(RunStep){
+	case 0:
+		if(IRLocation.TopIrLeft >0){ //WT.EDIT 2021.01.20
+						RunStep = 0x60; //TopIr PROC
+						RunMs = 0;
+			IRLocation.TopIrLeft=0;
+		     
+	     }
+		RunStep = 0x60;
+		RunMs =0;
+	break;
+
+	/***************TOP IR PROC**********************/
+			case 0x60: //旋转
+				
+					
+			
+					
+				    if(RunMs < 100) {
+					
+					   InitMotorLeft();
+					
+					}
+					else{
+					
+					 RunStep = 0x61;
+					}
+				
+				
+	
+			break;
+			case 0x61:
+				 SetStop();
+				 Delay_ms(500);
+				 RunStep = 0x62;
+				 RunMs =0;
+	
+			break;
+			case 0x62: //直线 
+				
+	
+					 InitMotorForwardSlow();
+					 if(RunMs > 30) RunStep=0x63;
+					 
+				
+				
+
+		    break;
+			case 0x63:
+				
+			    SetStop();
+				 Delay_ms(500);
+				 RunStep = 0x64;
+				 RunMs =0;
+				
+			break;
+
+			case 0x64:
+				
+                   InitMotorRight();
+					if(RunMs > 60)RunStep=65;
+					
+					
+				
+				break;	
+				
+				case 0x65:
+				
+			    SetStop();
+				 Delay_ms(500);
+				 RunStep = 0x66;
+				 RunMs =0;
+				
+			break;
+             case 0x66: //旋转
+				
+					InitMotorLeft();
+					if(RunMs >30)RunStep=0;//
+				
+				
+	
+			break;				
+
+
+			break;
+
+			}
+
+
+}

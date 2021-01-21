@@ -62,21 +62,6 @@ void Init_IR()
 
 	Mid_ReadIR.ReadIRFlag=0;
 }
-void Iint_T5(void)
-{
- /**********************************TIM5????3?ê??ˉ**************************************/
-    P3M3 = 0x62;                        //P33éè???aé?à-ê?è?    
-	T5_MAP = 0x16;						//T52????úó3é?P33???ú
-	T5CON = 0x3F;						//256分频，16位下降沿捕获
-	T5CON1 = 0x00;						//T5捕获选择 T5脚的变化
-	TH5 = 0x00;
-	TL5 = 0x00;
-	IE1 |= 0x10;						//′ò?aT5?D??
-	EA = 1;
-
-
-
-}
 
 void MidIR_Count(void)
 {
@@ -340,7 +325,7 @@ void CheckRechargeIR()
 //		break;
 	  }
 
-	  #if 0
+	  #if 1
 	  Usart1Send[0]=4; 
 	  Usart1Send[1]=Mid_ReadIR.ReadIR[0];
 	  Usart1Send[2]=Mid_ReadIR.ReadIR[1];

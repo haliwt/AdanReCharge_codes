@@ -1789,8 +1789,9 @@ void rechargeBatMode(void)
 				}
 				else if(IRLocation.NearPreRight>0)
 				{
-					//RunStep=0x53;
+					
 					RunStep=0x50;
+					
 				}
 				else if(IRLocation.NearPreLeft>0)
 				{
@@ -1799,13 +1800,23 @@ void rechargeBatMode(void)
 				}
 				else if(IRLocation.NearRight>0)
 				{
-					//RunStep=0x59;
-					RunStep=0x50;
+					
+					//RunStep=0x50;
+					if(IRLocation.TopIrLeft >0){ //WT.EDIT 2021.01.20
+						RunStep = 0x60; //TopIr PROC
+						RunMs = 0;
+					}
+					else RunStep = 0x50;
 				}
 				else if(IRLocation.NearLeft>0)
 				{
-					//RunStep=0x5c;
-					RunStep=0x50;
+					
+					//RunStep=0x50;
+					if(IRLocation.TopIrLeft >0){ //WT.EDIT 2021.01.20
+						RunStep = 0x60; //TopIr PROC
+						RunMs = 0;
+					}
+					else RunStep = 0X50;
 				}
 				else if(IRLocation.FarMid>0)
 				{
@@ -1913,6 +1924,7 @@ void rechargeBatMode(void)
 //					SendCount=1;
 //					SBUF=Usart1Send[SendCount];
 //				}
+                
 			    if(IRLocation.NearMid>0)
 				{
 					RunStep=0x50;
@@ -1920,22 +1932,43 @@ void rechargeBatMode(void)
 				else if(IRLocation.NearPreRight>0)
 				{
 					//RunStep=0x53;
-					RunStep=0x50;
+					
+					if(IRLocation.TopIrLeft >0){ //WT.EDIT 2021.01.20
+						RunStep = 0x60; //TopIr PROC
+						RunMs = 0;
+					}
+					else RunStep=0x50;
+                }
 				}
 				else if(IRLocation.NearPreLeft>0)
 				{
-					//RunStep=0x56;
-					RunStep=0x50;
+					
+					//RunStep=0x50;
+					if(IRLocation.TopIrLeft >0){ //WT.EDIT 2021.01.20
+						RunStep = 0x60; //TopIr PROC
+						RunMs = 0;
+					}
+					else RunStep = 0x50;
 				}
 				else if(IRLocation.NearRight>0)
 				{
-					//RunStep=0x59;
-					RunStep=0x50;
+					
+					//RunStep=0x50;
+					if(IRLocation.TopIrLeft >0){ //WT.EDIT 2021.01.20
+						RunStep = 0x60; //TopIr PROC
+						RunMs = 0;
+					}
+					else RunStep =0x50;
 				}
 				else if(IRLocation.NearLeft>0)
 				{
-					//RunStep=0x5c;
-					RunStep=0x50;
+					
+					//RunStep=0x50;
+					if(IRLocation.TopIrLeft >0){ //WT.EDIT 2021.01.20
+						RunStep = 0x60; //TopIr PROC
+						RunMs = 0;
+					}
+					else RunStep = 0x50;
 				}
 				else if(IRLocation.FarMid>0)
 				{
@@ -2010,8 +2043,8 @@ void rechargeBatMode(void)
 				}
 				ClearAllIR();
 			}
-		}
-			break;
+
+		break;
 		case 0x50:   //near 
 		{
             
@@ -2046,11 +2079,7 @@ void rechargeBatMode(void)
 					SBUF=Usart1Send[SendCount];
 				}
 				#endif 
-			if(TOP_IR>0 && TOP_IR < 0x0A){ //WT.EDIT 2021.01.20
-					RunStep = 0x60; //TopIr PROC
-					RunMs = 0;
-              }
-			  else if(IRLocation.NearMid>0)
+				if(IRLocation.NearMid>0)
 				{
 					InitMotorForwardSlow_Target();
 					RunNoIRsenorTime=0;
@@ -2165,7 +2194,6 @@ void rechargeBatMode(void)
 
 		/***************TOP IR PROC**********************/
 		case 0x60: //旋转
-		    TOP_IR =0;
 			if(RunMs < 200){
 				InitMotorLeft();
 			    RunStep=0x61;//
