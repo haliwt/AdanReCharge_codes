@@ -2697,19 +2697,24 @@ void rechargeBatMode(void)
 		break;
 
 		case 0x52:
-			  SetStop();
-			 RunStep=0x53;
-			 RunMs=0;
+			  if(RunMs >200){
+				  SetStop();
+				 RunStep=0x53;
+				 RunMs=0;
+			  }
         break;
+		
 		case 0x53:
-			 if(RunMs > 0)
-				{
-					InitMotorRetreat();
-					RunStep=0x06;
-					RunMs =0;
+			 if(RunMs > 30)
+			{
+
+				RunStep=6;
+				RunMs =0;
 					
-				}
+			}
         break;
+
+		
 		
 		default:
 			break;
