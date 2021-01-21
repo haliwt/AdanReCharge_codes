@@ -1972,7 +1972,16 @@ void rechargeBatMode(void)
 		case 1:
 		{
 
-               if(RunMs>30){ 
+			if(IMP>0 ||(WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin)) //WT.EDIT 2021.01.19
+            {
+                NoImpSecond=0;
+				RunStep=0x3;
+				SetStop();
+				RunMs=0;
+				CurrentMax++;	
+
+			}
+			else  if(RunMs>30){ 
 				RunMs=0;
 				connect++;
 				rightLostFlag = 0;
@@ -2138,7 +2147,7 @@ void rechargeBatMode(void)
 				break;						
 		
 		case 7:
-               if(IMP>0) //WT.EDIT 2021.01.19
+               if(IMP>0 ||(WallDp[0]>WallMin)||(WallDp[1]>WallMin)) //WT.EDIT 2021.01.19
 			   {
 					NoImpSecond=0;
 					RunStep=0x3;
@@ -2156,7 +2165,16 @@ void rechargeBatMode(void)
 				
 		case 0x40:   //far away
 		{
-			if(RunMs>20 ) //WT.EDIT 
+           if(IMP>0 ||(WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin)) //WT.EDIT 2021.01.19
+            {
+                NoImpSecond=0;
+				RunStep=0x3;
+				SetStop();
+				RunMs=0;
+				CurrentMax++;	
+
+			}
+			else if(RunMs>20 ) //WT.EDIT 
 			{
 				RunMs=0;
 				distance = 0;
@@ -2181,7 +2199,7 @@ void rechargeBatMode(void)
 //					SendCount=1;
 //					SBUF=Usart1Send[SendCount];
 //				}
-
+              
 				if(IRLocation.NearMid>0)
 				{
 					RunStep=0x50;
@@ -2668,19 +2686,31 @@ void rechargeBatMode(void)
 			break;
 		case 0x51:   //impact occur after run step
 			{
-				if(RunMs < 20)
+				if(RunMs > 0)
 				{
 					InitMotorRetreat();
 					RunStep=0x52;
+					RunMs =0;
+					
 				}
 			}
 		break;
 
 		case 0x52:
 			  SetStop();
-			 RunStep=0x50;
+			 RunStep=0x53;
 			 RunMs=0;
         break;
+		case 0x53:
+			 if(RunMs > 0)
+				{
+					InitMotorRetreat();
+					RunStep=0x06;
+					RunMs =0;
+					
+				}
+        break;
+		
 		default:
 			break;
 	}	
