@@ -95,8 +95,8 @@ void main(void)
 	while(1)
 	{
 		
-
-	 
+      //  TOP_IR();
+	 #if 1
 		flag = AutoDC_ReChargeStatus();
 		if(flag==0){
 		
@@ -110,6 +110,7 @@ void main(void)
 			battVoltDetect();
 			
 		}
+	 #endif 
 		
 	}
 }
