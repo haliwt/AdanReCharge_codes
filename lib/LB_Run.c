@@ -1514,6 +1514,13 @@ void rechargeBatMode(void)
 					RunStep=0x40;
 					InitMotorForwardRightSlow();
 				}
+				else if(IRLocation.TopIR >1)
+				{
+						RunStep = 0x10; //TopIr PROC
+						RunMs = 0;
+						InitMotorLeft();				
+				
+				}								
 				else if(connect>timeCircle){
 					connect = 0;
 					RunMs = 0;
@@ -1622,7 +1629,87 @@ void rechargeBatMode(void)
 					RunStep=1;
 					timeCircle = 50;
 					InitMotorRightCircleRecharge();
-				}	
+				}
+				//TOP IR
+                else if(IRLocation.NearMid>0)
+				{
+					RunStep=0x50;
+				}
+				else if(IRLocation.NearPreRight>0)
+				{
+					RunStep=0x50;
+					InitMotorForwardLeftSlow();
+				}
+				else if(IRLocation.NearPreLeft>0)
+				{
+					RunStep=0x50;
+					InitMotorForwardRightSlow();
+				}
+				else if(IRLocation.NearRight>0)
+				{
+				  /*
+					if(IRLocation.TopIR >0){ //WT.EDIT 2021.01.21
+						RunStep = 0x10; //TopIr PROC
+						RunMs = 0;
+					}
+					else{
+						RunStep=0x50;
+						InitMotorForwardLeftSlow();
+					}
+				*/
+						RunStep=0x50;
+						InitMotorForwardLeftSlow();
+
+				}
+				else if(IRLocation.NearLeft>0)
+				{
+				/*
+					if(IRLocation.TopIR >0){ //WT.EDIT 2021.01.21
+						RunStep = 0x10; //TopIr PROC
+						RunMs = 0;
+					}
+					else{
+						RunStep=0x50;
+						InitMotorForwardRightSlow();
+					}
+					*/
+						RunStep=0x50;
+						InitMotorForwardRightSlow();
+				}
+				else if(IRLocation.FarMid>0)
+				{
+					RunStep=0x40;
+					InitMotorForwardSlow();
+				}
+				else if(IRLocation.FarPreRight>0)
+				{
+					RunStep=0x40;
+					InitMotorForwardLeftSlow();
+				}
+				else if(IRLocation.FarPreLeft>0)
+				{
+					RunStep=0x40;
+					InitMotorForwardRightSlow();
+				}
+				else if(IRLocation.FarRight>0)
+				{
+					RunStep=0x40;
+					InitMotorForwardLeftSlow();
+				}
+				else if(IRLocation.FarLeft>0)
+				{
+					RunStep=0x40;
+					InitMotorForwardRightSlow();
+				}
+				else
+				if(IRLocation.TopIR >1)
+				{
+						RunStep = 0x10; //TopIr PROC
+						RunMs = 0;
+						InitMotorLeft();				
+				
+				}				
+					
 				break;						
 		
 		case 7:
@@ -1634,12 +1721,203 @@ void rechargeBatMode(void)
 					RunMs=0;
 					CurrentMax++;			
 				}
-                else if(RunMs > 250 )//else if(RunMs>250) //WT.EIDT
+                else if(RunMs > 120 )//else if(RunMs>250) //WT.EIDT
 				{
 					InitMotorForward();
 					RunMs=0;
 					RunStep=6;
-				}				
+				}
+				//TOP IR
+				else if(IRLocation.NearMid>0)
+					{
+						RunStep=0x50;
+					}
+					else if(IRLocation.NearPreRight>0)
+					{
+						RunStep=0x50;
+						InitMotorForwardLeftSlow();
+					}
+					else if(IRLocation.NearPreLeft>0)
+					{
+						RunStep=0x50;
+						InitMotorForwardRightSlow();
+					}
+					else if(IRLocation.NearRight>0)
+					{
+					  /*
+						if(IRLocation.TopIR >0){ //WT.EDIT 2021.01.21
+							RunStep = 0x10; //TopIr PROC
+							RunMs = 0;
+						}
+						else{
+							RunStep=0x50;
+							InitMotorForwardLeftSlow();
+						}
+					*/
+							RunStep=0x50;
+							InitMotorForwardLeftSlow();
+			
+					}
+					else if(IRLocation.NearLeft>0)
+					{
+					/*
+						if(IRLocation.TopIR >0){ //WT.EDIT 2021.01.21
+							RunStep = 0x10; //TopIr PROC
+							RunMs = 0;
+						}
+						else{
+							RunStep=0x50;
+							InitMotorForwardRightSlow();
+						}
+						*/
+							RunStep=0x50;
+							InitMotorForwardRightSlow();
+					}
+					else if(IRLocation.FarMid>0)
+					{
+						RunStep=0x40;
+						InitMotorForwardSlow();
+					}
+					else if(IRLocation.FarPreRight>0)
+					{
+						RunStep=0x40;
+						InitMotorForwardLeftSlow();
+					}
+					else if(IRLocation.FarPreLeft>0)
+					{
+						RunStep=0x40;
+						InitMotorForwardRightSlow();
+					}
+					else if(IRLocation.FarRight>0)
+					{
+						RunStep=0x40;
+						InitMotorForwardLeftSlow();
+					}
+					else if(IRLocation.FarLeft>0)
+					{
+						RunStep=0x40;
+						InitMotorForwardRightSlow();
+					}
+					else
+					if(IRLocation.TopIR >1)
+					{
+							RunStep = 0x10; //TopIr PROC
+							RunMs = 0;
+							InitMotorLeft();				
+					
+					}								
+				break;
+			case 0x10:
+			{
+			   if(RunMs>60)
+			   {
+				  SetStop();
+				  RunStep=0x11;
+				  RunMs=0;
+			   }
+			
+			}
+			break;
+			case 0x11:
+			{
+			  if(RunMs>10)
+			  {
+				  InitMotorForward();
+				  RunStep=0x12;
+			  }
+			}
+			break;
+			case 0x12:
+			{
+			   if(RunMs>250)
+			   {
+			   
+				  RunStep=0;
+			   }
+			   else if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+				{
+					NoImpSecond=0;
+					RunStep=0x13;
+					InitMotorRetreat();
+					RunMs=10;
+			
+				}
+				else if(IMP>0)
+				{
+					NoImpSecond=0;
+					RunStep=0x13;
+					InitMotorRetreat();
+					RunMs=0;
+			
+				}
+			}
+			break;	
+			case 0x13:
+			{
+			   if(RunMs>40)
+			   {
+				  InitMotorRightCircle();
+				  RunStep=0x14;
+				  RunMs=0;
+			   }
+			}
+			break;
+			case 0x14:
+			{
+			   if(RunMs>220)
+			   {
+				  SetStop();
+				  RunStep=0x15;
+				  RunMs=0;
+			   }
+			
+			}
+			break;
+			case 0x15:
+			{
+			  if(RunMs>10)
+			  {
+				  InitMotorForward();
+				  RunStep=0x16;
+			  }
+			}
+			break;	
+			case 0x16:
+			{
+			   if(RunMs>250)
+			   {
+			   
+				  RunStep=0;
+			   }
+			   else if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+				{
+					NoImpSecond=0;
+					RunStep=0x17;
+					InitMotorRetreat();
+					RunMs=10;
+			
+				}
+				else if(IMP>0)
+				{
+					NoImpSecond=0;
+					RunStep=0x17;
+					InitMotorRetreat();
+					RunMs=0;
+			
+				}
+			}
+			break;
+			case 0x17:
+			{
+			  if(RunMs>10)
+			  {
+				  
+				  RunStep=0;
+			  }
+			}
+			break;									
+
+				
 			break;
 				
 		case 0x40:   //far away
@@ -1650,10 +1928,10 @@ void rechargeBatMode(void)
 				RunStep=0x3;
 				SetStop();
 				RunMs=0;
-				CurrentMax++;	
+				//CurrentMax++;	
 
 			}
-			else if(RunMs>20)///else if(RunMs>20 ) //WT.EDIT 
+			else if(RunMs>40)///else if(RunMs>20 ) //WT.EDIT 
 			{
 				RunMs=0;
 				distance = 0;
@@ -1778,9 +2056,9 @@ void rechargeBatMode(void)
 					RunStep=0x3;
 					SetStop();
 					RunMs=0;
-					CurrentMax++;			
+					//CurrentMax++;			
 			}
-            else if(RunMs>30 )//else if(RunMs>30)
+            else if(RunMs>40 )//else if(RunMs>30)
 			{
 				RunMs=0;
 //				if(SendCount>=12)
@@ -1818,20 +2096,22 @@ void rechargeBatMode(void)
 				}
 				else if(IRLocation.NearRight>0)
 				{
-					if(IRLocation.TopIR >0){ //WT.EDIT 2021.01.21
-						RunStep = 0x60; //TopIr PROC
-						RunMs = 0;
-					}
-					else
-					   RunStep=0x50;
+                     
+					 if(IRLocation.TopIR >0){ //WT.EDIT 2021.01.21
+						 RunStep = 0x60; //TopIr PROC
+						 RunMs = 0;
+					 }
+					 else
+					 RunStep=0x50;
 				}
 				else if(IRLocation.NearLeft>0)
 				{
-					if(IRLocation.TopIR >0){ //WT.EDIT 2021.01.21
-						RunStep = 0x60; //TopIr PROC
-						RunMs = 0;
-					}
-					else
+                      
+					  if(IRLocation.TopIR >0){ //WT.EDIT 2021.01.21
+						  RunStep = 0x60; //TopIr PROC
+						  RunMs = 0;
+					  }
+					  else
 					  RunStep=0x50;
 				}
 				else if(IRLocation.FarMid>0)
@@ -1882,7 +2162,7 @@ void rechargeBatMode(void)
 //						timeCnt = 18;
 //					}
 //					else 
-						timeCnt = 9;
+						timeCnt = 3;//timeCnt = 9;
 					if(RunNoIRsenorTime>timeCnt)
 					{
 							rightLostFlag = 1;
@@ -1917,9 +2197,9 @@ void rechargeBatMode(void)
 					RunStep=0x3;
 					SetStop();
 					RunMs=0;
-					CurrentMax++;			
+					//CurrentMax++;			
 			}
-			else if(RunMs>30  )//else if(RunMs>30)
+			else if(RunMs>40  )//else if(RunMs>30)
 			{
 				RunMs=0;
 //				if(SendCount>=12)
@@ -2013,7 +2293,7 @@ void rechargeBatMode(void)
 //						timeCnt = 18;
 //					}
 //					else 
-						timeCnt = 9;
+						timeCnt = 3;//timeCnt = 9;
 					if(RunNoIRsenorTime>timeCnt)
 					{
 							leftLostFlag = 1;
@@ -2049,7 +2329,7 @@ void rechargeBatMode(void)
 					RunStep=0x51;
 					SetStop();
 					RunMs=0;
-					CurrentMax++;			
+				//	CurrentMax++;			
 			}
 			else if(RunMs>20 )//else if(RunMs>20)
 			{
@@ -2059,7 +2339,7 @@ void rechargeBatMode(void)
 //				rightLostFlag = 0;
 //				leftLostFlag = 0;
 
-				RunMs=0;
+		
 				#if 0
 				if(SendCount>=12)
 				{

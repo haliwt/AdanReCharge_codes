@@ -43,7 +43,8 @@ code INT8U IRcode[100]={
 0xa8,0x61,0x80,	  //Ô¶ÓÒ		17
 0x61,0x80,0x00,   //Ô¶ÓÒ		18
 0xaa,0x86,0x00,	  //Ô¶ÓÒ		19
-
+0xAA,0X00,0X00,   //½üÓÒ      20  //WT.EDIT --ÔÚ»Ø³ä×ùµÄÓÒ±ß¡£
+0xAA,0xA8,0X00,   //TOP IR  21  //WT.EDIT 
 0x00,0x00,0x00, 
 };
 void Init_IR()
@@ -359,6 +360,7 @@ void CheckRechargeIR()
 	 IRLocation.FarRight=0;
 	 IRLocation.FarPreLeft=0;
 	 IRLocation.FarPreRight=0;
+	 IRLocation.TopIR=0;
  }
 void CheckHandsetIR()
 {
