@@ -410,9 +410,9 @@ void InitFanEdgeIO(void)
 	//			= 170.5us		   占空比为 170.5/511.5 = 33.3%
 
 	PWM0DH = 0x00;						//PWM0高4位占空比0x01
-	PWM0DL = 0x90;	//WT.EDIT 					//PWM0低8位占空比0x55
+	PWM0DL = 0xa0;	//WT.EDIT 					//PWM0低8位占空比0x55
 	PWM0DTH = 0x00;						//PWM01高4位占空比0x01
-	PWM0DTL = 0x90;						//PWM01低8位占空比0x55
+	PWM0DTL = 0xa0;						//PWM01低8位占空比0x55
 	PWMEN |= 0x11;						//使能PWM0以及PWM01
 	ForwardFlag=0;
 }
@@ -512,11 +512,11 @@ void InitFanEdgeIO(void)
 	  if(PWM0DTL<0xee)						 
 	   PWM0DTL += 1;
 	}	
-	else if(ForwardFlag==13) //左转圈
+	else if(ForwardFlag==13) // turn right run
 	{
-	  if(PWM0DL<0xc0)					 
-	   PWM0DL += 1;				 
-	  if(PWM0DTL<0xf8)// WT.EDIT if(PWM0DTL<0xc0)						 
+	   if(PWM0DL<0xc0)					 
+	    PWM0DL += 1;				 
+	   if(PWM0DTL<0xC0)	//if(PWM0DTL<0xf8)// WT.EDIT if(PWM0DTL<0xc0)						 
 	   PWM0DTL += 1;
 	}	
 		else if(ForwardFlag == 14){   //左轮减速，微调角度
@@ -944,9 +944,9 @@ void InitMotorRightCircle(void)
 	PWM0PL = 0x0;						//周期低8位设置为0xFF
 
 	PWM0DH = 0x00;						//PWM0高4位占空比0x01
-	PWM0DL = 0x60;						//PWM0低8位占空比0x55
+	PWM0DL = 0xC0;	//WT.EDIT				//PWM0低8位占空比0x55
 	PWM0DTH = 0x00;						//PWM01高4位占空比0x01
-	PWM0DTL = 0x60;						//PWM01低8位占空比0x55
+	PWM0DTL = 0x60;		// WT.EDIT				//PWM01低8位占空比0x55
 	PWMEN |= 0x11;						//使能PWM0以及PWM01
 	ForwardFlag=13;
 }
@@ -990,7 +990,7 @@ void InitMotorRightCircleRecharge(void)
 	PWM0PL = 0x0;						//周期低8位设置为0xFF
 
 	PWM0DH = 0x00;						//PWM0高4位占空比0x01
-	PWM0DL = 0x90; 						//PWM0低8位占空比0x55
+	PWM0DL = 0x60; 						//PWM0低8位占空比0x55
 	PWM0DTH = 0x00;						//PWM01高4位占空比0x01
 	PWM0DTL = 0xc0;						//PWM01低8位占空比0x55
 	PWMEN |= 0x11;						//使能PWM0以及PWM01

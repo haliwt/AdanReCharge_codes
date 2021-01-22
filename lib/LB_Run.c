@@ -2190,7 +2190,7 @@ void rechargeBatMode(void)
 		break;
 
 		case 0x52:
-			  if(RunMs >20){
+			  if(RunMs >40){
 				  SetStop();
 				 RunStep=0x03;
 				 RunMs=0;
