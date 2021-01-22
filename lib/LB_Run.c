@@ -1834,7 +1834,7 @@ void rechargeBatMode(void)
 			   
 				  RunStep=0;
 			   }
-			   else if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+			   else if(( IMP>0 || WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
 				{
 					NoImpSecond=0;
 					RunStep=0x13;
@@ -2097,21 +2097,21 @@ void rechargeBatMode(void)
 				else if(IRLocation.NearRight>0)
 				{
                      
-					 if(IRLocation.TopIR >0){ //WT.EDIT 2021.01.21
-						 RunStep = 0x60; //TopIr PROC
-						 RunMs = 0;
-					 }
-					 else
+//					 if(IRLocation.TopIR >0){ //WT.EDIT 2021.01.21
+//						 RunStep = 0x10; //TopIr PROC
+//						 RunMs = 0;
+//					 }
+//					 else
 					 RunStep=0x50;
 				}
 				else if(IRLocation.NearLeft>0)
 				{
                       
-					  if(IRLocation.TopIR >0){ //WT.EDIT 2021.01.21
-						  RunStep = 0x60; //TopIr PROC
-						  RunMs = 0;
-					  }
-					  else
+//					  if(IRLocation.TopIR >0){ //WT.EDIT 2021.01.21
+//						  RunStep = 0x10; //TopIr PROC
+//						  RunMs = 0;
+//					  }
+//					  else
 					  RunStep=0x50;
 				}
 				else if(IRLocation.FarMid>0)
