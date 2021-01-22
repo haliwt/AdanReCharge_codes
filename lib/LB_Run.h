@@ -57,6 +57,7 @@ KAKA_Run_EXT  INT8U  LowVoltageFlag;
 KAKA_Run_EXT  void CheckMode(INT8U Key);
 KAKA_Run_EXT  void InitSysclk(INT8U SYS);
 KAKA_Run_EXT  void Delay_ms(INT16U fui_i);
+KAKA_Run_EXT  void Auto_ReChargeBattery(void);
 KAKA_Run_EXT   void CleanMode_BOW(void);
 KAKA_Run_EXT   void CleanMode_Random(void);
 

@@ -129,58 +129,111 @@ void ItselfChecking(void)
 
 		break;
 
+ }
 }
-		}
-
 void TOP_IR(void)
 {
 
-    INT8U i;
+   
 	switch(RunStep){
 	case 0:
-		
-		i=0;
-		RunStep = 0x60;
-		RunMs =0;
+		   
+				
+		  if(RunMs <  20){
+               InitMotorForwardSlow();//InitMotorLeft();
+		   }
+		   else {
+		      RunMs =0;
+			  RunStep =1;
+		   
+		   }
 	break;
 
-	/***************TOP IR PROC**********************/
-		case 0x60: //旋转
-			
-			if(RunMs < 200){
-				InitMotorLeft();
-			    RunStep=0x61;//
-            }
-
-		break;
-		case 0x61:
-			  i++;
-			 SetStop();
-			 if(i>30){
-				 RunStep = 0x62;
-				 RunMs =0;
-			 }
+	case 1:
 			 
-		break;
-		case 0x62: //直线 
+				
 		   
-            if(RunMs< 10){
+		   if(RunMs< 30){
+			   SetStop();
 
-                 InitMotorForwardSlow();
-                 RunStep = 0x63 ;
-                 i=0;
+		   }
+		   else{
+		   
+		    RunStep = 2;
+				 RunMs =0;
+		   
+		   }
+	break;
+
+	 /***************TOP IR PROC**********************/
+	case 2: //旋转  //Fast turn run  InitMotorLeft(void);
+			
+				
+			  
+
+			
+			if(RunMs < 100){
+				InitMotorLeft();//InitMotorForwardSlow();
+				
+
+			}
+			else{
+			
+			  RunStep=3;//
+				RunMs = 0;
 			}
 
 		break;
-		case 0x63:
-			i++;
-             SetStop();
-		     if(i>30){
-			 RunStep = 0x62;
-			 RunMs =0; //转圈
-		     	}
-		break;
+		case 3:
+			
+	            
+				
+		   
+		  if(RunMs< 30){
 
+             SetStop();
+			 
+
+			}
+		   else{
+		     RunStep = 4;
+			RunMs =0;
+		   
+		   }
+		break;
+		case 4: //直线 
+            
+
+                
+                
+		    
+			if(RunMs< 30){
+				
+				 InitMotorForwardSlow();
+			}
+			else{
+			 RunStep = 5 ;
+			     RunMs = 0;
+			
+			}
+
+		break;
+		case 5:
+			
+				
+				
+			 
+			 if(RunMs<20){
+					 SetStop();
+				
+			 }
+			 else{
+			 
+			  RunStep = 0;
+				 RunMs =0; //转圈--look for
+			 }
+			
+		break;
 
 		
 
@@ -188,3 +241,5 @@ void TOP_IR(void)
 
 
 }
+
+

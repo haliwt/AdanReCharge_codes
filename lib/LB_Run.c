@@ -95,7 +95,6 @@ INT8U readRunTime()
 		i= 61;
 	return (i+40);
 }
-
 /***********************************************************************
  * ***
  *Function Name:void ReChargeBattery(void) 
@@ -750,7 +749,7 @@ void  CheckRun()
 
 			case 5:
 			//	Auto_ReChargeBattery();
-			    SetEdge(180);		//WT.EDIT 2021.01.18
+			    SetEdge(200);		//WT.EDIT 2021.01.18
 				rechargeBatMode();
 				break;
 			
@@ -1446,23 +1445,22 @@ void rechargeBatMode(void)
 				
 		case 1:
 		{
-            if(IMP>0 ||(WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin)) //WT.EDIT 2021.01.19
+
+			if(IMP>0 ||(WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin)) //WT.EDIT 2021.01.19
             {
                 NoImpSecond=0;
 				RunStep=0x3;
-				InitMotorRetreat();
-				RunMs=10;
-				CurrentMax++;
+				SetStop();
+				RunMs=0;
+				CurrentMax++;	
 
-            }
-			else if(RunMs>30 && RunMs < 50) //WT.EDIT 
-			{
+			}
+			else  if(RunMs>30){ 
 				RunMs=0;
 				connect++;
 				rightLostFlag = 0;
 				leftLostFlag = 0;
-		
-			   if(IRLocation.NearMid>0)
+				if(IRLocation.NearMid>0)
 				{
 					RunStep=0x50;
 				}
@@ -1479,25 +1477,17 @@ void rechargeBatMode(void)
 				else if(IRLocation.NearRight>0)
 				{
 
-					if(IRLocation.TopIrLeft >0){ //WT.EDIT 2021.01.20
-						RunStep = 0x60; //TopIr PROC
-						RunMs = 0;
-					}
-					else{
+				
 						RunStep=0x50;
 						InitMotorForwardLeftSlow();
-					}
+					
 				}
 				else if(IRLocation.NearLeft>0)
 				{
-					if(IRLocation.TopIrLeft >0){ //WT.EDIT 2021.01.20
-						RunStep = 0x60; //TopIr PROC
-						RunMs = 0;
-					}
-					else{
-					RunStep=0x50;
-					InitMotorForwardRightSlow();
-					}
+					
+						RunStep=0x50;
+						InitMotorForwardRightSlow();
+					
 				}
 				else if(IRLocation.FarMid>0)
 				{
@@ -1558,7 +1548,7 @@ void rechargeBatMode(void)
 				RunMs=10;
 				CurrentMax++;
 			}
-			else if(IMP>0 ||(WallDp[0]>WallMin)||(WallDp[1]>WallMin)) //center IR WT.EDIT
+			else if(IMP>0)
 			{
 				NoImpSecond=0;
 				RunStep=0x3;
@@ -1592,7 +1582,7 @@ void rechargeBatMode(void)
 					RunStep=4;
 				}
 			}
-				break;
+			break;
 			
 			case 4:  //ֹͣ
 			{
@@ -1607,17 +1597,7 @@ void rechargeBatMode(void)
 
 			case 5:  //ת��
 			{
-
-                if(IMP>0 ||(WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
-                {
-					CurrentMax++;
-					NoImpSecond=0;
-					RunStep=0x3;
-					SetStop();
-					RunMs=0;
-
-				}
-				else if(RunMs>20)
+				if(RunMs>20)
 				{
 					InitMotorLeftCircle();
 					RunMs=0;
@@ -1627,7 +1607,7 @@ void rechargeBatMode(void)
 				break;
 
 			case 6:  //ֱ��	
-				if(IMP>0 || (WallDp[0]>WallMin)||(WallDp[1]>WallMin))
+				if(IMP>0)
 				{
 					NoImpSecond=0;
 					RunStep=0x3;
@@ -1646,7 +1626,7 @@ void rechargeBatMode(void)
 				break;						
 		
 		case 7:
-               if(IMP>0) //WT.EDIT 2021.01.19
+               if(IMP>0 ||(WallDp[0]>WallMin)||(WallDp[1]>WallMin)) //WT.EDIT 2021.01.19
 			   {
 					NoImpSecond=0;
 					RunStep=0x3;
@@ -1654,9 +1634,9 @@ void rechargeBatMode(void)
 					RunMs=0;
 					CurrentMax++;			
 				}
-                else if(RunMs > 250  && RunMs < 260)//else if(RunMs>250) //WT.EIDT
+                else if(RunMs > 250 )//else if(RunMs>250) //WT.EIDT
 				{
-					InitMotorForward();//
+					InitMotorForward();
 					RunMs=0;
 					RunStep=6;
 				}				
@@ -1664,18 +1644,16 @@ void rechargeBatMode(void)
 				
 		case 0x40:   //far away
 		{
-
-            if(IMP>0 ||(WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin)) //WT.EDIT 2021.01.19
+           if(IMP>0 ||(WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin)) //WT.EDIT 2021.01.19
             {
                 NoImpSecond=0;
 				RunStep=0x3;
-				InitMotorRetreat();
-				RunMs=10;
-				CurrentMax++;
+				SetStop();
+				RunMs=0;
+				CurrentMax++;	
 
-            }
-
-			else if(RunMs>20 && RunMs < 80) //WT.EDIT 
+			}
+			else if(RunMs>20)///else if(RunMs>20 ) //WT.EDIT 
 			{
 				RunMs=0;
 				distance = 0;
@@ -1700,7 +1678,7 @@ void rechargeBatMode(void)
 //					SendCount=1;
 //					SBUF=Usart1Send[SendCount];
 //				}
-
+              
 				if(IRLocation.NearMid>0)
 				{
 					RunStep=0x50;
@@ -1794,16 +1772,15 @@ void rechargeBatMode(void)
 		{
 
        
-			 if(IMP>0 ||(WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin)) //WT.EDIT 2021.01.19
-            {
-                NoImpSecond=0;
-				RunStep=0x3;
-				InitMotorRetreat();
-				RunMs=10;
-				CurrentMax++;
-
-            }
-            else if(RunMs>30 && RunMs < 50)//else if(RunMs>30)
+			if(IMP>0 ||(WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin)) //WT.EDIT 2021.01.19
+			 {
+					NoImpSecond=0;
+					RunStep=0x3;
+					SetStop();
+					RunMs=0;
+					CurrentMax++;			
+			}
+            else if(RunMs>30 )//else if(RunMs>30)
 			{
 				RunMs=0;
 //				if(SendCount>=12)
@@ -1824,16 +1801,15 @@ void rechargeBatMode(void)
 //					SendCount=1;
 //					SBUF=Usart1Send[SendCount];
 //				}
-             
-			    if(IRLocation.NearMid>0)
+
+				if(IRLocation.NearMid>0)
 				{
 					RunStep=0x50;
 				}
 				else if(IRLocation.NearPreRight>0)
 				{
-					
+					//RunStep=0x53;
 					RunStep=0x50;
-					
 				}
 				else if(IRLocation.NearPreLeft>0)
 				{
@@ -1842,23 +1818,21 @@ void rechargeBatMode(void)
 				}
 				else if(IRLocation.NearRight>0)
 				{
-					
-					//RunStep=0x50;
-					if(IRLocation.TopIrLeft >0){ //WT.EDIT 2021.01.20
+					if(IRLocation.TopIR >0){ //WT.EDIT 2021.01.21
 						RunStep = 0x60; //TopIr PROC
 						RunMs = 0;
 					}
-					else RunStep = 0x50;
+					else
+					   RunStep=0x50;
 				}
 				else if(IRLocation.NearLeft>0)
 				{
-					
-					//RunStep=0x50;
-					if(IRLocation.TopIrLeft >0){ //WT.EDIT 2021.01.20
+					if(IRLocation.TopIR >0){ //WT.EDIT 2021.01.21
 						RunStep = 0x60; //TopIr PROC
 						RunMs = 0;
 					}
-					else RunStep = 0X50;
+					else
+					  RunStep=0x50;
 				}
 				else if(IRLocation.FarMid>0)
 				{
@@ -1945,7 +1919,7 @@ void rechargeBatMode(void)
 					RunMs=0;
 					CurrentMax++;			
 			}
-			else if(RunMs>30 && RunMs < 40 )//else if(RunMs>30)
+			else if(RunMs>30  )//else if(RunMs>30)
 			{
 				RunMs=0;
 //				if(SendCount>=12)
@@ -1966,42 +1940,30 @@ void rechargeBatMode(void)
 //					SendCount=1;
 //					SBUF=Usart1Send[SendCount];
 //				}
-                
-			    if(IRLocation.NearMid>0)
+
+				if(IRLocation.NearMid>0)
 				{
 					RunStep=0x50;
 				}
 				else if(IRLocation.NearPreRight>0)
 				{
+					//RunStep=0x53;
 					RunStep=0x50;
-					
-                
 				}
 				else if(IRLocation.NearPreLeft>0)
 				{
-					
+					//RunStep=0x56;
 					RunStep=0x50;
-					
 				}
 				else if(IRLocation.NearRight>0)
 				{
-					
-					//RunStep=0x50;
-					if(IRLocation.TopIrLeft >0){ //WT.EDIT 2021.01.20
-						RunStep = 0x60; //TopIr PROC
-						RunMs = 0;
-					}
-					else RunStep =0x50;
+					//RunStep=0x59;
+					RunStep=0x50;
 				}
 				else if(IRLocation.NearLeft>0)
 				{
-					
-					//RunStep=0x50;
-					if(IRLocation.TopIrLeft >0){ //WT.EDIT 2021.01.20
-						RunStep = 0x60; //TopIr PROC
-						RunMs = 0;
-					}
-					else RunStep = 0x50;
+					//RunStep=0x5c;
+					RunStep=0x50;
 				}
 				else if(IRLocation.FarMid>0)
 				{
@@ -2076,8 +2038,8 @@ void rechargeBatMode(void)
 				}
 				ClearAllIR();
 			}
-
-		break;
+		}
+			break;
 		case 0x50:   //near 
 		{
             
@@ -2089,8 +2051,14 @@ void rechargeBatMode(void)
 					RunMs=0;
 					CurrentMax++;			
 			}
-			else if(RunMs>30 && RunMs <40)
+			else if(RunMs>20 )//else if(RunMs>20)
 			{
+				RunMs=0;
+//				distance = 1;
+//				lostCnt = 0;
+//				rightLostFlag = 0;
+//				leftLostFlag = 0;
+
 				RunMs=0;
 				#if 0
 				if(SendCount>=12)
@@ -2180,7 +2148,7 @@ void rechargeBatMode(void)
 				else
 				{
 					RunNoIRsenorTime++;
-					if(RunNoIRsenorTime>4)
+					if(RunNoIRsenorTime>5)
 					{
 
 						RunNoIRsenorTime=0;
@@ -2188,7 +2156,7 @@ void rechargeBatMode(void)
 						{
 
 						}
-						else	if(RunNoIRsenorLastStep==2)
+						else if(RunNoIRsenorLastStep==2)
 						{
 							InitMotorForwardRightSlow();
 							RunNoIRsenorTime=0;
@@ -2211,60 +2179,66 @@ void rechargeBatMode(void)
 			break;
 		case 0x51:   //impact occur after run step
 			{
-				if(RunMs>0)
+				if(RunMs > 1)
 				{
 					InitMotorRetreat();
-					RunMs=0;
-					RunStep=0x51;
-					InitMotorRetreat();
+					RunStep=0x52;
+					RunMs =0;
+					
 				}
 			}
 		break;
 
 		case 0x52:
-			 SetStop();
-			 RunStep=0x50;
-			 RunMs=0;
+			  if(RunMs >20){
+				  SetStop();
+				 RunStep=0x03;
+				 RunMs=0;
+			  }
         break;
 		
-
-		/***************TOP IR PROC**********************/
-		case 0x60: //旋转
-			if(RunMs > 0 && RunMs < 200){
-				InitMotorLeft();
+        /***************TOP IR PROC**********************/
+		case 0x60: //旋转  //Fast turn run  InitMotorLeft(void);
+			if(RunMs > 10){
+				InitMotorLeft(); //FAST turn left
 			    RunStep=0x61;//
-			    RunMs = 0;
-            }
+				RunMs = 0;
+
+			}
 
 		break;
 		case 0x61:
-			 SetStop();
-			 RunStep = 0x62;
-			 RunMs =0;
-
+			 if(RunMs > 30){ 
+	             SetStop();
+				 RunStep = 0x62;
+				 RunMs =0;
+		   }
 		break;
 		case 0x62: //直线 
-            if(RunMs > 0  && RunMs < 20){
+            if(RunMs > 30 ){ //stop time 30ms
 
                  InitMotorForwardSlow();
                  RunStep = 0x63 ;
 			     RunMs = 0;
-                 
-			}
+		    }
 
 		break;
 		case 0x63:
-             SetStop();
-			 RunStep = 0x06;
-			 RunMs =0; //转圈--look for
+			 if(RunMs > 20 && RunMs != 310){ //line run 20ms 
+				 SetStop();
+				 RunStep = 0x3;
+				 RunMs =0; //转圈--look for
+			 }
 		break;
+		
+		
 		default:
 			break;
 	}	
 	return;
 }
 
-}
+
 /***************************************************************
 	*
 	*Function Name:void sysMode(INT8U val)
@@ -2563,7 +2537,7 @@ void sysMode(INT8U val)
 			Delay_ms(10);
 			BuzzerOff();	
             SetFan(0); 
-			SetEdge(180);		//WT.EDIT 2021.01.18
+			SetEdge(150);		//WT.EDIT 2021.01.18
 		    ADCtl = 0;
 			SysFlag = FIND;	
 		  
