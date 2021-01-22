@@ -1477,25 +1477,17 @@ void rechargeBatMode(void)
 				else if(IRLocation.NearRight>0)
 				{
 
-					if(IRLocation.TopIR >0){ //WT.EDIT 2021.01.21
-						RunStep = 0x60; //TopIr PROC
-						RunMs = 0;
-					}
-					else{
+				
 						RunStep=0x50;
 						InitMotorForwardLeftSlow();
-					}
+					
 				}
 				else if(IRLocation.NearLeft>0)
 				{
-					if(IRLocation.TopIR >0){ //WT.EDIT 2021.01.21
-						RunStep = 0x60; //TopIr PROC
-						RunMs = 0;
-					}
-					else{
+					
 						RunStep=0x50;
 						InitMotorForwardRightSlow();
-					}
+					
 				}
 				else if(IRLocation.FarMid>0)
 				{
@@ -1661,7 +1653,7 @@ void rechargeBatMode(void)
 				CurrentMax++;	
 
 			}
-			else if(RunMs>20 ) //WT.EDIT 
+			else if(RunMs>20)///else if(RunMs>20 ) //WT.EDIT 
 			{
 				RunMs=0;
 				distance = 0;
@@ -1788,7 +1780,7 @@ void rechargeBatMode(void)
 					RunMs=0;
 					CurrentMax++;			
 			}
-            else if(RunMs>30)//else if(RunMs>30)
+            else if(RunMs>30 )//else if(RunMs>30)
 			{
 				RunMs=0;
 //				if(SendCount>=12)
@@ -2059,8 +2051,14 @@ void rechargeBatMode(void)
 					RunMs=0;
 					CurrentMax++;			
 			}
-			else if(RunMs>20)
+			else if(RunMs>20 )//else if(RunMs>20)
 			{
+				RunMs=0;
+//				distance = 1;
+//				lostCnt = 0;
+//				rightLostFlag = 0;
+//				leftLostFlag = 0;
+
 				RunMs=0;
 				#if 0
 				if(SendCount>=12)
@@ -2158,7 +2156,7 @@ void rechargeBatMode(void)
 						{
 
 						}
-						else	if(RunNoIRsenorLastStep==2)
+						else if(RunNoIRsenorLastStep==2)
 						{
 							InitMotorForwardRightSlow();
 							RunNoIRsenorTime=0;
