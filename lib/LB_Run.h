@@ -38,6 +38,9 @@ KAKA_Run_EXT  INT8U RunNoIRsenorLastStep;
 KAKA_Run_EXT  INT16U RunMs;
 KAKA_Run_EXT  INT8U  EdgeTime;
 KAKA_Run_EXT INT8U chargeflag;
+KAKA_Run_EXT INT8U  TOP_impact; //impact top flag
+KAKA_Run_EXT INT8U  TOP_Right;
+KAKA_Run_EXT INT8U  TOP_Left;
 KAKA_Run_EXT  INT8U BatteryRechargeFlag;//WT.EDIT
 KAKA_Run_EXT  INT16U Imp2Time;
 KAKA_Run_EXT  INT16U twinkle;  //WT.EDIT 

@@ -112,6 +112,42 @@ void InitFanEdgeIO(void)
 	PWMEN |= 0x11;						//使能PWM0以及PWM01
 	ForwardFlag=1;
 }
+ void InitMotorForward_TOPIR(void)
+{
+    P1_1=0;  //right 
+    P1_2=0;
+	
+    P1_3=0; //left
+    P1_4=0;
+	PWM0_MAP = 0x13;					//PWM0通道映射P13口
+	PWM01_MAP = 0x12;					//PWM01通道映射P12口
+    PWM0C = 0x01;						//PWM0高有效，PWM01高有效，时钟8分频 
+    PWMM |= 0x10;						//PWM0工作于互补模式						
+
+	//独立模式下，PWM0和PWM01共用一个周期寄存器
+	//PWM0的占空比调节使用			PWM0组的占空比寄存器
+	//PWM01的占空比调节使用			PWM0组的死区寄存器
+
+	//周期计算 	= 0x03ff / (Fosc / PWM分频系数)		（Fosc见系统时钟配置的部分）
+	//			= 0x03ff / (16000000 / 8)			
+	// 			= 1023   /2000000
+	//			= 511.5us		   		约1.955kHz
+
+	PWM0PH = 0x01;						//周期高4位设置为0x03
+	PWM0PL = 0x0;						//周期低8位设置为0xFF
+
+	//占空比计算= 0x0155 / (Fosc / PWM分频系数)		（Fosc见系统时钟配置的部分）
+	//			= 0x0155 / (16000000 / 8)			
+	// 			= 341 	 / 2000000
+	//			= 170.5us		   占空比为 170.5/511.5 = 33.3%
+
+	PWM0DH = 0x00;						//PWM0高4位占空比0x01
+	PWM0DL = 0xA0;	//WT.EDIT					//PWM0低8位占空比0x55
+	PWM0DTH = 0x00;						//PWM01高4位占空比0x01
+	PWM0DTL = 0xA0;						//PWM01低8位占空比0x55
+	PWMEN |= 0x11;						//使能PWM0以及PWM01
+	
+}
  void InitMotorRetreat(void)
 {
     P1_1=0;
@@ -619,6 +655,42 @@ void InitMotorRight(void)
 	PWMEN |= 0x11;						//使能PWM0以及PWM01
 	ForwardFlag=4;
 }
+void InitMotorRight_TOPIR(void)
+{
+    P1_1=0;
+    P1_2=0;
+    P1_3=0;
+    P1_4=0;
+	PWM0_MAP = 0x13;					//PWM0通道映射P14口
+	PWM01_MAP = 0x11;					//PWM01通道映射P11口
+    PWM0C = 0x01;						//PWM0高有效，PWM01高有效，时钟8分频 
+    PWMM |= 0x10;						//PWM0工作于互补模式						
+
+	//独立模式下，PWM0和PWM01共用一个周期寄存器
+	//PWM0的占空比调节使用			PWM0组的占空比寄存器
+	//PWM01的占空比调节使用			PWM0组的死区寄存器
+
+	//周期计算 	= 0x03ff / (Fosc / PWM分频系数)		（Fosc见系统时钟配置的部分）
+	//			= 0x03ff / (16000000 / 8)			
+	// 			= 1023   /2000000
+	//			= 511.5us		   		约1.955kHz
+
+	PWM0PH = 0x01;						//周期高4位设置为0x03
+	PWM0PL = 0x0;	//0x10					//周期低8位设置为0xFF
+
+	//占空比计算= 0x0155 / (Fosc / PWM分频系数)		（Fosc见系统时钟配置的部分）
+	//			= 0x0155 / (16000000 / 8)			
+	// 			= 341 	 / 2000000
+	//			= 170.5us		   占空比为 170.5/511.5 = 33.3%
+
+	PWM0DH = 0x00;						//PWM0高4位占空比0x01
+	PWM0DL = 0xA0;	 //WT.EDIT 					//PWM0低8位占空比0x55  //WT.EDTI 
+	PWM0DTH = 0x00;						//PWM01高4位占空比0x01
+	PWM0DTL = 0x60;						//PWM01低8位占空比0x55
+	PWMEN |= 0x11;						//使能PWM0以及PWM01
+	
+}
+
 /***************************************************************
 	*
 	*Function Name:void InitMotorLeft(void)
@@ -663,6 +735,50 @@ void InitMotorRight(void)
 	PWM0DTL = 0xA0;		//WT.EDIT 				//PWM01低8位占空比0x55 
 	PWMEN |= 0x11;						//使能PWM0以及PWM01
 	ForwardFlag=4;
+}
+ /***************************************************************
+	*
+	*Function Name:void InitMotorLeft(void)
+	*Function :turn round CCW 
+	*
+	*
+	*
+***************************************************************/
+ void InitMotorLeft_TOPIR(void)
+{
+    P1_1=0;
+    P1_2=0;
+    P1_3=0;
+    P1_4=0;
+	PWM0_MAP = 0x14;					//PWM0通道映射P13口
+	PWM01_MAP = 0x12;					//PWM01通道映射P12口
+    PWM0C = 0x01;						//PWM0高有效，PWM01高有效，时钟8分频 
+    PWMM |= 0x10;						//PWM0工作于互补模式
+     
+    	
+
+	//独立模式下，PWM0和PWM01共用一个周期寄存器
+	//PWM0的占空比调节使用			PWM0组的占空比寄存器
+	//PWM01的占空比调节使用			PWM0组的死区寄存器
+
+	//周期计算 	= 0x03ff / (Fosc / PWM分频系数)		（Fosc见系统时钟配置的部分）
+	//			= 0x03ff / (16000000 / 8)			
+	// 			= 1023   /2000000
+	//			= 511.5us		   		约1.955kHz
+
+	PWM0PH = 0x01;						//周期高4位设置为0x03
+	PWM0PL = 0x0;						//周期低8位设置为0xFF
+
+	//占空比计算= 0x0155 / (Fosc / PWM分频系数)		（Fosc见系统时钟配置的部分）
+	//			= 0x0155 / (16000000 / 8)			
+	// 			= 341 	 / 2000000
+	//			= 170.5us		   占空比为 170.5/511.5 = 33.3%
+
+	PWM0DH = 0x00;						//PWM0高4位占空比0x01
+	PWM0DL = 0x60;						//PWM0低8位占空比0x55
+	PWM0DTH = 0x00;						//PWM01高4位占空比0x01
+	PWM0DTL = 0xA0;		//WT.EDIT 				//PWM01低8位占空比0x55 
+	PWMEN |= 0x11;					
 }
 /***************************************************************
 	*

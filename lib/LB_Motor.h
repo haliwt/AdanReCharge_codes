@@ -76,6 +76,9 @@ KAKA_Motor_EXT void InitMotorRightLittle(void);
 
 KAKA_Motor_EXT void InitMotorRightCircleRecharge(void);
 KAKA_Motor_EXT void InitMotorForwardSlow_Target(void);
+KAKA_Motor_EXT void  InitMotorLeft_TOPIR(void);
+KAKA_Motor_EXT  void InitMotorForward_TOPIR(void);
+KAKA_Motor_EXT  void InitMotorRight_TOPIR(void);
 
 KAKA_Motor_EXT INT8U ForwardFlag;
 #endif

@@ -174,7 +174,7 @@ void TIMER1_Rpt(void) interrupt TIMER1_VECTOR
 			MidWallOffSecond++;
 			CheckTime++;
 			battDetect1sFlag = 1;
-			
+			#if 0			
 			Usart1Send[0]=3;
 			Usart1Send[1]=Voltage/100;
 			Usart1Send[2]=Voltage%100;
@@ -183,7 +183,7 @@ void TIMER1_Rpt(void) interrupt TIMER1_VECTOR
 			SBUF=Usart1Send[SendCount];
 			Battery_HigVoltage = Voltage/100;
 			Battery_LowVoltage = Voltage%100;
-			#if 0
+  	       #endif 
 			if(SendCount>=12)
 			{
 				Usart1Send[0]=12;
@@ -217,7 +217,7 @@ void TIMER1_Rpt(void) interrupt TIMER1_VECTOR
 //			SendCount=1;
 //			SBUF=Usart1Send[SendCount];
 			}
-			#endif 
+		
 			/*
 			Usart1Send[0]=13;
 			Usart1Send[1]=LeftIR.Left;
