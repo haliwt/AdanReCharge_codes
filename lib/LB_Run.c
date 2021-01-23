@@ -1614,7 +1614,7 @@ void rechargeBatMode(void)
 			
 			case 4:  //ֹͣ
 			{
-				if(RunMs>60)
+				if(RunMs>200)
 				{
 					SetStop();
 					RunMs=0;
@@ -1627,9 +1627,12 @@ void rechargeBatMode(void)
 			{
 				if(RunMs>20)
 				{
-					InitMotorLeftCircle();
+					//timeCircle= 27; //WT.EDIT 
+					//InitMotorLeftCircle();
+					//InitMotorRightCircleRecharge(); //WT.EDIT 2021.01.23
 					RunMs=0;
-					RunStep=7;
+					//RunStep=7;
+					RunStep=0;
 				}
 			}
 				break;
@@ -1868,7 +1871,7 @@ void rechargeBatMode(void)
 				TOP_impact =1;
 
 		    }
-			else if(RunMs >500 && TOP_impact !=1){
+			else if(RunMs >800 && TOP_impact !=1){
 
 				RunStep=0x13;
 			    RunMs =0;
@@ -1885,7 +1888,7 @@ void rechargeBatMode(void)
 		{
 		   if(RunMs>40)
 		   {
-		   	  InitMotorRightCircle();
+		   	  InitMotorLeft_TOPIR(); //InitMotorRightCircle();
 			  RunStep=0x14;
 			  RunMs=0;
 		   }
@@ -2018,7 +2021,7 @@ void rechargeBatMode(void)
 
 
 			if(RunMs > 30){
-				// InitMotorLeft_TOPIR();  
+				 
 				SetStop();
 	            RunStep =0;
 			    RunMs = 0;
@@ -2026,33 +2029,7 @@ void rechargeBatMode(void)
             }
 		break;
 
-		case 0x36:
-
-				SetStop();
-	            RunStep =0x0;
-//			if(IRLocation.NearMid>0){//if is center position
-//
-//                      SetStop();
-//	                  RunStep =0x50;
-//					  RunMs = 0;
-//				      TOP_Left =0;
-//					  IRLocation.TopIR =0;
-//			  }
-//             else if(RunMs>400 ){
-//
-//				SetStop();
-//			   
-//				RunStep = 0x37; //第二判断
-//				    rec =rec ^ 0x1;
-//					if(rec==1)
-//                      TOP_Left ++ ;
-//					else TOP_Left ++ ;
-//				RunMs = 0;
-//
-//			 }
-
-		break;
-
+		
 
 		case 0x37:  //恢复到原来直线上，右转90度
 		   if(RunMs>30)
@@ -2103,7 +2080,7 @@ void rechargeBatMode(void)
 				CurrentMax++;	
 
 			}
-			else if(RunMs>40 ) //WT.EDIT 
+			else if(RunMs >20 && RunMs < 40)//else if(RunMs>40 ) //WT.EDIT 
 			{
 				RunMs=0;
 				distance = 0;
@@ -2217,7 +2194,7 @@ void rechargeBatMode(void)
 					RunMs=0;
 					CurrentMax++;			
 			}
-            else if(RunMs>40)//else if(RunMs>30)
+            else if(RunMs>20 && RunMs < 40)//else if(RunMs>30)
 			{
 				RunMs=0;
 
@@ -2335,7 +2312,7 @@ void rechargeBatMode(void)
 					RunMs=0;
 					CurrentMax++;			
 			}
-			else if(RunMs>40  )//else if(RunMs>30)
+			else if(RunMs>20 && RunMs<40  )//else if(RunMs>30)
 			{
 				RunMs=0;
 //				if(SendCount>=12)
