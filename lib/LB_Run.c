@@ -1441,6 +1441,7 @@ void rechargeBatMode(void)
 			ClearAllIR();
 			timeCircle= 50;
 			findCnt = 0;
+			connect = 0; //WT.EIDT 2021.01.23
 		}
 			break;
 				
