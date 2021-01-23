@@ -1825,7 +1825,7 @@ void rechargeBatMode(void)
 				{
 						RunStep = 0x10; //TopIr PROC
 						RunMs = 0;
-						InitMotorLeft();				
+						InitMotorLeft();			
 				
 				}								
 			break;
@@ -1834,7 +1834,7 @@ void rechargeBatMode(void)
         /**********TOP_IR_RIGHT************************/
 		case 0x10:
 		{
-		 if(RunMs>60)
+		 if(RunMs>60) //Left 45 degree // if(RunMs>60)
 		   {
 		   	  SetStop();
 		   	  RunStep=0x11;
@@ -1843,6 +1843,7 @@ void rechargeBatMode(void)
 		
 		}
 		break;
+
 		case 0x11:
 		{
 		  if(RunMs>10)
@@ -1871,89 +1872,85 @@ void rechargeBatMode(void)
 				TOP_impact =1;
 
 		    }
-			else if(RunMs >800 && TOP_impact !=1){
+			else if(RunMs >600 && TOP_impact !=1){
 
 				RunStep=0x13;
 			    RunMs =0;
 				TOP_impact =0;
 			}
-
-
-		  
-		
 		break;	
 
 	
 		case 0x13:
 		{
-		   if(RunMs>40)
+		   if(RunMs>30)
 		   {
-		   	  InitMotorLeft_TOPIR(); //InitMotorRightCircle();
-			  RunStep=0x14;
+			  SetStop();
+		   	  RunStep=0x14;
 			  RunMs=0;
+			  
 		   }
 		}
 		break;
-		case 0x14:
-		{
-		   if(RunMs>250)
-		   {
-		   	  SetStop();
-		   	  RunStep=0x15;
-			  RunMs=0;
-		   }
-		
-		}
-		break;
-		case 0x15:
-		{
-		  if(RunMs>10)
-		  {
-		  	  InitMotorForward_TOPIR();
-			  RunStep=0x16;
-		  }
-		}
-		break;	
-		case 0x16:
-		
-		   if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
-			{
-				NoImpSecond=0;
-				
-				InitMotorRetreat();
-				RunMs=0;
-				RunStep=0x30;
-				TOP_impact =1;
 
-			}
-			else if(IMP>0)
-			{
-				NoImpSecond=0;
-				InitMotorRetreat();
-				RunStep=0x30;
-				RunMs=0;
-				TOP_impact =1;
-		
-			}
-		   else if(RunMs>300 && TOP_impact !=1)
-		   {
-		      SetStop();
-		   	  RunStep=0x17;
-			  RunMs = 0;
-			  TOP_impact =0;
-		   }
-		 
-		break;
-		case 0x17:
+		case 0x14://left 转弯
 		{
 		  if(RunMs>30)
 		  {
-		  	  
-			  RunStep=0;
-			  RunMs = 0;
+		  	  InitMotorLeft_TOPIR();//left
+			  RunStep=0x15;
 		  }
 		}
-		break;					
+		break;	
+
+        case 0x15://
+		{
+		  if(RunMs>150)
+		  {
+			  SetStop();
+			  RunStep=0x16;
+			  RunMs = 0;
+
+			}
+		}
+		break;	
+
+		case 0x16:
+		{
+		   if(RunMs>30)
+		   {
+			   InitMotorForward_TOPIR();
+			  RunStep=0x17;
+		   	 
+		   }
+		
+		}
+		break;
+		
+		case 0x17:
+		{
+		   if(RunMs>200)
+		   {
+			   SetStop();
+			   RunStep=0x18;
+			   RunMs = 0;
+		   	 
+		   }
+		
+		}
+		break;
+		
+		case 0x18:
+			 if(RunMs > 30){
+
+				 RunStep=0;
+			     RunMs = 0;
+
+			 }
+		  
+		 
+		break;
+				
 
 		/*********************************************/
         //TOP_LEFT IR
