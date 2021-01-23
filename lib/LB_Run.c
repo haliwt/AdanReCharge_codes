@@ -1428,6 +1428,7 @@ void rechargeBatMode(void)
 	static INT8U leftLostFlag = 0;
 	static INT16U timeCircle;
 	static INT8U findCnt = 0;
+    static INT8U  rec=0;
 	
 	switch(RunStep)
 	{
@@ -1825,9 +1826,11 @@ void rechargeBatMode(void)
 				}								
 			break;
 		/*******************TOP IR***********************/
+
+        /**********TOP_IR_RIGHT************************/
 		case 0x10:
 		{
-		   if(RunMs>60)
+		 if(RunMs>60)
 		   {
 		   	  SetStop();
 		   	  RunStep=0x11;
@@ -1836,64 +1839,17 @@ void rechargeBatMode(void)
 		
 		}
 		break;
-		case 0x11:  //left turn run
-		    if(RunMs > 30){
-               InitMotorLeft_TOPIR();
-			  
-               RunMs =0;
-			   RunStep = 0x12;
-            }
-
-
+		case 0x11:
+		{
+		  if(RunMs>10)
+		  {
+		  	  InitMotorForward();
+			  RunStep=0x12;
+		  }
+		}
 		break;
 		case 0x12:
-		    if(RunMs>50)
-		   {
-		      SetStop();
-			  RunStep = 0x13;
-			  RunMs = 0;
-		   	  
-		   }
-
-		break;
-
-		case 0x13: //run line 
-		      if(RunMs > 30){
-                InitMotorForward_TOPIR();
-				if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
-				{
-					
-					NoImpSecond=0;
-					RunStep=0x30;
-					InitMotorRetreat();
-					RunMs=0;
-					TOP_impact =1;
-
-				}
-				else if(IMP>0)
-				{
-					
-					NoImpSecond=0;
-					RunStep=0x30;
-					InitMotorRetreat();
-					RunMs=0;
-					TOP_impact =1;
-
-			    }
-				else{
-		                RunStep = 0x14;
-						RunMs =0;
-					}
-			   }
-
-		break;
-			
-		case 0x14:
-		{
-            if(RunMs >200){
-
-			   
-		     if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+		    if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
 			{
 				NoImpSecond=0;
 				RunStep=0x30;
@@ -1911,76 +1867,82 @@ void rechargeBatMode(void)
 				TOP_impact =1;
 
 		    }
-			else{
+			else if(RunMs >200){
 
-				RunStep=0x16;
-			   RunMs =0;
-			  }
+				RunStep=0x13;
+			    RunMs =0;
 			}
-		}	
+
+
+		  
 		
 		break;	
-
+		case 0x13:
+		{
+		   if(RunMs>40)
+		   {
+		   	  InitMotorRightCircle();
+			  RunStep=0x14;
+			  RunMs=0;
+		   }
+		}
+		break;
+		case 0x14:
+		{
+		   if(RunMs>220)
+		   {
+		   	  SetStop();
+		   	  RunStep=0x15;
+			  RunMs=0;
+		   }
 		
-	    case 0x16: //stop
-	          if(RunMs >30){
-                SetStop();
-               RunStep = 0x17;
-			   RunMs = 0;
-
-			  }
-
+		}
 		break;
-	    case 0x17:  //look for signal
-              if(RunMs >30){
-			  	 
-	                  InitMotorRight_TOPIR();
-	                 RunStep = 0x18;
-				     RunMs =0;
-				 
+		case 0x15:
+		{
+		  if(RunMs>10)
+		  {
+		  	  InitMotorForward();
+			  RunStep=0x16;
+		  }
+		}
+		break;	
+		case 0x16:
+		 if(RunMs>250)
+		   {
+		   
+		   	  RunStep=0;
+		   }
+		   else if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+			{
+				NoImpSecond=0;
+				RunStep=0x17;
+				InitMotorRetreat();
+				RunMs=10;
 
-			  }
-
-		break;
-
-		case 0x18: ////check signal is center signal or not signal
-              if(RunMs >30){
-				   SetStop();
-				   RunStep = 0x19;
-			      RunMs =0;
-				
-
-			  }
+			}
+			else if(IMP>0)
+			{
+				NoImpSecond=0;
+				RunStep=0x17;
+				InitMotorRetreat();
+				RunMs=0;
 		
+			}
+		 
 		break;
-	    case 0x19 :
+		case 0x17:
+		{
+		  if(RunMs>10)
+		  {
+		  	  
+			  RunStep=0;
+		  }
+		}
+		break;					
 
-		     if(RunMs >30){
-               if(IRLocation.NearMid>0){//if is center position
-
-	                  RunStep =0x50;
-					  RunMs = 0;
-				      TOP_Right =0;
-					 
-				 }
-				else {
-				   RunStep = 0x13; //第二判断
-				   RunMs = 0;
-                   TOP_Right ++ ;
-				   if(TOP_Right >=2){
-
-                     RunStep = 0;
-					 RunMs =0;
-				     TOP_Right =0;
-					 
-
-				   }
-				 }
-		     	}
-
-		break;
-
-       //TOP_LEFT IR
+		/*********************************************/
+        //TOP_LEFT IR
 		case 0x30:
 		{
 		  if(RunMs>300) //后退 --OK
@@ -1996,7 +1958,7 @@ void rechargeBatMode(void)
 
 		  if(RunMs>30)
 		  {
-		  	   InitMotorRight_TOPIR();//right
+		  	  InitMotorRight_TOPIR();//right
 			  RunStep=0x32;
 			  RunMs  = 0;
 		  }
@@ -2005,11 +1967,17 @@ void rechargeBatMode(void)
 
 		case 0x32 : // 右转 90度
 
-		  if(RunMs >500){
+		 if(RunMs >300){ //if(RunMs >400){ //600
 
               SetStop();
 			  RunStep = 0x33;  //LINE RUN
 		      RunMs = 0;
+			  if(IRLocation.NearMid>0){//if is center position
+
+	                  RunStep =0x50;
+					  RunMs = 0;
+				      TOP_Left =0;
+			  }
 
 
 		  }
@@ -2050,7 +2018,47 @@ void rechargeBatMode(void)
 		break;
 
 		case 0x36:
-            if(RunMs>300){
+
+			  if(IRLocation.FarMid>0)
+				{
+					 RunStep=0x40;
+					 TOP_Left =0 ;
+					InitMotorForwardSlow();
+				}
+				else if(IRLocation.FarPreRight>0)
+				{
+					RunStep=0x40;
+					 TOP_Left =0 ;
+					InitMotorForwardLeftSlow();
+				}
+				else if(IRLocation.FarPreLeft>0)
+				{
+					RunStep=0x40;
+					 TOP_Left =0 ;
+					InitMotorForwardRightSlow();
+				}
+				else if(IRLocation.FarRight>0)
+				{
+					RunStep=0x40;
+					 TOP_Left =0 ;
+					InitMotorForwardLeftSlow();
+				}
+				else if(IRLocation.FarLeft>0)
+				{
+					RunStep=0x40;
+					 TOP_Left =0 ;
+					InitMotorForwardRightSlow();
+				}
+				else
+				if(IRLocation.TopIR >1)
+				{
+						RunStep = 0x10; //TopIr PROC
+						RunMs = 0;
+						InitMotorLeft();	
+						TOP_Left =0 ;
+				
+			   }								
+               else if(RunMs>400 ){
 
 				SetStop();
 				RunStep = 0x37;
@@ -2062,34 +2070,90 @@ void rechargeBatMode(void)
 
 
 		case 0x37:
-			   if(RunMs >30){
 
-               if(IRLocation.NearMid>0){//if is center position
+		     if(RunMs > 10){
 
-	                  RunStep =0x50;
-					  RunMs = 0;
-				      TOP_Left =0;
-				 }
-				else {
-				    RunStep = 0x33; //第二判断
+             
+				    RunStep = 0x38; //第二判断
 				    RunMs = 0;
-                    TOP_Left ++ ;
-				   if(TOP_Left >=2){
-
-                     RunStep = 0;
-					 RunMs =0;
-				     TOP_Left =0;
-					 
-
-				   }
-				 }
-		     	}
+				    rec =rec ^ 0x1;
+					if(rec==1)
+                      TOP_Left ++ ;
+					else TOP_Left ++ ;
+				}
 
 		
 		break;
-		
 
-		
+		case 0x38:  //恢复到原来直线上，右转90度
+		   if(RunMs>10)
+			  {
+			  	  InitMotorRight_TOPIR();//right
+				  RunStep=0x39;
+				  RunMs  = 0;
+			  }
+
+		break;
+		case 0x39:
+             if(RunMs > 400){
+			    SetStop();
+				RunStep = 0x64; //run Line 
+			    RunMs = 0;
+                
+
+			}
+		 break;
+
+		 case 0x64:
+		 	
+		 	    
+				if(IRLocation.FarMid>0)
+				{
+							 RunStep=0x40;
+							 TOP_Left =0 ;
+							InitMotorForwardSlow();
+				}
+				else if(IRLocation.FarPreRight>0)
+						{
+							RunStep=0x40;
+							 TOP_Left =0 ;
+							InitMotorForwardLeftSlow();
+						}
+						else if(IRLocation.FarPreLeft>0)
+						{
+							RunStep=0x40;
+							 TOP_Left =0 ;
+							InitMotorForwardRightSlow();
+						}
+						else if(IRLocation.FarRight>0)
+						{
+							RunStep=0x40;
+							 TOP_Left =0 ;
+							InitMotorForwardLeftSlow();
+						}
+						else if(IRLocation.FarLeft>0)
+						{
+							RunStep=0x40;
+							 TOP_Left =0 ;
+							InitMotorForwardRightSlow();
+						}
+					
+				    else {
+					    RunStep = 0x33; //第二判断
+					    RunMs = 0;
+	                    if(TOP_Left >2){
+
+	                     RunStep = 0;
+						 RunMs =0;
+					     TOP_Left =0;
+						 
+
+					      }
+				    }
+				   
+				 
+		      
+			break;
 
 		/*************************************************/
 		case 0x40:   //far away
@@ -2610,23 +2674,17 @@ void rechargeBatMode(void)
 		break;
 		case 0x52:   //impact occur after run step
 			{
-				if(RunMs > 30)
+				if(RunMs > 300)
 				{
-					InitMotorRetreat();
-					RunStep=0x53;
-					RunMs =0;
+				    SetStop();
+				    RunStep=0x01;
+				    RunMs=0;
 					
 				}
 			}
 		break;
 
-		case 0x53:
-			  if(RunMs >30){
-				  SetStop();
-				 RunStep=0x01;
-				 RunMs=0;
-			  }
-        break;
+		
 		
         
 		
