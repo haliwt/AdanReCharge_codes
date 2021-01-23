@@ -1439,7 +1439,7 @@ void rechargeBatMode(void)
 			RunStep=1;
 //			ADCtl = 0;
 			ClearAllIR();
-			timeCircle= 40;// 旋转的时间//timeCircle= 50;//
+			timeCircle= 27;// 旋转的时间//timeCircle= 50;//
 			findCnt = 0;
 			connect = 0; //WT.EIDT 2021.01.23
 		}
@@ -1648,7 +1648,7 @@ void rechargeBatMode(void)
 //					InitMotorForward();
 					RunMs=0;
 					RunStep=1;
-					timeCircle = 50;
+					timeCircle = 27;//timeCircle = 50;
 					InitMotorRightCircleRecharge();
 				}
                 else if(IRLocation.NearMid>0)
@@ -1844,7 +1844,7 @@ void rechargeBatMode(void)
 		{
 		  if(RunMs>10)
 		  {
-		  	  InitMotorForward();
+		  	  InitMotorForward_TOPIR();
 			  RunStep=0x12;
 		  }
 		}
@@ -1868,16 +1868,19 @@ void rechargeBatMode(void)
 				TOP_impact =1;
 
 		    }
-			else if(RunMs >200){
+			else if(RunMs >500 && TOP_impact !=1){
 
 				RunStep=0x13;
 			    RunMs =0;
+				TOP_impact =0;
 			}
 
 
 		  
 		
 		break;	
+
+	
 		case 0x13:
 		{
 		   if(RunMs>40)
@@ -1890,7 +1893,7 @@ void rechargeBatMode(void)
 		break;
 		case 0x14:
 		{
-		   if(RunMs>220)
+		   if(RunMs>250)
 		   {
 		   	  SetStop();
 		   	  RunStep=0x15;
@@ -1903,41 +1906,48 @@ void rechargeBatMode(void)
 		{
 		  if(RunMs>10)
 		  {
-		  	  InitMotorForward();
+		  	  InitMotorForward_TOPIR();
 			  RunStep=0x16;
 		  }
 		}
 		break;	
 		case 0x16:
-		 if(RunMs>250)
-		   {
-		   
-		   	  RunStep=0;
-		   }
-		   else if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+		
+		   if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
 			{
 				NoImpSecond=0;
-				RunStep=0x17;
+				
 				InitMotorRetreat();
-				RunMs=10;
+				RunMs=0;
+				RunStep=0x30;
+				TOP_impact =1;
 
 			}
 			else if(IMP>0)
 			{
 				NoImpSecond=0;
-				RunStep=0x17;
 				InitMotorRetreat();
+				RunStep=0x30;
 				RunMs=0;
+				TOP_impact =1;
 		
 			}
+		   else if(RunMs>300 && TOP_impact !=1)
+		   {
+		      SetStop();
+		   	  RunStep=0x17;
+			  RunMs = 0;
+			  TOP_impact =0;
+		   }
 		 
 		break;
 		case 0x17:
 		{
-		  if(RunMs>10)
+		  if(RunMs>30)
 		  {
 		  	  
 			  RunStep=0;
+			  RunMs = 0;
 		  }
 		}
 		break;					
@@ -1951,6 +1961,7 @@ void rechargeBatMode(void)
 		  	  SetStop();
 			  RunStep=0x31;
 			  RunMs  = 0;
+			  TOP_impact =0;
 		  }
 		}
 		break;
@@ -2303,7 +2314,7 @@ void rechargeBatMode(void)
 							lostCnt = 0;
 							RunNoIRsenorTime=0;
 							RunStep = 1;
-							timeCircle = 50;
+							timeCircle = 27;//timeCircle = 50;//
 							InitMotorRightCircleRecharge();
 						}
 
@@ -2441,7 +2452,7 @@ void rechargeBatMode(void)
 							SetStop();
 							RunNoIRsenorTime=0;
 							RunStep = 1;
-							timeCircle = 50;
+							timeCircle = 27;//timeCircle = 50;
 							InitMotorRightCircleRecharge();
 						}
 
