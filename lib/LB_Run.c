@@ -1428,7 +1428,7 @@ void rechargeBatMode(void)
 	static INT8U leftLostFlag = 0;
 	static INT16U timeCircle;
 	static INT8U findCnt = 0;
-    static INT8U  rec=0;
+ 
 	
 	switch(RunStep)
 	{
@@ -1439,7 +1439,7 @@ void rechargeBatMode(void)
 			RunStep=1;
 //			ADCtl = 0;
 			ClearAllIR();
-			timeCircle= 50;
+			timeCircle= 40;// ��ת��ʱ��//timeCircle= 50;//
 			findCnt = 0;
 			connect = 0; //WT.EIDT 2021.01.23
 		}
@@ -1946,7 +1946,7 @@ void rechargeBatMode(void)
         //TOP_LEFT IR
 		case 0x30:
 		{
-		  if(RunMs>300) //后退 --OK
+		  if(RunMs>350) ////300后退 --OK
 		  {
 		  	  SetStop();
 			  RunStep=0x31;
@@ -1992,7 +1992,7 @@ void rechargeBatMode(void)
 
 		case 0x34:
 
-		     if(RunMs>400){  //line run 
+		     if(RunMs>500){  //line run 
 
 				SetStop();
 				RunStep = 0x35;
@@ -2004,35 +2004,41 @@ void rechargeBatMode(void)
 		break;
 
 		case 0x35 : //left 90 --check siginal has or not 
-            if(RunMs > 30){
-				 InitMotorLeft_TOPIR();  
-				 RunStep = 0x36;
+
+
+			if(RunMs > 30){
+				// InitMotorLeft_TOPIR();  
+				SetStop();
+	            RunStep =0;
 			    RunMs = 0;
 
             }
 		break;
 
 		case 0x36:
-			if(IRLocation.NearMid>0){//if is center position
-
-                      SetStop();
-	                  RunStep =0x50;
-					  RunMs = 0;
-				      TOP_Left =0;
-					  IRLocation.TopIR =0;
-			  }
-             else if(RunMs>400 ){
 
 				SetStop();
-			   
-				RunStep = 0x37; //第二判断
-				    rec =rec ^ 0x1;
-					if(rec==1)
-                      TOP_Left ++ ;
-					else TOP_Left ++ ;
-				RunMs = 0;
-
-			 }
+	            RunStep =0x0;
+//			if(IRLocation.NearMid>0){//if is center position
+//
+//                      SetStop();
+//	                  RunStep =0x50;
+//					  RunMs = 0;
+//				      TOP_Left =0;
+//					  IRLocation.TopIR =0;
+//			  }
+//             else if(RunMs>400 ){
+//
+//				SetStop();
+//			   
+//				RunStep = 0x37; //第二判断
+//				    rec =rec ^ 0x1;
+//					if(rec==1)
+//                      TOP_Left ++ ;
+//					else TOP_Left ++ ;
+//				RunMs = 0;
+//
+//			 }
 
 		break;
 

@@ -777,7 +777,7 @@ void InitMotorRight_TOPIR(void)
 	PWM0DH = 0x00;						//PWM0高4位占空比0x01
 	PWM0DL = 0x60;						//PWM0低8位占空比0x55
 	PWM0DTH = 0x00;						//PWM01高4位占空比0x01
-	PWM0DTL = 0xB0;		//WT.EDIT 				//PWM01低8位占空比0x55 
+	PWM0DTL = 0xD0;	//WT.EDIT 2022.01.23				//PWM01低8位占空比0x55 
 	PWMEN |= 0x11;					
 }
 /***************************************************************
