@@ -1428,18 +1428,21 @@ void rechargeBatMode(void)
 	static INT8U leftLostFlag = 0;
 	static INT16U timeCircle;
 	static INT8U findCnt = 0;
+	
  
 	
 	switch(RunStep)
 	{
 		case 0:   //init
 		{
+			
 			InitMotorRightCircleRecharge();
 			RunMs = 0;
 			RunStep=1;
 //			ADCtl = 0;
 			ClearAllIR();
-			timeCircle= 27;// 旋转的时间//timeCircle= 50;//
+            timeCircle= 27;// 旋转的时间//timeCircle= 50;//
+          
 			findCnt = 0;
 			connect = 0; //WT.EIDT 2021.01.23
 		}
@@ -1618,27 +1621,102 @@ void rechargeBatMode(void)
 				{
 					SetStop();
 					RunMs=0;
-					RunStep=5;
+					RunStep=0xb0;
 				}
 			}
-				break;
+			break;
+			case 0xb0:
+            if(RunMs>30) //
+			  {
+				    InitMotorLeft_TOPIR();//left
+					RunMs=0;
+					RunStep=0xb1;
+			  }
+		
+			break;
+
+			case 0xb1:
+			  if(IMP>0 ||(WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+			{
+				NoImpSecond=0; //WT.EDIT 2021.01.19
+			   {
+					NoImpSecond=0;
+					RunStep=0x3;
+					SetStop();
+					RunMs=0;
+					CurrentMax++;			
+				}
+			  }
+			  else if(RunMs>150) //
+			  {
+				    SetStop();
+					RunMs=0;
+					RunStep=7;
+			  }
+			
+			break;
 
 			case 5:  //转弯
 			{
-				if(RunMs>20)
-				{
-					//timeCircle= 27; //WT.EDIT 
-					//InitMotorLeftCircle();
-					//InitMotorRightCircleRecharge(); //WT.EDIT 2021.01.23
+
+			if(IMP>0 ||(WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+			{
+				NoImpSecond=0; //WT.EDIT 2021.01.19
+			   {
+					NoImpSecond=0;
+					RunStep=0x3;
+					SetStop();
 					RunMs=0;
-					//RunStep=7;
+					CurrentMax++;			
+				}
+			  }
+			  else if(RunMs>30) //
+			  {
+				    InitMotorLeft_TOPIR();//left
+					RunMs=0;
+					RunStep=0xa0;
+			  }
+			}
+			break;
+			
+			case 0xa0:
+				if(IMP>0 ||(WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
+				{
+					NoImpSecond=0; //WT.EDIT 2021.01.19
+				   {
+						NoImpSecond=0;
+						RunStep=0x3;
+						SetStop();
+						RunMs=0;
+						CurrentMax++;			
+					}
+			    }			
+
+			   else  if(RunMs>150)
+				{
+					SetStop();
+					RunMs=0;
+					RunStep=0xa1;
+				}
+
+
+			break;
+
+			case 0xa1:
+			    if(RunMs>30)
+				{
+					SetStop();
+					RunMs=0;
 					RunStep=0;
 				}
-			}
-				break;
+
+			break;
+			
+
+			
 
 			case 6:  //直走	
-				if(IMP>0)
+				if(IMP>0 ||(WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
 				{
 					NoImpSecond=0;
 					RunStep=0x3;
@@ -1648,11 +1726,11 @@ void rechargeBatMode(void)
 				}
 				else if(RunMs>300)
 				{
-//					InitMotorForward();
+					SetStop();
 					RunMs=0;
-					RunStep=1;
-					timeCircle = 27;//timeCircle = 50;
-					InitMotorRightCircleRecharge();
+					RunStep=5;
+//					timeCircle = 13;//WT.EDIT 鍗婂湀 //27;//timeCircle = 50;
+//					InitMotorRightCircleRecharge();
 				}
                 else if(IRLocation.NearMid>0)
 				{
@@ -1744,11 +1822,12 @@ void rechargeBatMode(void)
 					RunMs=0;
 					CurrentMax++;			
 				}
-                else if(RunMs > 120 )//else if(RunMs>250) //WT.EIDT
+                else if(RunMs > 30 )//else if(RunMs>250) //WT.EIDT
 				{
-					InitMotorForward();
+					//timeCircle = 10;//WT.EDIT 鍗婂湀 //27;//timeCircle = 50;
+					
 					RunMs=0;
-					RunStep=6;
+					RunStep=0;
 				}
                 else if(IRLocation.NearMid>0)
 				{
@@ -1914,43 +1993,38 @@ void rechargeBatMode(void)
 			}
 		}
 		break;	
-
 		case 0x16:
-		{
-		   if(RunMs>30)
-		   {
-			   InitMotorForward_TOPIR();
+		  if(RunMs>30)
+		  {
+			  InitMotorForward_TOPIR();
 			  RunStep=0x17;
-		   	 
-		   }
-		
-		}
-		break;
-		
+			  RunMs = 0;
+
+			}
+        break;
+
 		case 0x17:
-		{
-		   if(RunMs>200)
+		 if(RunMs>500)// if(RunMs>200)
 		   {
 			   SetStop();
 			   RunStep=0x18;
 			   RunMs = 0;
 		   	 
 		   }
-		
-		}
 		break;
 		
 		case 0x18:
-			 if(RunMs > 30){
+		{
+		    if(RunMs > 30){
 
 				 RunStep=0;
 			     RunMs = 0;
 
 			 }
-		  
-		 
+		
+		}
 		break;
-				
+	
 
 		/*********************************************/
         //TOP_LEFT IR

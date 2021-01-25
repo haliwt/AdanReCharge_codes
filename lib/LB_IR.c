@@ -314,7 +314,7 @@ void CheckRechargeIR()
 		IRLocation.FarPreRight++;
 		break; //WT.EDIT 
  		case 20:  //WT.EDIT 
-           IRLocation.FarPreRight++;
+           IRLocation.TopIR++;//WT.EDIT 2021.01.25 //IRLocation.FarPreRight++;
 		break;
 		case 21 :
 			IRLocation.TopIR++;

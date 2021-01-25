@@ -183,24 +183,30 @@ void TIMER1_Rpt(void) interrupt TIMER1_VECTOR
 			SBUF=Usart1Send[SendCount];
 			Battery_HigVoltage = Voltage/100;
 			Battery_LowVoltage = Voltage%100;
-  	       #endif 
-			if(SendCount>=12)
+  	       #endif
+
+           #if 1			
+			if(SendCount>=5)//if(SendCount>=12)
 			{
-				Usart1Send[0]=12;
-				Usart1Send[1]=Voltage/100;
-				Usart1Send[2]=Voltage%100;
-				Usart1Send[3]=WallDp[0];
-				Usart1Send[4]=WallDp[1];
-				Usart1Send[5]=WallDp[2];
-				Usart1Send[6]=WallDp[3];
-				Usart1Send[7]=LCurrent;
-				Usart1Send[8]=RCurrent;
-				Usart1Send[9]=EdgeCurrent;
-				Usart1Send[10]=FanCurrent;
-				Usart1Send[11]=IMP;
-				Usart1Send[12]=RunStep;
+				Usart1Send[0]=5;
+				Usart1Send[1]=Mid_ReadIR.ReadIR[0];
+				Usart1Send[2]=Mid_ReadIR.ReadIR[1];
+				Usart1Send[3]=Mid_ReadIR.ReadIR[2];				
+				//	Usart1Send[1]=Voltage/100;
+				//	Usart1Send[2]=Voltage%100;
+				//	Usart1Send[3]=WallDp[0];
+//				Usart1Send[4]=WallDp[1];
+//				Usart1Send[5]=WallDp[2];
+//				Usart1Send[6]=WallDp[3];
+//				Usart1Send[7]=LCurrent;
+//				Usart1Send[8]=RCurrent;
+//				Usart1Send[9]=EdgeCurrent;
+//				Usart1Send[10]=FanCurrent;
+				Usart1Send[4]=IMP;
+				Usart1Send[5]=RunStep;
 				SendCount=1;
-				SBUF=Usart1Send[SendCount];				
+				SBUF=Usart1Send[SendCount];	
+            				
 //			Usart1Send[0]=12;
 //			Usart1Send[1]=IRLocation.NearMid;
 //			Usart1Send[2]=IRLocation.NearPreRight;
@@ -217,7 +223,7 @@ void TIMER1_Rpt(void) interrupt TIMER1_VECTOR
 //			SendCount=1;
 //			SBUF=Usart1Send[SendCount];
 			}
-		
+		 #endif 
 			/*
 			Usart1Send[0]=13;
 			Usart1Send[1]=LeftIR.Left;
