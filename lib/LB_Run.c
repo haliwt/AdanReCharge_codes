@@ -2,12 +2,12 @@
 
 ---------- file information -----------------------------------------------
 file name:
-define   : <ï¿½Ä¼ï¿½Ëµï¿½ï¿½>
-version  : ï¿½ï¿½ï¿½Ä¼ï¿½Î²ï¿½ï¿½
+define   : <??????>
+version  : ?????¦Â??
 ---------------------------------------------------------------------------
 */
 
-//È«ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//??????????
 #define  KAKA_Run_GB
 
 #ifdef   CodeC_Includes
@@ -26,10 +26,10 @@ version  : ï¿½ï¿½ï¿½Ä¼ï¿½Î²ï¿½ï¿½
 #endif
 #include "..\lib\LB_Key.h"
 /*******************************************************
-  * @?|Â¨Â¬???  	?Â¡Â§?Â¡Â§o?Â¨Â¤o?Â£Â¤Â¡Â§oy
-  * @2?Â¡Â§oy  	fui_i : ?Â¡Â§?Â¡Â§o?Â¨Â¤Â¡Â§o?Â¨Â¤??
-  * @?Â¡Ã¨|Â¨Â¬???|Â¨Â¬ ?T
-  * @?Â¨Â¢?Â¨Â¦ 	Fcpu = 16MHz?Â¨Âº?fui_i = 1Â¡Â§o?Â¨Â¤?Â¨Âº??Â¡Â§?Â¡Â§o?Â¨Â¤Â¡Â§o?Â¨Â¤?????a1Ms
+  * @?|¡§????  	??¡ì??¡ìo?¡§¡èo?¡ê¡è?¡ìoy
+  * @2??¡ìoy  	fui_i : ??¡ì??¡ìo?¡§¡è?¡ìo?¡§¡è??
+  * @??¨¨|¡§????|¡§? ?T
+  * @?¡§¡é?¡§| 	Fcpu = 16MHz?¡§o?fui_i = 1?¡ìo?¡§¡è?¡§o???¡ì??¡ìo?¡§¡è?¡ìo?¡§¡è?????a1Ms
 **************************************************************/
 void Delay_ms(INT16U fui_i)
 {
@@ -41,10 +41,10 @@ void Delay_ms(INT16U fui_i)
 	}
 }
 /*******************************************************
-  * @?|Â¨Â¬???  	?Â¡Â§?Â¡Â§o?Â¨Â¤o?Â£Â¤Â¡Â§oy
-  * @2?Â¡Â§oy  	fui_i : ?Â¡Â§?Â¡Â§o?Â¨Â¤Â¡Â§o?Â¨Â¤??
-  * @?Â¡Ã¨|Â¨Â¬???|Â¨Â¬ ?T
-  * @?Â¨Â¢?Â¨Â¦ 	Fcpu = 16MHz?Â¨Âº?fui_i = 1Â¡Â§o?Â¨Â¤?Â¨Âº??Â¡Â§?Â¡Â§o?Â¨Â¤Â¡Â§o?Â¨Â¤?????a1Ms
+  * @?|¡§????  	??¡ì??¡ìo?¡§¡èo?¡ê¡è?¡ìoy
+  * @2??¡ìoy  	fui_i : ??¡ì??¡ìo?¡§¡è?¡ìo?¡§¡è??
+  * @??¨¨|¡§????|¡§? ?T
+  * @?¡§¡é?¡§| 	Fcpu = 16MHz?¡§o?fui_i = 1?¡ìo?¡§¡è?¡§o???¡ì??¡ìo?¡§¡è?¡ìo?¡§¡è?????a1Ms
 **************************************************************/
 INT8U readRunTime()
 {
@@ -106,7 +106,7 @@ INT8U readRunTime()
 void CleanMode_BOW(void)
 {
 
-// ¹­ĞÎ
+// 1-?
 	
 		
 		switch(RunStep)
@@ -754,7 +754,7 @@ void  CheckRun()
 				break;
 			
 			case 6:
-				getOutMode(); //è„±å›°æ¨¡å¼
+				getOutMode(); //ÍÑÀ§Ä£Ê½
 				break;
 			case 7: //itself checking for mass production
                 ItselfChecking();  
@@ -783,7 +783,7 @@ void circleMode(void)
 			}
 				break;
 
-			case 1:  //³õÊ¼Ô­µØÓÒ×ªÈ¦
+			case 1:  //3???¦Ì??a?
 			{								
 				InitMotorRightCircle();
 				RunStep=2;
@@ -828,7 +828,7 @@ void circleMode(void)
 			}
 				break;
 			
-			case 3:   //ºóÍË
+			case 3:   //o??
 			{
 				if(RunMs>30)
 				{
@@ -839,7 +839,7 @@ void circleMode(void)
 			}
 				break;
 			
-			case 4:  //Í£Ö¹
+			case 4:  //??
 			{
 				if(RunMs>40)
 				{
@@ -850,7 +850,7 @@ void circleMode(void)
 			}
 				break;
 
-			case 5:  //×ªÍä
+			case 5:  //??
 			{
 				if(RunMs>20)
 				{
@@ -861,7 +861,7 @@ void circleMode(void)
 			}
 				break;
 
-			case 6:  //Ö±×ß
+			case 6:  //??
 			{			
 				if(RunMs>150)
 				{
@@ -874,7 +874,7 @@ void circleMode(void)
 					
 			case 7:
 			{
-			if(RunMs>300)  //Ö±×ßÒ»¶Î¾àÀë£¬È»ºó»»×ªÏò
+			if(RunMs>300)  //????¦Î+¡ê??o??a?
 				{
 					SetStop();				
 					RunStep=1;				
@@ -902,7 +902,7 @@ void circleMode(void)
 				break;
 			
 						
-			//ÓÒÄÚÈ¦
+			//?¨§?
 			case 0x10:{
 				if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
 				{
@@ -938,7 +938,7 @@ void circleMode(void)
 			}
 				break;
 			
-			//ÓÒÖĞÈ¦
+			//???
 			case 0x11:{
 				if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
 				{
@@ -974,7 +974,7 @@ void circleMode(void)
 			}
 				break;	
 
-			//ÓÒÍâÈ¦
+			//???
 			case 0x12:{
 				if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
 				{
@@ -1011,7 +1011,7 @@ void circleMode(void)
 				break;	
 
 #if 0   
-			case 0x08:   //Ô­µØ×ó×ª
+			case 0x08:   //?¦Ì???
 			{
 				InitMotorLeftCircle();
 				RunStep= 0x02;
@@ -1021,7 +1021,7 @@ void circleMode(void)
 				break;			
 			
 			
-			//×óÄÚÈ¦
+			//?¨§?
 			case 0x20:{
 				if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
 				{
@@ -1057,7 +1057,7 @@ void circleMode(void)
 			}
 				break;
 			
-			//×óÖĞÈ¦
+			//???
 			case 0x21:{
 				if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
 				{
@@ -1093,7 +1093,7 @@ void circleMode(void)
 			}
 				break;	
 
-			//×óÍâÈ¦
+			//???
 			case 0x22:{
 				if((WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
 				{
@@ -1203,14 +1203,14 @@ void wallMode(void)
 				SetStop();
 				findIR = 1;
 			}					
-			else if(firstTime==0 && RunMs>1200)	{//ÍùÓÒÇ°·½×ß£¬Ò»Ö±´òÈ¦¼ì²â²»µ½£¬ÔòÏòÖ±×ßÒ»¶Î¾àÀë£¬ÖØĞÂ¼ì²â
+			else if(firstTime==0 && RunMs>1200)	{//???¡¤??¡ê???¡ä???2?¦Ì?¡ê???????¦Î+¡ê?????
 //			RunStep = 0x09;
 				RunMs = 0;
 				InitMotorForward();
 			}
 			break;
 		
-		case 3: 		//ºóÍË retreat
+		case 3: 		//o??retreat
 			if(RunMs>30){
 				firstTime = 0;
 				InitMotorRetreat();
@@ -1219,7 +1219,7 @@ void wallMode(void)
 			}			
 			break;
 
-			case 4:  		//Í£Ö¹ stop
+			case 4:  		//?? stop
 				if(RunMs>40){	
 					SetStop();
 					RunMs=0;
@@ -1227,7 +1227,7 @@ void wallMode(void)
 				}
 				break;
 
-			case 5:  //×ªÍä turn
+			case 5:  //?? turn
 				if(RunMs>20){			
 					InitMotorLeft();
 					RunStep=6;
@@ -1238,7 +1238,7 @@ void wallMode(void)
 				}
 				break;
 
-			case 6:  //Ö±×ß	
+			case 6:  //??	
 				if(RunMs>135){
 					InitMotorForward();
 					RunMs=0;
@@ -1255,7 +1255,7 @@ void wallMode(void)
 				}	
 				break;			
 					
-			case 7:  //Ö±×ßÒ»¶ÎĞ¡¾àÀë£¬È»ºó»»×ªÏò			
+			case 7:  //???????+¡ê??o??a?			
 				if(RunMs>100){  			
 					RunStep=2;				
 					RunMs=0;
@@ -1287,7 +1287,7 @@ void wallMode(void)
 				}				
 				break;
 						
-			case 8:   //right IR check ²ÉÑù
+			case 8:   //right IR check 2¨»¨´
 				if(RunMs>10){
 					RunMs = 0;
 					firstTime = 0;
@@ -1304,7 +1304,7 @@ void wallMode(void)
 						RunStep = 0x02;
 						RunMs = 0;
 					}
-					else if(WallDp[1]<WallModeNormal){ //È«ËÙÖ±×ß
+					else if(WallDp[1]<WallModeNormal){ //?¨B??
 						RunMs = 0;
 						InitMoterAdjustForward();
 					}					
@@ -1338,7 +1338,7 @@ void wallMode(void)
 				}
 				break;
 				
-			case 9:		//ÏòÇ°×ßÒ»¶Î³¤¾àÀë£¬ÖØĞÂÑ°ÕÒÇ½
+			case 9:		//?????¦Ã¡è?+¡ê??????
 				if(RunMs>500){
 					RunMs = 0;
 					RunStep = 2;
@@ -1355,7 +1355,7 @@ void wallMode(void)
 				break;
 
 			
-		case 10: 		//ºóÍË retreat
+		case 10: 		//o??retreat
 			if(RunMs>10){
 				InitMotorRetreat();
 				RunStep=11;
@@ -1366,7 +1366,7 @@ void wallMode(void)
 			}			
 			break;
 
-			case 11:  		//Í£Ö¹ stop
+			case 11:  		//?? stop
 				if(RunMs>170){	
 					SetStop();
 					RunMs=0;
@@ -1374,7 +1374,7 @@ void wallMode(void)
 				}
 				break;
 
-			case 12:  //×ªĞ¡Íä turn
+			case 12:  //?§³? turn
 				if(RunMs>20){			
 					InitMotorLeft();
 					RunMs=0;
@@ -1386,7 +1386,7 @@ void wallMode(void)
 				}
 				break;
 				
-			case 13:  //Ğ¡ÇúÏßÓÒ×ª	
+			case 13:  //§³????	
 				if(RunMs>80){		
 					if(wallRechargeModeFlag){
 						RunStep=7;	
@@ -1441,7 +1441,7 @@ void rechargeBatMode(void)
 			RunStep=1;
 //			ADCtl = 0;
 			ClearAllIR();
-            timeCircle= 27;// Ğı×ªµÄÊ±¼ä//timeCircle= 50;//
+            timeCircle= 27;// §ß?¦Ì?¡À??timeCircle= 50;//
           
 			findCnt = 0;
 			connect = 0; //WT.EIDT 2021.01.23
@@ -1615,7 +1615,7 @@ void rechargeBatMode(void)
 			}
 			break;
 			
-			case 4:  //Í£Ö¹
+			case 4:  //??
 			{
 				if(RunMs>200)
 				{
@@ -1656,7 +1656,7 @@ void rechargeBatMode(void)
 			
 			break;
 
-			case 5:  //×ªÍä
+			case 5:  //??
 			{
 
 			if(IMP>0 ||(WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
@@ -1715,7 +1715,7 @@ void rechargeBatMode(void)
 
 			
 
-			case 6:  //Ö±×ß	
+			case 6:  //??	
 				if(IMP>0 ||(WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
 				{
 					NoImpSecond=0;
@@ -1729,7 +1729,7 @@ void rechargeBatMode(void)
 					SetStop();
 					RunMs=0;
 					RunStep=5;
-//					timeCircle = 13;//WT.EDIT åŠåœˆ //27;//timeCircle = 50;
+//					timeCircle = 13;//WT.EDIT °ëÈ¦ //27;//timeCircle = 50;
 //					InitMotorRightCircleRecharge();
 				}
                 else if(IRLocation.NearMid>0)
@@ -1824,7 +1824,7 @@ void rechargeBatMode(void)
 				}
                 else if(RunMs > 30 )//else if(RunMs>250) //WT.EIDT
 				{
-					//timeCircle = 10;//WT.EDIT åŠåœˆ //27;//timeCircle = 50;
+					//timeCircle = 10;//WT.EDIT °ëÈ¦ //27;//timeCircle = 50;
 					
 					RunMs=0;
 					RunStep=0;
@@ -1972,7 +1972,7 @@ void rechargeBatMode(void)
 		}
 		break;
 
-		case 0x14://left è½¬å¼¯
+		case 0x14://left ×ªÍä
 		{
 		  if(RunMs>30)
 		  {
@@ -2030,7 +2030,7 @@ void rechargeBatMode(void)
         //TOP_LEFT IR
 		case 0x30:
 		{
-		  if(RunMs>350) ////300åé€€ --OK
+		  if(RunMs>350) ////300ºóÍË --OK
 		  {
 		  	  SetStop();
 			  RunStep=0x31;
@@ -2051,7 +2051,7 @@ void rechargeBatMode(void)
 
 		break;
 
-		case 0x32 : // å³è½¬ 90åº¦
+		case 0x32 : // ÓÒ×ª 90¶È
 
 		 if(RunMs >300){ //if(RunMs >400){ //600
 
@@ -2102,7 +2102,7 @@ void rechargeBatMode(void)
 
 		
 
-		case 0x37:  //æ¢å¤åˆ°åŸæ¥ç›´çº¿ä¸Šï¼Œå³è½¬90åº¦
+		case 0x37:  //»Ö¸´µ½Ô­À´Ö±ÏßÉÏ£¬ÓÒ×ª90¶È
 		   if(RunMs>30)
 			  {
 			  	  InitMotorRight_TOPIR();//right
@@ -2111,7 +2111,7 @@ void rechargeBatMode(void)
 			  }
 
 		break;
-		case 0x38: //æ¢å¤åˆ°ç›´çº¿ï¼Œç»§ç»­æ£€æµ‹--ä¸­ç‚¹ä¿¡å·
+		case 0x38: //»Ö¸´µ½Ö±Ïß£¬¼ÌĞø¼ì²â--ÖĞµãĞÅºÅ
              if(IRLocation.NearMid>0){//if is center position
 
                       SetStop();
@@ -2132,7 +2132,7 @@ void rechargeBatMode(void)
 		 case 0x39:
 		 	
 			 if(RunMs >30) {
-					    RunStep = 0; //ç¬¬äºŒåˆ¤æ–­
+					    RunStep = 0; //µÚ¶şÅĞ¶Ï
 					    RunMs = 0;
 	                   
 			}
@@ -2859,7 +2859,7 @@ void sysMode(INT8U val)
              }
 			
 		    
-			RunMode =2; //Ñ˜Â±ß
+			RunMode =2; //?¡À?
 			RunStep =1;
 			SetBuzzerTime(100);
 			Delay_ms(10);
@@ -2889,7 +2889,7 @@ void sysMode(INT8U val)
 				SetEdge(0);
 		   	}
 		   
-			RunMode =3; //Â¹Â­
+			RunMode =3; //1-
 			RunStep =1;
 			SetBuzzerTime(100);
 			Delay_ms(10);
@@ -2921,7 +2921,7 @@ void sysMode(INT8U val)
 				SetEdge(0);
            	}
 			
-			RunMode =4; //Ô²
+			RunMode =4; //?
 			RunStep =1;
 			SetBuzzerTime(100);
 			Delay_ms(10);
@@ -2947,7 +2947,7 @@ void sysMode(INT8U val)
 			
 			break;
 			
-		case 5:// å¾…æœºçŠ¶æ€ standby mode
+		case 5:// ´ı»ú×´Ì¬ standby mode
 			
 			SetStop();
 			RunMode = 0;
@@ -2964,7 +2964,7 @@ void sysMode(INT8U val)
 			break;
 		
 		
-		case 6: // å›å……
+		case 6: // »Ø³ä
 		    if(ModeStopTime < 2){
 			    SetStop();
 				SetFan(0);
@@ -3092,7 +3092,7 @@ void getOutMode(void)
 			}
 			break;
 
-			case 1:  //³õÊ¼Ô­µØÓÒ×ªÈ¦
+			case 1:  //3???¦Ì??a?
 			{								
 				SetStop();
 				RunStep=2;
@@ -3111,7 +3111,7 @@ void getOutMode(void)
 			}
 			break;
 			
-//			case 3:   //ºóÍË
+//			case 3:   //o??
 //			{
 //				if(RunMs>30)
 //				{
@@ -3122,7 +3122,7 @@ void getOutMode(void)
 //			}
 //				break;
 			
-			case 4:  //Í£Ö¹
+			case 4:  //??
 			{
 				if(RunMs>80)
 				{
@@ -3221,10 +3221,10 @@ void battVoltDetect(void)
 		return;
 	battDetect1sFlag = 0;
 	
-	if(lastMode == 0) //¹Ø»ú×´Ì¬
+	if(lastMode == 0) //1?¨²??
 		return;
 	
-	if(Voltage < 0x3F6 && Voltage > 0x3a0 ){  //0x3f6¶ÔÓ¦7VµçÑ¹  £¬0x3a0¶ÔÓ¦6.1VµçÑ¹ ,0X3d0 ¶ÔÓ¦3.85VµçÑ¹£¨ÔËĞĞÊ±µÄµÍµçÑ¹£©
+	if(Voltage < 0x3F6 && Voltage > 0x3a0 ){  //0x3f6??|7V¦Ì¬Ÿ  ¡ê?0x3a0??|6.1V¦Ì¬Ÿ ,0X3d0 ??|3.85V¦Ì¬Ÿ¡ê¡§?§¡?¦Ì??¬Ÿ¡ê?
 		if(RunMode == 5)
 			return;
 		
@@ -3267,5 +3267,6 @@ void battVoltDetect(void)
 	}
 	return;
 }
+
 
 
