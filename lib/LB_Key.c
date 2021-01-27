@@ -35,6 +35,7 @@ INT8U AutoDC_ReChargeStatus(void)
 					SetBuzzerTime(25);
 					Delay_ms(500);
 					BuzzerOff();
+					SetStop();
 					
 			}
             if(BatteryRechargStatus ==1){

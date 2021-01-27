@@ -1428,7 +1428,7 @@ void rechargeBatMode(void)
 	static INT8U leftLostFlag = 0;
 	static INT16U timeCircle;
 	static INT8U findCnt = 0;
-	
+	static INT8U topir_flag =0;
  
 	
 	switch(RunStep)
@@ -1647,7 +1647,7 @@ void rechargeBatMode(void)
 					CurrentMax++;			
 				}
 			  }
-			  else if(RunMs>150) //
+			  else if(RunMs>100) //
 			  {
 				    SetStop();
 					RunMs=0;
@@ -1692,7 +1692,7 @@ void rechargeBatMode(void)
 					}
 			    }			
 
-			   else  if(RunMs>150)
+			   else  if(RunMs>80)
 				{
 					SetStop();
 					RunMs=0;
@@ -1902,9 +1902,16 @@ void rechargeBatMode(void)
 				else
 				if(IRLocation.TopIR >1)
 				{
-						RunStep = 0x10; //TopIr PROC
-						RunMs = 0;
-						InitMotorLeft();			
+						if(topir_flag ==1){
+							RunStep = 0; //TopIr PROC
+						    RunMs = 0;
+
+						}
+						else{
+							RunStep = 0x10; //TopIr PROC
+							RunMs = 0;
+							InitMotorLeft();
+						}
 				
 				}								
 			break;
@@ -1913,7 +1920,7 @@ void rechargeBatMode(void)
         /**********TOP_IR_RIGHT************************/
 		case 0x10:
 		{
-		 if(RunMs>60) //Left 45 degree // if(RunMs>60)
+		 if(RunMs>60 ) //Left 45 degree // if(RunMs>60)
 		   {
 		   	  SetStop();
 		   	  RunStep=0x11;
@@ -1951,11 +1958,18 @@ void rechargeBatMode(void)
 				TOP_impact =1;
 
 		    }
-			else if(RunMs >600 && TOP_impact !=1){
+			else if(topir_flag ==1){
+			
+			RunStep=0;
+			RunMs =0;
+
+            }
+			else if(RunMs >800){ //600
 
 				RunStep=0x13;
 			    RunMs =0;
 				TOP_impact =0;
+				IRLocation.TopIR=0;
 			}
 		break;	
 
@@ -1967,6 +1981,7 @@ void rechargeBatMode(void)
 			  SetStop();
 		   	  RunStep=0x14;
 			  RunMs=0;
+			  IRLocation.TopIR=0;
 			  
 		   }
 		}
@@ -1978,17 +1993,19 @@ void rechargeBatMode(void)
 		  {
 		  	  InitMotorLeft_TOPIR();//left
 			  RunStep=0x15;
+			  IRLocation.TopIR=0;
 		  }
 		}
 		break;	
 
         case 0x15://
 		{
-		  if(RunMs>150)
+		  if(RunMs>150)//if(RunMs>150)
 		  {
 			  SetStop();
 			  RunStep=0x16;
 			  RunMs = 0;
+			   IRLocation.TopIR=0;
 
 			}
 		}
@@ -2004,7 +2021,7 @@ void rechargeBatMode(void)
         break;
 
 		case 0x17:
-		 if(RunMs>500)// if(RunMs>200)
+		 if(RunMs>300)// if(RunMs>500)
 		   {
 			   SetStop();
 			   RunStep=0x18;
@@ -2019,7 +2036,8 @@ void rechargeBatMode(void)
 
 				 RunStep=0;
 			     RunMs = 0;
-
+				 IRLocation.TopIR=0;
+				 topir_flag =1;
 			 }
 		
 		}
@@ -2142,7 +2160,8 @@ void rechargeBatMode(void)
 		/*************************************************/
 		case 0x40:   //far away
 		{
-           if(IMP>0 ||(WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin)) //WT.EDIT 2021.01.19
+           topir_flag =0;
+		   if(IMP>0 ||(WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin)) //WT.EDIT 2021.01.19
             {
                 NoImpSecond=0;
 				RunStep=0x3;
@@ -2256,7 +2275,7 @@ void rechargeBatMode(void)
 		case 0x41:  //right side
 		{
 
-       
+            topir_flag =0;
 			if(IMP>0 ||(WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin)) //WT.EDIT 2021.01.19
 			 {
 					NoImpSecond=0;
@@ -2374,7 +2393,7 @@ void rechargeBatMode(void)
 			break;
 		case 0x42:   //leftt side 
 		{
-
+             topir_flag =0;
 			if(IMP>0 ||(WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin)) //WT.EDIT 2021.01.19
 			 {
 					NoImpSecond=0;
@@ -2512,11 +2531,11 @@ void rechargeBatMode(void)
 			break;
 		case 0x50:   //near 
 		{
-            
+             topir_flag =0;
              if(IMP>0 ||(WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin)) //WT.EDIT 2021.01.19
 			 {
 					NoImpSecond=0;
-					RunStep=0x51;
+					RunStep=3;
 					SetStop();
 					RunMs=0;
 					CurrentMax++;			
@@ -2645,28 +2664,7 @@ void rechargeBatMode(void)
 			
 		}
 			break;
-		case 0x51:   //impact occur after run step
-			{
-				if(RunMs > 10)
-				{
-					InitMotorRetreat();
-					RunStep=0x52;
-					RunMs =0;
-					
-				}
-			}
-		break;
-		case 0x52:   //impact occur after run step
-			{
-				if(RunMs > 200)
-				{
-				    SetStop();
-				    RunStep=0;
-				    RunMs=0;
-					
-				}
-			}
-		break;
+		
 
 		
 		
