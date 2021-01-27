@@ -730,7 +730,7 @@ void InitMotorRight_TOPIR(void)
 	//			= 170.5us		   占空比为 170.5/511.5 = 33.3%
 
 	PWM0DH = 0x00;						//PWM0高4位占空比0x01
-	PWM0DL = 0x60;						//PWM0低8位占空比0x55
+	PWM0DL = 0x90;	//WT.EDIT					//PWM0低8位占空比0x55
 	PWM0DTH = 0x00;						//PWM01高4位占空比0x01
 	PWM0DTL = 0xA0;		//WT.EDIT 				//PWM01低8位占空比0x55 
 	PWMEN |= 0x11;						//使能PWM0以及PWM01

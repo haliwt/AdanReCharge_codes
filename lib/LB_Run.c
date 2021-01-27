@@ -1484,32 +1484,14 @@ void rechargeBatMode(void)
 				}
 				else if(IRLocation.NearRight>0)
 				{
-				  /*
-					if(IRLocation.TopIR >0){ //WT.EDIT 2021.01.21
-						RunStep = 0x10; //TopIr PROC
-						RunMs = 0;
-					}
-					else{
-						RunStep=0x50;
-						InitMotorForwardLeftSlow();
-					}
-				*/
+				  
 						RunStep=0x50;
 						InitMotorForwardLeftSlow();
 
 				}
 				else if(IRLocation.NearLeft>0)
 				{
-				/*
-					if(IRLocation.TopIR >0){ //WT.EDIT 2021.01.21
-						RunStep = 0x10; //TopIr PROC
-						RunMs = 0;
-					}
-					else{
-						RunStep=0x50;
-						InitMotorForwardRightSlow();
-					}
-					*/
+				
 						RunStep=0x50;
 						InitMotorForwardRightSlow();
 				}
@@ -1546,11 +1528,18 @@ void rechargeBatMode(void)
 						InitMotorLeft();				
 				
 				}				
-				else if(connect>timeCircle){
+			    else if(connect>timeCircle){
 					connect = 0;
-					RunMs = 0;
-					RunStep = 6;
-					InitMotorForward();
+					if(topir_flag ==1){ //
+                         InitMotorLeft_TOPIR();//left
+						 RunMs = 0;
+						 RunStep = 0x19; // new charge pile
+					}
+					else{
+						RunMs = 0;
+						RunStep = 6; //
+						InitMotorForward();
+					}
 					findCnt++;
 					if(findCnt>= 20){
 						findCnt = 0;
@@ -1748,32 +1737,14 @@ void rechargeBatMode(void)
 				}
 				else if(IRLocation.NearRight>0)
 				{
-				  /*
-					if(IRLocation.TopIR >0){ //WT.EDIT 2021.01.21
-						RunStep = 0x10; //TopIr PROC
-						RunMs = 0;
-					}
-					else{
-						RunStep=0x50;
-						InitMotorForwardLeftSlow();
-					}
-				*/
+				  
 						RunStep=0x50;
 						InitMotorForwardLeftSlow();
 
 				}
 				else if(IRLocation.NearLeft>0)
 				{
-				/*
-					if(IRLocation.TopIR >0){ //WT.EDIT 2021.01.21
-						RunStep = 0x10; //TopIr PROC
-						RunMs = 0;
-					}
-					else{
-						RunStep=0x50;
-						InitMotorForwardRightSlow();
-					}
-					*/
+			
 						RunStep=0x50;
 						InitMotorForwardRightSlow();
 				}
@@ -1845,32 +1816,14 @@ void rechargeBatMode(void)
 				}
 				else if(IRLocation.NearRight>0)
 				{
-				  /*
-					if(IRLocation.TopIR >0){ //WT.EDIT 2021.01.21
-						RunStep = 0x10; //TopIr PROC
-						RunMs = 0;
-					}
-					else{
-						RunStep=0x50;
-						InitMotorForwardLeftSlow();
-					}
-				*/
+				  
 						RunStep=0x50;
 						InitMotorForwardLeftSlow();
 
 				}
 				else if(IRLocation.NearLeft>0)
 				{
-				/*
-					if(IRLocation.TopIR >0){ //WT.EDIT 2021.01.21
-						RunStep = 0x10; //TopIr PROC
-						RunMs = 0;
-					}
-					else{
-						RunStep=0x50;
-						InitMotorForwardRightSlow();
-					}
-					*/
+				
 						RunStep=0x50;
 						InitMotorForwardRightSlow();
 				}
@@ -1960,8 +1913,8 @@ void rechargeBatMode(void)
 		    }
 			else if(topir_flag ==1){
 			
-			RunStep=0;
-			RunMs =0;
+				RunStep=0;
+				RunMs =0;
 
             }
 			else if(RunMs >800){ //600
@@ -2042,6 +1995,49 @@ void rechargeBatMode(void)
 		
 		}
 		break;
+		/*new charge pile*/
+		case 0x19 :
+               if(RunMs > 200){ //left  180 degree position
+
+				 SetStop();
+				 RunStep=0x1a;
+			     RunMs = 0;
+				 IRLocation.TopIR=0;
+				 topir_flag =1;
+			 }
+
+
+		break;
+
+		case 0x1a:
+			 if(RunMs >30){
+
+                InitMotorForward_TOPIR();
+                RunStep = 0x1b;
+				RunMs =0; 
+           }
+        break;
+
+		case 0x1b :
+			if(RunMs >500){ //line run 
+
+                SetStop();
+                RunStep = 0x1c;
+				RunMs =0; 
+           }
+
+		break;
+
+		case 0x1c :
+			if(RunMs >30){
+                RunStep = 0;
+				RunMs =0; 
+			    topir_flag =0;
+           }
+
+		break;
+
+		
 	
 
 		/*********************************************/
