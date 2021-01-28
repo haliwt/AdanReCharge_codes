@@ -1523,14 +1523,24 @@ void rechargeBatMode(void)
 				else
 				if(IRLocation.TopIR >1)
 				{
-						RunStep = 0x10; //TopIr PROC
-						RunMs = 0;
-						InitMotorLeft();				
+                        if(topir_flag ==1){
+							InitMotorForward_TOPIR();
+							RunStep = 0x1d; //TopIr PROC
+						    RunMs = 0;
+							
+
+						}
+						else{
+							RunStep = 0x10; //TopIr PROC
+							RunMs = 0;
+							InitMotorLeft();
+						}
 				
 				}				
 			    else if(connect>timeCircle){
 					connect = 0;
 					if(topir_flag ==1){ //
+					     SetStop();
                          InitMotorLeft_TOPIR();//left
 						 RunMs = 0;
 						 RunStep = 0x19; // new charge pile
@@ -1636,7 +1646,7 @@ void rechargeBatMode(void)
 					CurrentMax++;			
 				}
 			  }
-			  else if(RunMs>100) //
+			  else if(RunMs>50) //
 			  {
 				    SetStop();
 					RunMs=0;
@@ -1681,7 +1691,7 @@ void rechargeBatMode(void)
 					}
 			    }			
 
-			   else  if(RunMs>80)
+			   else  if(RunMs>40)
 				{
 					SetStop();
 					RunMs=0;
@@ -1776,9 +1786,19 @@ void rechargeBatMode(void)
 				else
 				if(IRLocation.TopIR >1)
 				{
+					  if(topir_flag ==1){
+							InitMotorForward_TOPIR();
+							RunStep = 0x1d; //TopIr PROC
+						    RunMs = 0;
+							
+
+						}
+						else{
+                        
 						RunStep = 0x10; //TopIr PROC
 						RunMs = 0;
-						InitMotorLeft();				
+						InitMotorLeft();
+						}
 				
 				}				
 					
@@ -1796,9 +1816,10 @@ void rechargeBatMode(void)
                 else if(RunMs > 30 )//else if(RunMs>250) //WT.EIDT
 				{
 					//timeCircle = 10;//WT.EDIT °ëÈ¦ //27;//timeCircle = 50;
-					
+					SetStop();
+
 					RunMs=0;
-					RunStep=0;
+					RunStep=0xa1;
 				}
                 else if(IRLocation.NearMid>0)
 				{
@@ -1856,8 +1877,10 @@ void rechargeBatMode(void)
 				if(IRLocation.TopIR >1)
 				{
 						if(topir_flag ==1){
-							RunStep = 0; //TopIr PROC
+							InitMotorForward_TOPIR();
+							RunStep = 0x1d ; //TopIr PROC
 						    RunMs = 0;
+							
 
 						}
 						else{
@@ -1873,7 +1896,7 @@ void rechargeBatMode(void)
         /**********TOP_IR_RIGHT************************/
 		case 0x10:
 		{
-		 if(RunMs>60 ) //Left 45 degree // if(RunMs>60)
+		 if(RunMs>40 ) //Left 45 degree // if(RunMs>60)
 		   {
 		   	  SetStop();
 		   	  RunStep=0x11;
@@ -1951,7 +1974,7 @@ void rechargeBatMode(void)
 		}
 		break;	
 
-        case 0x15://
+        case 0x15://return back  
 		{
 		  if(RunMs>150)//if(RunMs>150)
 		  {
@@ -1995,7 +2018,7 @@ void rechargeBatMode(void)
 		
 		}
 		break;
-		/*new charge pile*/
+		/*The first new charge pile*/
 		case 0x19 :
                if(RunMs > 200){ //left  180 degree position
 
@@ -2019,7 +2042,7 @@ void rechargeBatMode(void)
         break;
 
 		case 0x1b :
-			if(RunMs >500){ //line run 
+			if(RunMs >600){ //line run 
 
                 SetStop();
                 RunStep = 0x1c;
@@ -2032,8 +2055,30 @@ void rechargeBatMode(void)
 			if(RunMs >30){
                 RunStep = 0;
 				RunMs =0; 
-			    topir_flag =0;
+			    topir_flag =1;
            }
+
+		break;
+			
+        //the second TOPIR =1
+		case 0x1d:
+			if(RunMs >300){ //line run 
+
+                SetStop();
+                RunStep = 0x1e;
+				RunMs =0; 
+				IRLocation.TopIR=0;
+           }
+
+
+		break;
+		case 0x1e:
+		if(RunMs >30){
+				RunStep = 0;
+				RunMs =0; 
+				topir_flag =0;
+		   }
+
 
 		break;
 
