@@ -23,11 +23,15 @@ version  : 见文件尾端
 code INT8U IRcode[100]={
 
 0xA1,0x84,0x60,    //近中     0
-0xAA,0x11,0x80,    //近中     1
+0xA8,0x44,0x60,    //近中     1
 0xAA,0x11,0x80,    //远中	  2
 0xAA,0x1a,0x00,	   //远left	  3
 0xAA,0x86,0x00,	   //远右	  4
 0xAA,0xA8,0X00,    //头顶     5
+0x18,0x61,0xA0,     //近中 6
+0x86,0x11,0x18,     //近中 7	
+0x11,0x11,0x11,     //近中 8
+0x18,0x61,0x18,     //近left 9	
 0x00,0x00,0x00, 
 };
 void Init_IR()
@@ -211,18 +215,24 @@ void CheckRechargeIR()
 	INT8U  FarPreRight;	
 
 0xA1,0x84,0x60,    //近中     0
-0xAA,0x11,0x80,    //近中     1
+0xA8,0x44,0x60,    //近中     1
 0xAA,0x11,0x80,    //远中	  2
 0xAA,0x1a,0x00,	   //远left	  3
 0xAA,0x86,0x00,	   //远右	  4
 0xAA,0xA8,0X00,    //头顶     5
+0x18,0x61,0xA0,     //近中 6
+0x86,0x11,0x18,     //近中 7	
+0x11,0x11,0x11,     //近中 8
+0x18,0x61,0x18,     //近left 9	
 0x00,0x00,0x00, 
+
 
 
 */
 	
 	if(Mid_ReadIR.ReadIRFlag==3)
 	{
+
 	  for(i=0;i<30;i++)	
 	  {
 	    if((IRcode[i*3]==Mid_ReadIR.ReadIR[0])&&(IRcode[i*3+1]==Mid_ReadIR.ReadIR[1])&&(IRcode[i*3+2]==Mid_ReadIR.ReadIR[2]))
@@ -237,20 +247,20 @@ void CheckRechargeIR()
 
 
 		case 0:
+	  	case 1:
+	  	case 6:	
+	  	case 7:	
+	  	case 8:				
 			  IRLocation.NearMid++;
 
 		break ;
-	  	case 1:
-	  
-		    IRLocation.NearMid++;
 
-		break;
 
 		case 2:
 				IRLocation.FarMid++;
 		break;
 	  	case 3:
-		
+	  	case 9:		
 				IRLocation.FarLeft++;
 		break;
 	  	case 4:
@@ -282,9 +292,9 @@ void CheckRechargeIR()
 				findRechargeFlag = 1;	
 		}
 
-//  		  Mid_ReadIR.ReadIR[0]=0;
+// 		    Mid_ReadIR.ReadIR[0]=0;
 //		    Mid_ReadIR.ReadIR[1]=0;
-//			Mid_ReadIR.ReadIR[2]=
+//			Mid_ReadIR.ReadIR[2]=0;
 			Mid_ReadIR.ReadIRFlag=0;
 
 	}
