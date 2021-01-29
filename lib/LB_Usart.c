@@ -64,5 +64,9 @@ void UART1_Rpt(void) interrupt UART1_VECTOR
 		  SBUF= Usart1Send[SendCount];
 
 		}
-	}									
+	}
+	else if(SCON & 0x01)		
+	{
+		SCON &=~ 0x01;	 
+	}
 }

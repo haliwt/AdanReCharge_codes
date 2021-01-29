@@ -446,9 +446,9 @@ void InitFanEdgeIO(void)
 	//			= 170.5us		   占空比为 170.5/511.5 = 33.3%
 
 	PWM0DH = 0x00;						//PWM0高4位占空比0x01
-	PWM0DL = 0x90;	//WT.EDIT 					//PWM0低8位占空比0x55
+	PWM0DL = 0xB0;	//WT.EDIT 					//PWM0低8位占空比0x55
 	PWM0DTH = 0x00;						//PWM01高4位占空比0x01
-	PWM0DTL = 0x90;						//PWM01低8位占空比0x55
+	PWM0DTL = 0xB0;						//PWM01低8位占空比0x55
 	PWMEN |= 0x11;						//使能PWM0以及PWM01
 	ForwardFlag=0;
 }
@@ -462,7 +462,10 @@ void InitFanEdgeIO(void)
 ***************************************************************/
  void SetMotorForwardPWMUP()
 {
-	if(ForwardFlag==1)
+	 switch(ForwardFlag)
+	 {
+		 case 1:
+	
 	{
 	  if(PWM0DL<0xd0)					 
 	   PWM0DL += 3;				 
@@ -470,91 +473,110 @@ void InitFanEdgeIO(void)
 	  if(PWM0DTL<0xd0)						 
 	   PWM0DTL += 3;
 	}
-	else if(ForwardFlag==2)
+	break;
+		 case 2:
+
 	{
 	  if(PWM0DL<0xa0)					 
 	   PWM0DL += 3;				 
 	  if(PWM0DTL<0xe5)						 
 	   PWM0DTL += 3;
 	}
-	else if(ForwardFlag==3)
+	break;
+		 case 3:
+	
 	{
 	  if(PWM0DL<0xf5)					 
 	   PWM0DL += 3;				 
 	  if(PWM0DTL<0xa0)						 
 	   PWM0DTL += 3;
 	}
-	else if(ForwardFlag==4)
+	break;
+		 case 4:
+	
 	{
 	  if(PWM0DL<0xf5)					 
 	   PWM0DL += 2;				 
 	  if(PWM0DTL<0xf5)						 
 	   PWM0DTL += 2;
 	}
-	else if(ForwardFlag==5)
+	break;
+		 case 5:
+	
 	{
 	  if(PWM0DL<0xb0)					 
 	   PWM0DL += 3;				 
 	  if(PWM0DTL<0x90)						 
 	   PWM0DTL += 3;
 	}
-	else if(ForwardFlag==6)
+	break;
+		 case 6:
+		 
 	{
 	  if(PWM0DL<0x90)					 
 	   PWM0DL += 3;				 
 	  if(PWM0DTL<0xb0)						 
 	   PWM0DTL += 3;
 	}
-	else if(ForwardFlag==7)
+	break;
+		 case 7:
 	{
 	  if(PWM0DL>0xC0)					 
 	   PWM0DL -= 1;				 
 	  if(PWM0DTL>0x90)						 
 	   PWM0DTL -= 2;
 	}
-	else if(ForwardFlag==8)
+	break;
+		 case 8:
 	{
 	  if(PWM0DL<0xd0)					 
 	   PWM0DL += 1;				 
 	  if(PWM0DTL<0xa0)						 
 	   PWM0DTL += 1;
 	}	
-	else if(ForwardFlag==9)
+	break;
+		 case 9:
 	{
 	  if(PWM0DL<0xee)					 
 	   PWM0DL += 1;				 
 	  if(PWM0DTL<0xb0)						 
 	   PWM0DTL += 1;
 	}
-	else if(ForwardFlag==10)
+	break;
+		 case 10:
 	{
 	  if(PWM0DL>0x90)					 
 	   PWM0DL -= 2;				 
 	  if(PWM0DTL>0xC0)						 
 	   PWM0DTL -= 1;
 	}
-	else if(ForwardFlag==11)
+	break;
+		 case 11:
 	{
 	  if(PWM0DL<0xa0)					 
 	   PWM0DL += 1;				 
 	  if(PWM0DTL<0xD0)						 
 	   PWM0DTL += 1;
 	}
-	else if(ForwardFlag==12)
+	break;
+		 case 12:
 	{
 	  if(PWM0DL<0xb0)					 
 	   PWM0DL += 1;				 
 	  if(PWM0DTL<0xee)						 
 	   PWM0DTL += 1;
 	}	
-	else if(ForwardFlag==13)
+	break;
+		 case 13:
 	{
 	  if(PWM0DL<0xc0)					 
 	   PWM0DL += 1;				 
 	  if(PWM0DTL<0xc0)						 
 	   PWM0DTL += 1;
 	}	
-		else if(ForwardFlag == 14){   //左轮减速，微调角度
+	break;
+		 case 14:
+			{   //左轮减速，微调角度
 		if(PWM0DL<0x90 && PWM0DTL==0xb0){
 			PWM0DL -= 1;	
 			if(PWM0DL<=0x90)
@@ -571,7 +593,9 @@ void InitFanEdgeIO(void)
 			}
 		}
 	}
-	else if(ForwardFlag == 15){   //由右转调节成直走
+	break;
+		 case 15:
+		{   //由右转调节成直走
 	  if(PWM0DL>0xc0)					 
 	   PWM0DL -= 2;			
 		else
@@ -583,13 +607,17 @@ void InitFanEdgeIO(void)
 		PWM0DTL += 2;
 		
 	}
-	else if(ForwardFlag == 16){   //左轮减速，微调角度
+	break;
+		 case 16:
+		{   //左轮减速，微调角度
 	  if(PWM0DL>0xb0)					 
 	   PWM0DL -= 1;				 
 	  if(PWM0DTL<0xd0)						 
 	   PWM0DTL += 1;
 	}
-	else if(ForwardFlag == 17){   //小曲线右转
+	break;
+		 case 17:
+		{   //小曲线右转
 	  if(PWM0DL>0xC0)
 			PWM0DL -= 1;	
 	  else
@@ -600,14 +628,17 @@ void InitFanEdgeIO(void)
 		else
 		PWM0DTL -= 1;
 	}
-	else if(ForwardFlag==18)
+	break;
+		 case 18:
 	{
 	  if(PWM0DL<0xa0)					 
 	   PWM0DL += 1;				 
 	  if(PWM0DTL<0xa0)						 
 	   PWM0DTL += 1;
 	}	
-	else if(ForwardFlag == 19){   //小曲线右转
+	break;
+		 case 19:
+		{   //小曲线右转
 	  if(PWM0DL>0xf0)
 			PWM0DL -= 2;	
 	  else
@@ -617,7 +648,9 @@ void InitFanEdgeIO(void)
 	   PWM0DTL += 2;
 		else
 		PWM0DTL -= 2;
-	}	
+	}
+    break;
+}	
 	return;
 }
 void InitMotorRight(void)

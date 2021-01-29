@@ -130,7 +130,7 @@ void TIMER1_Rpt(void) interrupt TIMER1_VECTOR
   ReadAD5ms();
  // BatteryLowVoltage_Detection();//WT.EDIT 1s detection
   MidIR_Count();
-  CheckVoltage();
+  
 	
 	if(t_1ms++>10){
 		t_1ms = 0;
@@ -145,6 +145,7 @@ void TIMER1_Rpt(void) interrupt TIMER1_VECTOR
 		RunMs++;
 		CheckBuzzer();
 		SetMotorForwardPWMUP();
+		
 		if(t_100ms>9) //100ms
 		{
 			t_100ms=0;
@@ -161,7 +162,8 @@ void TIMER1_Rpt(void) interrupt TIMER1_VECTOR
 			CheckLCurrent();
 			CheckRCurrent();
 			CheckEdgeCurrent();
-			CheckFanCurrent();			
+			CheckFanCurrent();	
+            CheckVoltage();			
 			LedTip(SysFlag);
 		}
 		

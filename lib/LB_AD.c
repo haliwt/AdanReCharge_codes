@@ -261,6 +261,7 @@ void CheckEdgeCurrent()
 		 
 		 if(EdgeCurrent>0xd0){
 			 EdgeCurrentCount++;
+			 /*
 			 if(EdgeCurrentCount>3){
 					EdgeCurrentCount = 0;
 					RunMode = 0;
@@ -277,6 +278,7 @@ void CheckEdgeCurrent()
 				 	SetEdge(0);		
 					SetStop();
 				}
+			 */
 		 }
 		 else 
 		 {
@@ -293,6 +295,7 @@ void CheckFanCurrent()
 	if(CheckTime>5){
 		CheckTime = 6;
 		FanCurrent=(FanCurrentAD[0]+FanCurrentAD[1]+FanCurrentAD[2]+FanCurrentAD[3]+FanCurrentAD[4]+FanCurrentAD[5]+FanCurrentAD[6]+FanCurrentAD[7])/64;
+/*
 		if(FanCurrent > 0x40){
 			RunMode = 0;
 			RunStep = 0;
@@ -300,7 +303,8 @@ void CheckFanCurrent()
 			SetEdge(0);		
 			SetStop();
 			SysFlag = 0XFF;
-		}		
+		}
+*/		
 	}
 	else
 		CheckTime++;

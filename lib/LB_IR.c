@@ -22,29 +22,12 @@ version  : 见文件尾端
 #endif
 code INT8U IRcode[100]={
 
-0x18,0x61,0xa0,	  //近左        0
-0x18,0x61,0x18,	  //近偏左		1
-0x44,0x44,0x00,	  //近偏左		2
-0x18,0x61,0x18,	  //近偏左		3
-0x11,0x11,0x11,	  //正中		4
-0x86,0x11,0x18,	  //近偏右		5
-0x86,0x15,0x18,	  //近偏右	    6
-0x86,0x46,0x00,	  //近偏右		7
-0xa8,0x61,0x80,	  //近右	    8 
-0xa8,0x60,0x80,	  //近右		9
-
-0xaa,0x1a,0x00,	  //远左		10
-0xa1,0x86,0x80,   //远左		11
-0x18,0x61,0xa0,	  //远偏左		12
-0x18,0x41,0x11,	  //远中		13
-0x18,0x44,0x46,   //远中	 	14
-0xA1,0x11,0x18,   //远中		15
-0x86,0x18,0x60,	  //远偏右		16
-0xa8,0x61,0x80,	  //远右		17
-0x61,0x80,0x00,   //远右		18
-0xaa,0x86,0x00,	  //远右		19
-0xAA,0X00,0X00,   //近右      20  //WT.EDIT --在回充座的右边。
-0xAA,0xA8,0X00,   //TOP IR  21  //WT.EDIT 
+0xA1,0x84,0x60,    //近中     0
+0xAA,0x11,0x80,    //近中     1
+0xAA,0x11,0x80,    //远中	  2
+0xAA,0x1a,0x00,	   //远left	  3
+0xAA,0x86,0x00,	   //远右	  4
+0xAA,0xA8,0X00,    //头顶     5
 0x00,0x00,0x00, 
 };
 void Init_IR()
@@ -227,29 +210,14 @@ void CheckRechargeIR()
 	INT8U  FarPreLeft;
 	INT8U  FarPreRight;	
 
-0x18,0x61,0xa0,	  //近左        0
-0x18,0x61,0x18,	  //近偏左		1
-0x44,0x44,0x00,	  //近偏左		2
-0x18,0x61,0x18,	  //近偏左		3
-0x11,0x11,0x11,	  //正中		4
-0x86,0x11,0x18,	  //近偏右		5
-0x86,0x15,0x18,	  //近偏右	    6
-0x86,0x46,0x00,	  //近偏右		7
-0xa8,0x61,0x80,	  //近右	    8 
-0xa8,0x60,0x80,	  //近右		9
+0xA1,0x84,0x60,    //近中     0
+0xAA,0x11,0x80,    //近中     1
+0xAA,0x11,0x80,    //远中	  2
+0xAA,0x1a,0x00,	   //远left	  3
+0xAA,0x86,0x00,	   //远右	  4
+0xAA,0xA8,0X00,    //头顶     5
+0x00,0x00,0x00, 
 
-0xaa,0x1a,0x00,	  //远左		10
-0xa1,0x86,0x80,   //远左		11
-0x18,0x61,0xa0,	  //远偏左		12
-0x18,0x41,0x11,	  //远中		13
-0x18,0x44,0x46,   //远中	 	14
-0xA1,0x11,0x18,   //远中		15
-0x86,0x18,0x60,	  //远偏右		16
-0xa8,0x61,0x80,	  //远右		17
-0x61,0x80,0x00,   //远右		18
-0xaa,0x86,0x00,	  //远右		19
-0xAA,0X00,0X00,   //近右      20  //WT.EDIT --在回充座的右边。
-0xAA,0xA8,0X00,   //TOP IR  21  //WT.EDIT 
 
 */
 	
@@ -265,60 +233,38 @@ void CheckRechargeIR()
 
 	  switch(i)
 	  {
-	  	case 0:
-		IRLocation.NearLeft++;
+	  
+
+
+		case 0:
+			  IRLocation.NearMid++;
+
+		break ;
+	  	case 1:
+	  
+		    IRLocation.NearMid++;
 
 		break;
-	  	case 1:
-	  	case 2:
-	  	case 3:
-		IRLocation.NearPreLeft++;
 
+		case 2:
+				IRLocation.FarMid++;
+		break;
+	  	case 3:
+		
+				IRLocation.FarLeft++;
 		break;
 	  	case 4:
-		IRLocation.NearMid++;
+	  
+		    IRLocation.FarRight++;
 
 		break;
+	 
 	  	case 5:
-	  	case 6:
-	  	case 7:
-		IRLocation.NearPreRight++;
-
-		break;
-	  	case 8:
-	  	case 9:
-		IRLocation.NearRight++;
+				IRLocation.TopIR++;
 
 		break;
 
-	  	case 10:
-	  	case 11:
-		IRLocation.FarLeft++;
-
-		break;		
-
-	  	case 12:
-		IRLocation.FarPreLeft++;
- 		break;
-	  	case 13:
-	  	case 14:
-	  	case 15:
-		IRLocation.FarMid++;
-		break;
-	  	case 16:
-		IRLocation.FarPreRight++;
-		break;
- 	  	case 17:
-	  	case 18:
-	  	case 19:
-		IRLocation.FarPreRight++;
-		break; //WT.EDIT 
- 		case 20:  //WT.EDIT 
-           IRLocation.TopIR++;//WT.EDIT 2021.01.25 //IRLocation.FarPreRight++;
-		break;
-		case 21 :
-			IRLocation.TopIR++;
-		break;
+	  	
 	  }
 
 	  #if 0
@@ -351,29 +297,11 @@ void CheckRechargeIR()
  void ClearAllIR(void)
  {
    	 IRLocation.NearMid=0;
-	 IRLocation.NearPreLeft=0;
-	 IRLocation.NearPreRight=0;
-	 IRLocation.NearLeft=0;
-	 IRLocation.NearRight=0;
      IRLocation.FarMid=0;
      IRLocation.FarLeft=0;
 	 IRLocation.FarRight=0;
-	 IRLocation.FarPreLeft=0;
-	 IRLocation.FarPreRight=0;
 	 IRLocation.TopIR=0;
  }
-void CheckHandsetIR()
-{
-
-   CheckXReadIR(&Mid_ReadIR);
-   if(Mid_ReadIR.ReadIRFlag==3)
-   {
-      Mid_ReadIR.ReadIRFlag=0;
-	  //if(Mid_ReadIR.ReadIR[0]==0X44)
-   	  //  SBUF=Mid_ReadIR.ReadIR[2];
-   }
-
-}
 /***************************************************************************************
   * @说明  	INT8-17中断服务函数
   *	@参数	无
@@ -383,11 +311,6 @@ void CheckHandsetIR()
 void INT8_17_Rpt() interrupt INT8_17_VECTOR 
 {
 	
-	if(PINTF1&0x80)						//判断INT15中断标志位
-	{
-		PINTF1 &=~ 0x80;				//清除INT15中断标志位
-	
-	}
 	
 	if(PINTF1&0x40)						//判断INT14中断标志位
 	{
@@ -395,11 +318,7 @@ void INT8_17_Rpt() interrupt INT8_17_VECTOR
 		Read_MidIR();
 	}
 	
-	if(PINTF1&0x20)						//判断INT13中断标志位
-	{
-		PINTF1 &=~ 0x20;				//清除INT13中断标志位	
-		
-	}
+
 
 }
 

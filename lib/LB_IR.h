@@ -43,15 +43,9 @@ version  : ���ļ�β��
  typedef struct
 {
 	INT8U  NearMid;
-	INT8U  NearPreLeft;
-	INT8U  NearPreRight;
-	INT8U  NearLeft;
-	INT8U  NearRight;
 	INT8U  FarMid;
 	INT8U  FarLeft;
 	INT8U  FarRight;
-	INT8U  FarPreLeft;
-	INT8U  FarPreRight;
 	INT8U  TopIR;
 
 	INT8U  irLeftValue;
