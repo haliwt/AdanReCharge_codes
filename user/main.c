@@ -42,7 +42,7 @@
 #include "..\lib\LB_IR.h"
 #include "..\lib\LB_Run.h"
 #include "..\lib\LB_Key.h"
-
+	INT8U flag100ms;
 void InitSysclk(INT8U SYS)
 {
 
@@ -112,7 +112,18 @@ void main(void)
 			
 		}
 	#endif
-		
+		if(flag100ms)
+		{
+			ReadIMP();
+			CheckLCurrent();
+			CheckRCurrent();
+			CheckEdgeCurrent();
+			CheckFanCurrent();	
+            CheckVoltage();			
+			LedTip(SysFlag);
+			
+			flag100ms=0;
+		}
 	}
 }
 
@@ -155,16 +166,10 @@ void TIMER1_Rpt(void) interrupt TIMER1_VECTOR
 			Imp2Second++;
 			NoImpSecond++;
 			WallSecond++;
+			flag100ms=1;
 			
 			
-			
-			ReadIMP();
-			CheckLCurrent();
-			CheckRCurrent();
-			CheckEdgeCurrent();
-			CheckFanCurrent();	
-            CheckVoltage();			
-			LedTip(SysFlag);
+
 		}
 		
 		

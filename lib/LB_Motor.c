@@ -477,9 +477,9 @@ void InitFanEdgeIO(void)
 		 case 2:
 
 	{
-	  if(PWM0DL<0xa0)					 
+	  if(PWM0DL<0xe5)					 
 	   PWM0DL += 3;				 
-	  if(PWM0DTL<0xe5)						 
+	  if(PWM0DTL<0xa0)						 
 	   PWM0DTL += 3;
 	}
 	break;

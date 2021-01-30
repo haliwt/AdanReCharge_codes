@@ -42,6 +42,7 @@ INT8U AutoDC_ReChargeStatus(void)
 			   LedRedOff();
 			   LedGreenON();
 	           Delay_ms(1000);
+			   if(Auto_DCCharge ==1){
                full ++ ;
 			   if(full > 250)full =11;
                if(full > 10){
@@ -50,8 +51,6 @@ INT8U AutoDC_ReChargeStatus(void)
 					SetStop();
 					RunMode = 0;
 					RunStep = 0;
-					SetBuzzerTime(4);
-					Delay_ms(10);
 					BuzzerOff();
 		            SetFan(0);  //WT.EDIT 
 					SetEdge(0);	 //WT.EDIT 	
@@ -59,6 +58,20 @@ INT8U AutoDC_ReChargeStatus(void)
 					SysFlag = IDEL;
 					return 1;
                }
+		      }
+			  else{
+					SetStop();
+					RunMode = 0;
+					RunStep = 0;
+					
+				
+					BuzzerOff();
+		            SetFan(0);  //WT.EDIT 
+					SetEdge(0);	 //WT.EDIT 	
+					ADCtl=0;
+					SysFlag = IDEL;
+					return 1;
+			   }
 			   return 1;
 	        
 		   }
