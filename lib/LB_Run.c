@@ -1346,6 +1346,7 @@ void wallMode(void)
 					if(findIR){
 						findIR = 0;
 						RunMode = 0x05;
+						circle=0;
 						RunStep = 0;
 						ADCtl = 0;
 						SetFan(0);
@@ -1429,7 +1430,7 @@ void rechargeBatMode(void)
 	static INT16U timeCircle=27;
 	static INT8U findCnt = 0;
 	static INT8U topir_flag =0;
-	static INT8U circle = 0; 
+
 	
 	switch(RunStep)
 	{
@@ -1667,21 +1668,25 @@ void rechargeBatMode(void)
                 else if(IRLocation.NearMid>0)
 				{
 					RunStep=0x50;
+					circle=0;
 				}
 		       else if(IRLocation.FarMid>0)
 				{
 					RunStep=0x40;
 					InitMotorForwardSlow();
+					circle=0;
 				}
 				else if(IRLocation.FarLeft>0)
 				{
 					RunStep=0x40;
 					InitMotorForwardRightSlow();
+					circle=0;
 				}			
 				else if(IRLocation.FarRight>0)
 				{
 					RunStep=0x40;
 					InitMotorForwardLeftSlow();
+					circle=0;
 				}
 		       else if(IRLocation.TopIR >1)
 				{
@@ -1945,7 +1950,7 @@ else if(IRLocation.NearMid>0)
 			   RunMs = 0;
 		   	 
 		   }
-else if(IRLocation.NearMid>0)
+		  else if(IRLocation.NearMid>0)
 				{
 					RunStep=0x50;
 				}
@@ -3172,6 +3177,7 @@ void sysMode(INT8U val)
 		
 			RunMode =5;
 			RunStep =0;
+			circle=0;
 			SetBuzzerTime(100);
 			Delay_ms(10);
 			BuzzerOff();	
@@ -3441,6 +3447,7 @@ void battVoltDetect(void)
 			cnt = 0;
 			RunMode =5;
 			RunStep =0;	
+			circle=0;
       SetFan(0);
 			SetEdge(0);		
 		  ADCtl = 0;

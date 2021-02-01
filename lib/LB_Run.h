@@ -101,6 +101,7 @@ KAKA_Run_EXT INT8U wallRechargeModeFlag;   //特殊的沿墙模式，用来找�
 KAKA_Run_EXT  INT8U  CheckTime;
 KAKA_Run_EXT  INT8U  oldMode;
 KAKA_Run_EXT 	INT8U lastMode;
+KAKA_Run_EXT 	INT8U circle ; 
 KAKA_Run_EXT void getOutMode(void);
 KAKA_Run_EXT void battVoltDetect(void);
 #endif
