@@ -1890,7 +1890,7 @@ void rechargeBatMode(void)
 			   IRLocation.TopIR=0;
 
 			}
-else if(IRLocation.NearMid>0)
+		else if(IRLocation.NearMid>0)
 				{
 					RunStep=0x50;
 				}
@@ -1919,7 +1919,7 @@ else if(IRLocation.NearMid>0)
 			  RunMs = 0;
 
 			}
-else if(IRLocation.NearMid>0)
+		else if(IRLocation.NearMid>0)
 				{
 					RunStep=0x50;
 				}
@@ -1991,7 +1991,7 @@ else if(IRLocation.NearMid>0)
 				 IRLocation.TopIR=0;
 				 topir_flag =1;
 			 }
-else if(IRLocation.NearMid>0)
+		else if(IRLocation.NearMid>0)
 				{
 					RunStep=0x50;
 				}
@@ -2090,7 +2090,7 @@ else if(IRLocation.NearMid>0)
 				RunMs =0; 
 				IRLocation.TopIR=0;
            }
-else if(IRLocation.NearMid>0)
+		  else if(IRLocation.NearMid>0)
 				{
 					RunStep=0x50;
 				}
@@ -2149,7 +2149,7 @@ else if(IRLocation.NearMid>0)
 
 
 		  }
-else if(IRLocation.NearMid>0)
+		else if(IRLocation.NearMid>0)
 				{
 					RunStep=0x50;
 				}
@@ -2234,7 +2234,7 @@ else if(IRLocation.NearMid>0)
 				  RunStep=0x38;
 				  RunMs  = 0;
 			  }
-else if(IRLocation.NearMid>0)
+			else if(IRLocation.NearMid>0)
 				{
 					RunStep=0x50;
 				}
@@ -2318,11 +2318,12 @@ else if(IRLocation.NearMid>0)
 				lostCnt = 0;
 				rightLostFlag = 0;
 				leftLostFlag = 0;
-              
+                //catch up signal process 
 				if(IRLocation.NearMid>0)
 				{
 					InitMotorForwardSlow();
 					RunStep=0x50;
+					RunNoIRsenorLastStep=4;//WT.EDIT.02.02.NearMid line
 				}
 		
 			
@@ -2331,39 +2332,38 @@ else if(IRLocation.NearMid>0)
 					//RunStep=0x40;
 					InitMotorForwardSlow();
 					RunNoIRsenorTime=0;
-					//RunNoIRsenorLastStep=1;
+					RunNoIRsenorLastStep=1; //WT.EDIT.2021.02.02   //RunNoIRsenorLastStep=1;
 				}
 				else if(IRLocation.FarLeft>0)
 				{
 					InitMotorForwardRightSlow();
 					//RunStep=0x43;
 					RunNoIRsenorTime=0;
-					RunNoIRsenorLastStep=2;
+					RunNoIRsenorLastStep=2;  //2 --right
 				}				
 				else if(IRLocation.FarRight>0)
 				{
 					InitMotorForwardLeftSlow();
 					//RunStep=0x43;
 					RunNoIRsenorTime=0;
-					RunNoIRsenorLastStep=3;
+					RunNoIRsenorLastStep=3; //3 -left
 				}
 			   else
-				{
+				{  // lost signal after process
 					RunNoIRsenorTime++;
 					if(RunNoIRsenorTime>0)//if(RunNoIRsenorTime>5)
 					{
 
 						RunNoIRsenorTime=0;
-						if(RunNoIRsenorLastStep==1)
+						if(RunNoIRsenorLastStep==1) //line 
 						{
-                             
-
-			                InitMotorForward_TOPIR();
+                            InitMotorForward_TOPIR();
 			                RunStep = 0x1f;
 							RunMs =0; 
+							RunNoIRsenorLastStep=0 ; //WT.EDIT 02.02
 			                   
 						}
-						else if(RunNoIRsenorLastStep==2)
+						else if(RunNoIRsenorLastStep==2) //right lost signal
 						{
 							InitMotorForwardRightSlow();
 							RunNoIRsenorTime=0;
@@ -2382,9 +2382,18 @@ else if(IRLocation.NearMid>0)
 							leftLostFlag = 1; //2021.01.22 YAO
 							RunNoIRsenorLastStep=0;
 						}
+						else if(RunNoIRsenorLastStep==4){//WT.EDIT 02.02.
+
+							NoImpSecond=0;
+						    SetStop();
+						    RunStep=0x3;
+							RunMs=0;	
+						    RunNoIRsenorLastStep=0;
+						}
 						else
 						{
 						   RunStep=0;
+						   RunMs =0 ;
 						}
 
 					}
@@ -2642,7 +2651,7 @@ else if(IRLocation.NearMid>0)
 				{
 					InitMotorForwardSlow_Target();
 					RunNoIRsenorTime=0;
-					//RunNoIRsenorLastStep=1;					
+					RunNoIRsenorLastStep=4;	//WT.EDIT 				
 				}
 			
 	            else if(IRLocation.FarMid>0)
@@ -2650,7 +2659,7 @@ else if(IRLocation.NearMid>0)
 					//RunStep=0x50;
 					InitMotorForwardSlow_Target();
 					RunNoIRsenorTime=0;
-					//RunNoIRsenorLastStep=1;					
+					RunNoIRsenorLastStep=1;					
 				}
 				
                 else if(IRLocation.FarLeft>0)
@@ -2675,12 +2684,14 @@ else if(IRLocation.NearMid>0)
 					{
 
 						RunNoIRsenorTime=0;
-						if(RunNoIRsenorLastStep==1)
+						if(RunNoIRsenorLastStep==1 || RunNoIRsenorLastStep==4)
 						{
 								
 			                InitMotorForward_TOPIR();
-			                RunStep = 0x1f;
+							SetStop();
+			                RunStep = 0x51; //return back;
 							RunMs =0; 
+							RunNoIRsenorLastStep=0;
 						}
 						else	if(RunNoIRsenorLastStep==2)
 						{
@@ -2724,7 +2735,7 @@ else if(IRLocation.NearMid>0)
 				{
 					SetStop();
 					RunMs=0;
-					RunStep=0x40;
+					RunStep=0;
 				}
 			}
 			break;
@@ -3180,7 +3191,7 @@ void sysMode(INT8U val)
 			Delay_ms(10);
 			BuzzerOff();	
             SetFan(0); 
-			SetEdge(150);		//WT.EDIT 2021.01.18
+			SetEdge(200);		//WT.EDIT 2021.01.18
 		    ADCtl = 0;
 			SysFlag = FIND;	
 		  
