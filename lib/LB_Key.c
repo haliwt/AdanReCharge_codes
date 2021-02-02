@@ -26,14 +26,14 @@ INT8U AutoDC_ReChargeStatus(void)
 					SetEdge(0);	
 					Delay_ms(1000);
 					Delay_ms(1000);
-					SetBuzzerTime(200);
-					Delay_ms(500);
+					SetBuzzerTime(10);
+					Delay_ms(200);
 					BuzzerOff();
-					SetBuzzerTime(200);
-					Delay_ms(500);
+					SetBuzzerTime(10);
+					Delay_ms(200);
 					BuzzerOff();
-					SetBuzzerTime(200);
-					Delay_ms(500);
+					SetBuzzerTime(10);
+					Delay_ms(200);
 					BuzzerOff();
 					SetStop();
 					

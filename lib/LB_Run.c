@@ -1605,14 +1605,13 @@ void rechargeBatMode(void)
 			case 0xb1:
 			  if(IMP>0)
 			{
-				NoImpSecond=0; //WT.EDIT 2021.01.19
-			   {
+				
 					NoImpSecond=0;
 					RunStep=0x3;
 					SetStop();
 					RunMs=0;
 					CurrentMax++;			
-				}
+				
 			  }
 			  else if(RunMs>50) //
 			  {
@@ -1628,14 +1627,13 @@ void rechargeBatMode(void)
 
 			if(IMP>0 ||(WallDp[0]>WallMin)||(WallDp[1]>WallMin)||(WallDp[2]>WallMin)||(WallDp[3]>WallMin))
 			{
-				NoImpSecond=0; //WT.EDIT 2021.01.19
-			   {
+				
 					NoImpSecond=0;
 					RunStep=0x3;
 					SetStop();
 					RunMs=0;
 					CurrentMax++;			
-				}
+				
 			  }
 			  else if(RunMs>30) //
 			  {
